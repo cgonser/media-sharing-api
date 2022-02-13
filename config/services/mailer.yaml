@@ -1,0 +1,14 @@
+parameters:
+    app.mailer.sender: contact@itinair.com
+    app.mailer.from: 'Itinair <contact@itinair.com>'
+    app.mailer.bcc: carlos@itinair.com
+    app.mailer.unsubscribe_url: '%env(MAILER_UNSUBSCRIBE_URL)%'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Core\Service\EmailComposer:
+        arguments:
+            $unsubscribeUrl: '%app.mailer.unsubscribe_url%'

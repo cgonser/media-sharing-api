@@ -1,0 +1,12 @@
+# Read the documentation: https://github.com/1up-lab/OneupFlysystemBundle/tree/master/Resources/doc/index.md
+oneup_flysystem:
+    adapters:
+        user_image_adapter:
+            awss3v3:
+                client: Aws\S3\S3Client
+                bucket: '%user.image.s3_bucket%'
+
+    filesystems:
+        user_image_filesystem:
+            adapter: user_image_adapter
+            alias: userImageFileSystem

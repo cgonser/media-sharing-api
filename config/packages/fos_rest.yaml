@@ -1,0 +1,15 @@
+fos_rest:
+    param_fetcher_listener:  true
+    allowed_methods_listener:  true
+    format_listener:
+        rules:
+            - { path: ^/, prefer_extension: true, fallback_format: json, priorities: [ json, html ] }
+
+    body_listener: true
+    body_converter:
+        enabled: true
+        validate: true
+        validation_errors_argument: validationErrors
+
+    exception:
+        enabled: true

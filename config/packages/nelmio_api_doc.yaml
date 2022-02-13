@@ -1,0 +1,37 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: itinair API
+            version: 0.0.1
+        components:
+            securitySchemes:
+                Bearer:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+        security:
+            - Bearer: []
+    areas:
+        default:
+            path_patterns:
+                - ^/countries
+                - ^/currencies
+                - ^/demo
+                - ^/timezones
+                - ^/users
+        public:
+            path_patterns:
+                - ^/public
+
+    models:
+        use_jms: false
+        names:
+            - { alias: Country, type: App\Localization\Dto\CountryDto, areas: [default] }
+            - { alias: Currency, type: App\Localization\Dto\CurrencyDto, areas: [default] }
+            - { alias: Timezone, type: App\Localization\Dto\TimezoneDto, areas: [default] }
+
+            - { alias: User, type: App\User\Dto\UserDto, areas: [default] }
+            - { alias: UserIntegration, type: App\User\Dto\UserIntegrationDto, areas: [default] }
+            - { alias: UserIntegrationStatus, type: App\User\Dto\UserIntegrationStatusDto, areas: [default] }
+            - { alias: UserSetting, type: App\User\Dto\UserSettingDto, areas: [default] }
+            - { alias: UserToolsStats, type: App\User\Dto\UserToolsStatsDto, areas: [default] }

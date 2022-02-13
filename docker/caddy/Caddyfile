@@ -1,0 +1,10 @@
+local.itinair.gg {
+    log stdout
+    
+    tls /root/certs/local.itinair.gg-cert.pem /root/certs/local.itinair.gg-key.pem
+
+    proxy / http://php:80 {
+        transparent
+        header_upstream Host  "local.itinair.gg"
+    }
+}

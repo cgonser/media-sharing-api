@@ -1,0 +1,33 @@
+framework:
+    messenger:
+        # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
+        # failure_transport: failed
+
+        transports:
+            # https://symfony.com/doc/current/messenger.html#transport-configuration
+            # async: '%env(MESSENGER_TRANSPORT_DSN)%'
+            # failed: 'doctrine://default?queue_name=failed'
+            sync: 'sync://'
+            void: 'in-memory://'
+
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN_ASYNC)%'
+                retry_strategy:
+                    max_retries: 10
+                    delay: 5000
+                    multiplier: 1
+                    max_delay: 0
+#
+#            email:
+#                dsn: '%env(MESSENGER_TRANSPORT_DSN_EMAIL)%'
+#                retry_strategy:
+#                    max_retries: 10
+#                    delay: 5000
+#                    multiplier: 1
+#                    max_delay: 0
+
+        routing:
+            'App\User\Message\UserCreatedEvent': async
+            'App\User\Message\UserUpdatedEvent': void
+
+            'Symfony\Component\Mailer\Messenger\SendEmailMessage': async

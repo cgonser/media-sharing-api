@@ -1,0 +1,63 @@
+security:
+    enable_authenticator_manager: true
+
+    password_hashers:
+        App\User\Entity\User: 'auto'
+
+    providers:
+        users:
+            entity:
+                class: App\User\Entity\User
+
+    firewalls:
+        api_token_refresh:
+            pattern:  ^/users/token/refresh
+            stateless: true
+
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        user_login:
+            pattern: ^/users/login$
+            stateless: true
+            provider: users
+            custom_authenticators:
+                - App\User\Security\MaintenancePasswordAuthenticator
+            json_login:
+                check_path: /users/login
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        main:
+            pattern: ^/
+            stateless: true
+            provider: users
+            jwt: ~
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/users/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/users/login/facebook$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/users/token/refresh$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/users/password-reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/users/email-verification, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/users$, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [POST] }
+
+        - { path: ^/countries, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [ GET ] }
+        - { path: ^/countries, roles: IS_AUTHENTICATED_FULLY, methods: [POST,PUT,DELETE] }
+        - { path: ^/currencies, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [ GET ] }
+        - { path: ^/currencies, roles: IS_AUTHENTICATED_FULLY, methods: [ POST,PUT,DELETE ] }
+        - { path: ^/timezones, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [ GET ] }
+        - { path: ^/timezones, roles: IS_AUTHENTICATED_FULLY, methods: [ POST,PUT,DELETE ] }
+
+        - { path: ^/payments/stripe/checkout/callback, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [ POST ] }
+        - { path: ^/payments/stripe/webhook, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [ POST ] }
+
+        - { path: ^/health, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/doc, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/demo, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/public/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

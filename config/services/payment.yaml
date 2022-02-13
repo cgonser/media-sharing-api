@@ -1,0 +1,22 @@
+parameters:
+    payment.default_currency: 'USD'
+
+    stripe.api_key: '%env(STRIPE_API_KEY)%'
+    stripe.success_url: '%env(STRIPE_SUCCESS_URL)%'
+    stripe.cancel_url: '%env(STRIPE_CANCEL_URL)%'
+    stripe.postback_url: '%env(STRIPE_POSTBACK_URL)%'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        bind:
+#            $paymentDefaultCurrency: '%payment.default_currency%'
+#            $stripeApiKey: '%stripe.api_key%'
+#            $stripeSuccessUrl: '%stripe.success_url%'
+#            $stripeCancelUrl: '%stripe.cancel_url%'
+#            $stripePostbackUrl: '%stripe.postback_url%'
+
+    Stripe\StripeClient:
+        arguments:
+            - '%stripe.api_key%'

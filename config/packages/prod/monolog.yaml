@@ -1,0 +1,14 @@
+monolog:
+    channels: [deprecation]
+    handlers:
+        main:
+            type:    stream
+            handler: nested
+            level:   debug
+
+        nested:
+            type:  stream
+            path:  "php://stderr"
+            level:   debug
+            formatter: 'monolog.formatter.json'
+            channels: ["!event", "!doctrine", "!console", "!deprecation", "!security", "!request"]

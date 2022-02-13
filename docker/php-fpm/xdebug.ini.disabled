@@ -1,0 +1,14 @@
+zend_extension=xdebug.so
+
+; Enable full error reporting (instead of default value hiding strict/notices/deprecations)
+error_reporting=E_ALL
+display_errors=On
+
+; Extend default timeouts for dev image usage.
+max_execution_time=140
+max_input_time=140
+
+xdebug.mode=debug
+xdebug.start_with_request=yes
+xdebug.discover_client_host=true
+xdebug.client_port=9003

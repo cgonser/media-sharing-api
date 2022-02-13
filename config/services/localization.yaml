@@ -1,0 +1,21 @@
+parameters:
+    locale: 'en'
+    timezone: 'Europe/Luxembourg'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Localization\:
+        resource: '../../src/Localization/*'
+        exclude: '../../src/Localization/{DependencyInjection,Entity,Tests,Kernel.php}'
+
+    App\Localization\Controller\:
+        resource: '../../src/Localization/Controller'
+        tags: ['controller.service_arguments']
+
+    GeoIp2\Database\Reader:
+        arguments:
+            $filename: '%kernel.project_dir%/config/geoip/GeoLite2-Country.mmdb'
+            $locales: [ 'en' ]

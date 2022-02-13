@@ -1,0 +1,48 @@
+user:
+    created:
+        subject: "Welcome to Itinair"
+        pre_header: "Welcome to Itinair 🚀 Please verify your email address to complete your registration."
+        hero: Nice to see you
+        thank_you: "Thanks for creating an Itinair account! To complete your registration please verify your email address."
+        verify_cta: "Verify email address"
+
+    email_validation:
+        subject: "Verify your email address"
+        pre_header: "Welcome to Itinair 🚀 Please verify your email address to complete your registration."
+        hero: Nice to see you
+        content: "Thanks for creating an Itinair account! To complete your registration please verify your email address."
+        cta: "Verify email address"
+
+    password_reset:
+        subject: "Forgot your password?"
+        pre_header: "Looks like you'd like to reset your password for your Itinair account"
+        hero: "Forgot your password?"
+        content: "Looks like you'd like to reset your password for your Itinair account. Don't worry, you can make a new one by clicking the button below 😌"
+        cta: "Reset password"
+        footer: "If you didn't ask us to reset your password, just ignore this email. Your account is safe with us."
+
+base:
+    greeting: "Hey %greeting_name% 👋"
+    greeting_annonymous: "Hey 👋"
+    signature: "Cheers,\nItinair Team"
+    get_in_touch: To get in touch with us, please send an email to support@itinair.com
+    unsubscribe: This email was sent to %recipient_email%. If you’d rather not receive this kind of email, you can unsubscribe [here](%unsubscribe_url%).
+    automatically_sent: This message was sent automatically to your e-mail adress registered with Itinair.
+    contact_us: Should you have any questions don't hesitate to [contact us](mailto:support@itinair.com) at any time.
+
+payment:
+    invoice_paid:
+        subject: "Thanks for your payment"
+        pre_header: "Your payment plan has been updated ✅"
+        hero: 'Thank you!'
+        title: 'Thanks for your payment'
+        text: 'Your payment plan has been updated ✅'
+        cta: 'See your invoices'
+
+    failed:
+        subject: "Your payment didn't go through"
+        pre_header: "Please verify your payment details 🔎"
+        hero: 'There was a problem!'
+        title: "Your payment didn't go through"
+        text: 'There seems to be a problem with your payment. Please verify your payment details 🔎'
+        cta: 'Open payment settings'

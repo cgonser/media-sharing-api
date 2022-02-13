@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>itinair.com | E-mail Verification</title>
+</head>
+<body>
+
+<div class="margin: 0 auto; width: 500px; text-align: center;">
+    <h1>E-mail verification</h1>
+
+    <p id="result"></p>
+</div>
+
+<script>
+    postBody = {
+        token: "{{ token }}"
+    }
+
+    fetch('{{ path ('user_email_verify') }}', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(postBody)
+    }).then(function (response) {
+        if (response.ok) {
+            document.getElementById('result').innerText = "Success";
+        } else {
+            return Promise.reject(response);
+        }
+    }).catch(function (err) {
+        document.getElementById('result').innerText = "Failed";
+        console.warn('Something went wrong.', err);
+    });
+
+</script>
+</body>
+</html>

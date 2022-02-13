@@ -1,0 +1,8 @@
+framework:
+    mailer:
+        dsn: '%env(MAILER_DSN)%'
+        envelope:
+            sender: '%app.mailer.sender%'
+        headers:
+            from: '%app.mailer.from%'
+            bcc: '%app.mailer.bcc%'

@@ -1,0 +1,14 @@
+parameters:
+    facebook.app_id: '%env(FACEBOOK_APP_ID)%'
+    facebook.app_secret: '%env(FACEBOOK_APP_SECRET)%'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    FacebookAds\Api:
+        factory: ['@App\Core\Service\FacebookApiClientFactory', 'createInstance']
+        arguments:
+            $facebookAppId: '%facebook.app_id%'
+            $facebookAppSecret: '%facebook.app_secret%'

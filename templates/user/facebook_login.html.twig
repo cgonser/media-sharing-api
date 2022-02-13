@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>itinair.com API | Facebook Login</title>
+</head>
+<body>
+
+<script>
+    // Reference: https://developers.facebook.com/docs/facebook-login/web
+
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '1816967968365276',
+            cookie: true,
+            xfbml: true,
+            version: 'v9.0'
+        });
+
+        FB.AppEvents.logPageView();
+    };
+
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+            return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    checkLoginState = function () {
+        FB.getLoginStatus(function (response) {
+            console.log(response);
+            // handle fb auth response:
+            // response.status specifies the login status of the person using the app. The status can be one of the following:
+            //     connected - the person is logged into Facebook, and has logged into your app.
+            if (response.status === 'connected') {
+                loginWithFacebookToken(response.authResponse.accessToken, response.authResponse.userID);
+
+                return;
+            }
+
+            //     not_authorized - the person is logged into Facebook, but has not logged into your app.
+            if (response.status === 'not_authorized') {
+
+            }
+
+            //     unknown - the person is not logged into Facebook, so you don't know if they've logged into your app or FB.logout() was called before and therefore, it cannot connect to Facebook.
+            if (response.status === 'unknown') {
+
+            }
+        });
+    }
+
+    loginWithFacebookToken = async function (accessToken, userId) {
+        var apiResponse = await fetch(
+            '{{ path('user_facebook_login') }}',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'accessToken': accessToken,
+                    'userId': userId
+                })
+            }
+        );
+
+        console.log(apiResponse);
+        // apiResponse.token = API JWT Token
+    }
+
+</script>
+
+<fb:login-button
+        scope="public_profile,email,instagram_basic,instagram_manage_insights,pages_show_list,pages_read_engagement"
+        onlogin="checkLoginState();">
+</fb:login-button>
+
+</body>
+</html>

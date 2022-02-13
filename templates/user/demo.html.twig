@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>itinair.com API | User Features Demo</title>
+</head>
+
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- LOGIN -->
+        <div class="col-sm-3">
+            <h2>Login</h2>
+            <form id="frmLogin" action="{{ path('user_login_check') }}" method="POST">
+                <div class="mb-3">
+                    <label for=login_username" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="login_username" name="username">
+                </div>
+                <div class="mb-3">
+                    <label for="login_password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="login_password" name="password">
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+
+            <div id="btnConnectFacebook" class="fb-login-button mt-3" data-size="large" data-button-type="continue_with"
+                 data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"
+                 data-onlogin="checkLoginState()"
+                 data-scope="public_profile,email,instagram_basic,instagram_manage_insights,pages_show_list,pages_read_engagement"></div>
+
+            <a id="btnDisconnectFacebook" class="btn btn-danger d-none"
+               href="{{ path('user_integration_delete', { platform: 'facebook', userId: 'current' }) }}">Unlink Facebook Account</a>
+        </div>
+
+        <div class="col-sm-3 text-center">
+            <h2>Instagram</h2>
+
+            <button id="fetchInstagramAccounts" class="btn btn-primary">Fetch Instagram Accounts</button>
+            <button id="unlinkInstagramAccount" class="btn btn-danger">Unlink Instagram Account</button>
+
+            <h3 class="mt-2">Accounts:</h3>
+            <ul class="list-group mt-2" id="instagramAccountsList">
+            </ul>
+        </div>
+
+        <div class="col-sm-3">
+            <h2 class="text-center">User Info</h2>
+
+            <form id="frmProfile" action="{{ path('users_update', { userId: 'current' }) }}" method="PUT">
+                <div class="mb-3">
+                    <label for="user_profile_picture" class="form-label">Profile picture</label>
+                    <input type="file" id="user_profile_picture" class="form-control">
+                </div>
+                <button type="submit" id="btn_submit_profile" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+<script async defer crossorigin="anonymous"
+        src="//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v11.0&appId=1816967968365276&autoLogAppEvents=1"
+        nonce="og9sx779"></script>
+
+<script>
+    document.getElementById('frmProfile').addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const form = event.currentTarget;
+        const url = form.action;
+        const method = form.getAttribute('method');
+
+        let profilePictureInput = document.getElementById('user_profile_picture');
+        let profilePicContents = await fileToBase64(profilePictureInput.files[0]);
+        let formData = {
+            profilePicture: profilePicContents.replace("data:", "").replace(/^.+,/, "")
+        };
+
+        const responseData = await submitFormDataAsJson(url, method, formData, true);
+        console.log(responseData);
+    });
+
+    const fileToBase64 = async (file) =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.readAsDataURL(file)
+            reader.onload = () => resolve(reader.result)
+            reader.onerror = (e) => reject(e)
+        });
+
+    document.getElementById('frmLogin').addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const form = event.currentTarget;
+        const url = form.action;
+        const method = form.method;
+        const formData = new FormData(form);
+
+        try {
+            const responseData = await submitFormDataAsJson(url, method, formData);
+            window.alert("Logged in");
+            localStorage.setItem('token', responseData.token);
+        } catch (err) {
+            window.alert("Login failed");
+        }
+    });
+
+    async function submitFormDataAsJson(url, method, formData, authorized) {
+        if (formData instanceof FormData) {
+            formData = Object.fromEntries(formData.entries());
+        }
+
+        headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        };
+
+        if (authorized) {
+            headers.Authorization = 'Bearer ' + window.localStorage.getItem('token');
+        }
+
+        const response = await fetch(url, {
+            method: method,
+            headers: headers,
+            body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage);
+        }
+
+        return response.json();
+    }
+
+    fetchInstagramAccounts = function () {
+        const instagramAccountsList = document.getElementById('instagramAccountsList');
+
+        while (instagramAccountsList.firstChild) {
+            instagramAccountsList.firstChild.remove();
+        }
+
+        fetch(
+            "{{ path('user_integration_get', { userId: 'current', platform: 'instagram' }) }}",
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + window.localStorage.getItem('token'),
+                    'Accept': 'application/json'
+                },
+            }
+        ).then(response => response.json()).then(response => {
+            let currentAccountId = response.externalId;
+
+            response.details.accounts.forEach(account => {
+                var li = document.createElement('li');
+                li.classList.add('list-group-item');
+
+                var a = document.createElement('a');
+                a.appendChild(document.createTextNode(account.name));
+                a.appendChild(document.createTextNode(' (@' + account.username + ')'));
+                a.dataset.instagramId = account.id;
+                a.setAttribute('href', '#');
+
+                if (currentAccountId === account.id) {
+                    li.classList.add('bg-success');
+                    a.classList.add('text-white');
+                    a.appendChild(document.createTextNode(' (linked)'));
+                }
+
+                a.addEventListener('click', async function (event) {
+                    let a = event.currentTarget;
+                    updateUserIntegration('instagram', a.dataset.instagramId);
+                });
+
+                li.appendChild(a);
+                instagramAccountsList.appendChild(li);
+            })
+        });
+    }
+
+    document.getElementById('fetchInstagramAccounts').addEventListener('click', function(event) {
+        event.preventDefault();
+
+        fetchInstagramAccounts();
+    });
+
+    updateUserIntegration = function(platform, externalId) {
+        fetch(
+            '{{ path('user_integration_post', { userId: 'current' }) }}',
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + window.localStorage.getItem('token'),
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'platform': platform,
+                    'externalId': externalId
+                })
+            }
+        ).then(function() {
+            fetchInstagramAccounts();
+        });
+    }
+
+    document.getElementById('unlinkInstagramAccount').addEventListener('click', function(event) {
+        event.preventDefault();
+
+        updateUserIntegration('instagram', null);
+    });
+
+    checkFacebookIntegrated = async function () {
+        fetch(
+            "{{ path('user_integration_get', { userId: 'current', platform: 'facebook' }) }}",
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + window.localStorage.getItem('token'),
+                    'Accept': 'application/json'
+                },
+            }
+        ).then(response => {
+            if (response.ok) {
+                document.getElementById('btnDisconnectFacebook').classList.remove('d-none');
+            }
+        });
+    }
+
+    document.getElementById('btnDisconnectFacebook').addEventListener('click', function(event) {
+        event.preventDefault();
+        const a = event.currentTarget;
+
+        fetch(
+            a.getAttribute('href'),
+            {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer ' + window.localStorage.getItem('token'),
+                    'Accept': 'application/json'
+                },
+            }
+        ).then(response => {
+            document.getElementById('btnDisconnectFacebook').classList.add('d-none');
+        });
+    });
+
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '1816967968365276',
+            cookie: true,
+            xfbml: true,
+            version: 'v9.0'
+        });
+
+        // FB.event.subscribe('xfbml.render', checkFacebookIntegrated);
+        FB.getLoginStatus(checkFacebookIntegrated);
+    };
+
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+            return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    checkLoginState = function () {
+        FB.getLoginStatus(function (response) {
+            console.log(response);
+
+            if (response.status === 'connected') {
+                integrateFacebookAccount(response.authResponse.accessToken, response.authResponse.userID);
+
+                return;
+            }
+
+            if (response.status === 'not_authorized') {
+            }
+
+            if (response.status === 'unknown') {
+            }
+        });
+    }
+
+    integrateFacebookAccount = async function (accessToken) {
+        fetch(
+            '{{ path('user_integration_post', { userId: 'current' }) }}',
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + window.localStorage.getItem('token'),
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'accessToken': accessToken,
+                    'platform': 'facebook'
+                })
+            }
+        ).then(function() {
+            document.getElementById('btnDisconnectFacebook').classList.remove('d-none');
+        });
+    }
+
+</script>
+</body>
+</html>

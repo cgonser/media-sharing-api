@@ -1,0 +1,11 @@
+core_controllers:
+    resource: '../../src/Core/Controller/'
+    type: annotation
+
+localization_controllers:
+    resource: '../../src/Localization/Controller/'
+    type: annotation
+
+user_controllers:
+    resource: '../../src/User/Controller/'
+    type: annotation

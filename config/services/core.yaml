@@ -1,0 +1,26 @@
+parameters:
+    locale: 'en'
+    timezone: 'Europe/Luxembourg'
+    app.env:  '%env(APP_ENV)%'
+    routing.uuid: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Core\:
+        resource: '../../src/Core/*'
+        exclude: '../../src/Core/{DependencyInjection,Entity,Tests,Kernel.php}'
+
+    App\Core\Controller\:
+        resource: '../../src/Core/Controller'
+        tags: ['controller.service_arguments']
+
+    App\Core\ArgumentResolver\UuidValueResolver:
+        tags:
+            - { name: controller.argument_value_resolver, priority: 500 }
+
+    App\Core\ParamConverter\QueryStringConverter:
+        tags:
+            - { name: request.param_converter, converter: querystring }
