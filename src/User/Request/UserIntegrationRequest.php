@@ -3,32 +3,22 @@
 namespace App\User\Request;
 
 use App\Core\Request\AbstractRequest;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @OA\RequestBody()
- */
+#[OA\RequestBody]
 class UserIntegrationRequest extends AbstractRequest
 {
-    /**
-     * @OA\Property()
-     * @Assert\NotBlank()
-     */
+    #[OA\Property]
+    #[Assert\NotBlank]
     public ?string $platform;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $accessToken;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $externalId;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $userId;
 }

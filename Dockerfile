@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-alpine
+FROM php:8.1-fpm-alpine
 
 ADD ./docker/php-fpm/www.conf /usr/local/etc/php-fpm.d/www.conf
 ADD ./docker/php-fpm/xdebug.ini.disabled /usr/local/etc/php/conf.d/xdebug.ini.disabled

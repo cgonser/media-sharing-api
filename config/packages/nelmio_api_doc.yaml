@@ -17,8 +17,10 @@ nelmio_api_doc:
                 - ^/countries
                 - ^/currencies
                 - ^/demo
+                - ^/moments
                 - ^/timezones
                 - ^/users
+                - ^/videos
         public:
             path_patterns:
                 - ^/public

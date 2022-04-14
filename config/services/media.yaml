@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Media\:
+        resource: '../../src/Media/*'
+        exclude: '../../src/Media/{DependencyInjection,Entity,Tests,Kernel.php}'
+
+    App\Media\Controller\:
+        resource: '../../src/Media/Controller'
+        tags: ['controller.service_arguments']

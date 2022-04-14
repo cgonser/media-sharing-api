@@ -6,24 +6,25 @@ use App\Localization\Repository\LanguageRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
+use Stringable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LanguageRepository::class)]
 #[ORM\Table()]
 #[UniqueEntity(fields: ['code'])]
-class Language implements \Stringable
+class Language implements Stringable
 {
     #[ORM\Id, ORM\GeneratedValue('CUSTOM'), ORM\CustomIdGenerator(UuidGenerator::class)]
     #[ORM\Column(type: 'uuid', unique: true)]
     private ?UuidInterface $id = null;
 
     #[ORM\Column(type: 'string', nullable: false)]
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     private string $name;
 
     #[ORM\Column(type: 'string', nullable: false)]
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     private string $code;
 
     public function getId(): ?UuidInterface

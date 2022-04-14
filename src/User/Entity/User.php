@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Index(fields: ['email'])]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['email'])]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable, SoftDeletableInterface, TimestampableInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDeletableInterface, TimestampableInterface
 {
     use TimestampableTrait;
     use SoftDeletableTrait;
@@ -34,12 +34,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     private UuidInterface $id;
 
     #[ORM\Column]
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     private string $name;
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private string $displayName;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $bio = null;
+
     #[ORM\Column(unique: true)]
-    #[Assert\NotBlank()]
-    #[Assert\Email()]
+    #[Assert\NotBlank]
+    #[Assert\Email]
     private string $email;
 
     #[ORM\Column(nullable: true)]
@@ -57,7 +63,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $timezone = null;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $profilePicture = null;
 
     #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => true])]
@@ -71,6 +77,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
 
     #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => false])]
     private bool $isEmailValidated = false;
+
+    #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => false])]
+    private bool $isProfilePrivate = false;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $emailValidatedAt = null;
@@ -97,6 +106,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDisplayName(): string
+    {
+        return $this->displayName;
+    }
+
+    public function setDisplayName(string $displayName): self
+    {
+        $this->displayName = $displayName;
+
+        return $this;
+    }
+
+    public function getBio(): ?string
+    {
+        return $this->bio;
+    }
+
+    public function setBio(?string $bio): self
+    {
+        $this->bio = $bio;
 
         return $this;
     }
@@ -233,6 +266,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
         return $this;
     }
 
+    public function isProfilePrivate(): bool
+    {
+        return $this->isProfilePrivate;
+    }
+
+    public function setIsProfilePrivate(bool $isProfilePrivate): self
+    {
+        $this->isProfilePrivate = $isProfilePrivate;
+
+        return $this;
+    }
+
     public function isBlocked(): bool
     {
         return $this->isBlocked;
@@ -342,12 +387,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     {
     }
 
-    public function serialize(): string
+    public function __serialize(): array
     {
-        return serialize([$this->id, $this->email, $this->password]);
+        return [$this->id, $this->email, $this->password];
     }
 
-    public function unserialize($serialized): void
+    public function __unserialize($serialized): void
     {
         // add $this->salt too if you don't use Bcrypt or Argon2i
         [$this->id, $this->email, $this->password] = unserialize($serialized, ['allowed_classes' => false]);

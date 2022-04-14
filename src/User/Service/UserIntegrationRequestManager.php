@@ -11,7 +11,7 @@ use Ramsey\Uuid\Uuid;
 class UserIntegrationRequestManager
 {
     public function __construct(
-        private UserIntegrationManager $userIntegrationManager,
+        private UserFollowManager $userIntegrationManager,
         private UserIntegrationProvider $userIntegrationProvider,
         private UserProvider $userProvider,
         private UserFacebookIntegrationManager $userFacebookIntegrationManager,

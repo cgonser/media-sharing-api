@@ -3,19 +3,13 @@
 namespace App\User\Request;
 
 use App\Core\Request\AbstractRequest;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @OA\RequestBody(
- *     request="UserPasswordResetRequest"
- * )
- */
+#[OA\RequestBody]
 class UserPasswordResetRequest extends AbstractRequest
 {
-    /**
-     * @OA\Property()
-     * @Assert\NotBlank()
-     */
+    #[OA\Property]
+    #[Assert\NotBlank]
     public ?string $emailAddress = null;
 }

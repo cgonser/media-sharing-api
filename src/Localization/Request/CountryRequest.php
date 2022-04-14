@@ -3,40 +3,26 @@
 namespace App\Localization\Request;
 
 use App\Core\Request\AbstractRequest;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 
-/**
- * @OA\RequestBody()
- */
+#[OA\RequestBody]
 class CountryRequest extends AbstractRequest
 {
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $name;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $code;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $currencyId;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $primaryTimezone;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $primaryLocale;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?bool $isActive;
 }

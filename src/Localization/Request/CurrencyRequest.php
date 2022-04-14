@@ -3,20 +3,14 @@
 namespace App\Localization\Request;
 
 use App\Core\Request\AbstractRequest;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 
-/**
- * @OA\RequestBody()
- */
+#[OA\RequestBody]
 class CurrencyRequest extends AbstractRequest
 {
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $name;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $code;
 }

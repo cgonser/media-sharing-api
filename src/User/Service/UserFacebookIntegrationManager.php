@@ -16,7 +16,7 @@ class UserFacebookIntegrationManager
     public function __construct(
         private FacebookApiClientFactory $facebookApiClientFactory,
         private UserIntegrationProvider $userIntegrationProvider,
-        private UserIntegrationManager $userIntegrationManager,
+        private UserFollowManager $userIntegrationManager,
         private string $facebookAppId,
         private string $facebookAppSecret,
     ) {

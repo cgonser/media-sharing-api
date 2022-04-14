@@ -1,0 +1,20 @@
+<?php
+
+namespace App\User\Dto;
+
+class UserFollowDto
+{
+    public string $id;
+
+    public string $followerId;
+
+    public string $followingId;
+
+    public PublicUserDto $following;
+
+    public ?bool $isApproved;
+
+    public string $createdAt;
+
+    public string $updatedAt;
+}

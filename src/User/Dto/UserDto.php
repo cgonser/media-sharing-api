@@ -8,13 +8,15 @@ class UserDto
 
     public ?string $name;
 
+    public ?string $displayName;
+
+    public ?string $bio;
+
     public ?string $email;
 
     public ?string $phone;
 
     public ?string $profilePicture;
-
-    public ?string $jobTitle;
 
     public ?string $country;
 
@@ -31,6 +33,8 @@ class UserDto
     public ?string $emailValidatedAt;
 
     public ?string $lastLoginAt;
+
+    public bool $isProfilePrivate;
 
     public bool $isActive;
 }

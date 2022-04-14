@@ -2,37 +2,23 @@
 
 namespace App\Core\Request;
 
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 
-/**
- * @OA\RequestBody(
- *     request="SearchRequest"
- * )
- */
+#[OA\RequestBody]
 class SearchRequest
 {
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $search = null;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?int $page = 1;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?int $resultsPerPage = 100;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $orderProperty = null;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $orderDirection = null;
 }

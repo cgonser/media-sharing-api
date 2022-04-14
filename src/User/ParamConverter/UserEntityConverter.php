@@ -15,12 +15,14 @@ class UserEntityConverter implements ParamConverterInterface
     ) {
     }
 
-    public function apply(Request $request, ParamConverter $configuration)
+    public function apply(Request $request, ParamConverter $configuration): bool
     {
         $request->attributes->set(
             'user',
             $this->userProvider->get(Uuid::fromString($request->attributes->get('userId')))
         );
+
+        return true;
     }
 
     public function supports(ParamConverter $configuration): bool

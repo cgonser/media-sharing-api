@@ -31,11 +31,11 @@ class Country implements \Stringable
     private array $timezones = [];
 
     #[ORM\Column(type: 'string', nullable: false)]
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     private string $name;
 
     #[ORM\Column(type: 'string', nullable: false)]
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     private string $code;
 
     #[ORM\Column(type: 'string', nullable: true)]

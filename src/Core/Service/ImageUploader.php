@@ -4,13 +4,13 @@ namespace App\Core\Service;
 
 use App\Core\Exception\InvalidImageException;
 use Aws\S3\S3Client;
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\Filesystem;
 use Ramsey\Uuid\Uuid;
 
 class ImageUploader
 {
     public function __construct(
-        private FilesystemInterface $fileSystem,
+        private Filesystem $fileSystem,
         private S3Client $s3Client,
         private string $s3BucketName,
     ) {

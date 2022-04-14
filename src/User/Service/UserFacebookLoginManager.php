@@ -16,7 +16,7 @@ class UserFacebookLoginManager
         private UserProvider $userProvider,
         private UserManager $userManager,
         private UserIntegrationProvider $userIntegrationProvider,
-        private UserIntegrationManager $userIntegrationManager,
+        private UserFollowManager $userIntegrationManager,
     ) {
     }
 

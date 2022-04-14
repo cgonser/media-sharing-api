@@ -6,23 +6,24 @@ namespace App\Core\EventSubscriber;
 
 use App\Core\Exception\ApiJsonInputValidationException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class ConstraintViolationEventSubscriber implements EventSubscriberInterface
 {
-    public function onControllerArguments($event): void
+    public function onControllerArguments(ControllerArgumentsEvent $event): void
     {
-        if (!$event->getRequest()->attributes->has('constraintViolationList')) {
-            return;
-        }
+        foreach ($event->getArguments() as $argument) {
+            if ($argument instanceOf ConstraintViolationListInterface) {
+                if ($argument->count() === 0) {
+                    return;
+                }
 
-        $constraintViolationList = $event->getRequest()->attributes->get('constraintViolationList');
-        if ($constraintViolationList->count() === 0) {
-            return;
+                throw new ApiJsonInputValidationException($argument);
+            }
         }
-
-        throw new ApiJsonInputValidationException($constraintViolationList);
     }
 
     public static function getSubscribedEvents(): array

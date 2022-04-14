@@ -6,11 +6,11 @@ class ApiJsonException extends \JsonException
 {
     public function __construct(
         private ?int $statusCode,
-        string $message = null,
+        ?string $message = '',
         private array $errors = [],
         \Throwable $previous = null
     ) {
-        parent::__construct($message, $statusCode, $previous);
+        parent::__construct($message ?? '', $statusCode, $previous);
     }
 
     public function getStatusCode(): ?int

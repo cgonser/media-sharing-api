@@ -3,100 +3,62 @@
 namespace App\User\Request;
 
 use App\Core\Request\AbstractRequest;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 
-/**
- * @OA\RequestBody()
- */
+#[OA\RequestBody]
 class BillingAddressRequest extends AbstractRequest
 {
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $userId;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $companyName;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $name;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $email;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $birthDate;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $phoneIntlCode;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $phoneAreaCode;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $phoneNumber;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $documentType;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $documentNumber;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $addressLine1;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $addressLine2;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $addressNumber;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $addressDistrict;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $addressCity;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $addressState;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $addressCountry;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $addressZipCode;
 }

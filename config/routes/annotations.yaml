@@ -2,6 +2,10 @@ core_controllers:
     resource: '../../src/Core/Controller/'
     type: annotation
 
+media_controllers:
+    resource: '../../src/Media/Controller/'
+    type: annotation
+
 localization_controllers:
     resource: '../../src/Localization/Controller/'
     type: annotation

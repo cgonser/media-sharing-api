@@ -2,8 +2,7 @@
 
 namespace App\User\Dto;
 
-use Nelmio\ApiDocBundle\Annotation\Model;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 
 class UserIntegrationDto
 {
@@ -15,9 +14,7 @@ class UserIntegrationDto
 
     public ?string $externalId;
 
-    /**
-     * @OA\Property(type="array", @OA\Items(type="string"))
-     */
+    #[OA\Property(type: "array", items: new OA\Items(type: "string"))]
     public ?array $details;
 
     public ?bool $isActive;

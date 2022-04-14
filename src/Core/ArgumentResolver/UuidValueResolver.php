@@ -2,7 +2,6 @@
 
 namespace App\Core\ArgumentResolver;
 
-use Iterator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,10 +15,7 @@ class UuidValueResolver implements ArgumentValueResolverInterface
         return is_a($argument->getType(), UuidInterface::class, true);
     }
 
-    /**
-     * @return UuidInterface|null
-     */
-    public function resolve(Request $request, ArgumentMetadata $argument): Iterator
+    public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         $argumentValue = $request->get($argument->getName());
         if (!is_string($argumentValue)) {

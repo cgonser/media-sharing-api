@@ -3,27 +3,17 @@
 namespace App\User\Request;
 
 use App\Core\Request\SearchRequest;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 
-/**
- * @OA\RequestBody(
- *     request="UserActivitySearchRequest"
- * )
- */
+#[OA\RequestBody]
 class UserActivitySearchRequest extends SearchRequest
 {
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $userId = null;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $startsAt = null;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $endsAt = null;
 }

@@ -24,7 +24,7 @@ class BillingAddressProvider extends AbstractProvider
         ]);
 
         if (!$billingAddress) {
-            throw new BillingAddressNotFoundException();
+            $this->throwNotFoundException();
         }
 
         return $billingAddress;

@@ -3,62 +3,40 @@
 namespace App\User\Request;
 
 use App\Core\Request\AbstractRequest;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @OA\RequestBody()
- */
+#[OA\RequestBody]
 class UserRequest extends AbstractRequest
 {
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $name;
 
-    /**
-     * @OA\Property()
-     * @Assert\Email()
-     */
+    #[OA\Property]
+    #[Assert\Email]
     public ?string $email;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $password;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $profilePicture;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $country;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $locale;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $timezone;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?string $currencyCode;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?bool $allowEmailMarketing;
 
-    /**
-     * @OA\Property()
-     */
+    #[OA\Property]
     public ?bool $isActive;
 }

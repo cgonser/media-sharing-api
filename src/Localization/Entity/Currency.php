@@ -19,11 +19,11 @@ class Currency implements \Stringable
     private ?UuidInterface $id = null;
 
     #[ORM\Column(type: 'string', nullable: false)]
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     private string $name;
 
     #[ORM\Column(type: 'string', nullable: false)]
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     private string $code;
 
     public function getId(): ?UuidInterface

@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class QueryStringConverter implements ParamConverterInterface
 {
-    public function apply(Request $request, ParamConverter $configuration)
+    public function apply(Request $request, ParamConverter $configuration): bool
     {
         $name = $configuration->getName();
         $class = $configuration->getClass();
@@ -26,9 +26,11 @@ class QueryStringConverter implements ParamConverterInterface
         }
 
         $request->attributes->set($name, $object);
+
+        return true;
     }
 
-    public function supports(ParamConverter $configuration)
+    public function supports(ParamConverter $configuration): bool
     {
         return 'querystring' === $configuration->getConverter();
     }

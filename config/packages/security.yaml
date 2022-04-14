@@ -35,29 +35,27 @@ security:
             provider: users
             jwt: ~
 
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/users/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/users/login/facebook$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/users/token/refresh$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/users/password-reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/users/email-verification, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/users$, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [POST] }
+        - { path: ^/users/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/users/login/facebook$, roles: PUBLIC_ACCESS }
+        - { path: ^/users/token/refresh$, roles: PUBLIC_ACCESS }
+        - { path: ^/users/password-reset, roles: PUBLIC_ACCESS }
+        - { path: ^/users/email-verification, roles: PUBLIC_ACCESS }
+        - { path: ^/users$, roles: PUBLIC_ACCESS, methods: [POST] }
 
-        - { path: ^/countries, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [ GET ] }
+        - { path: ^/countries, roles: PUBLIC_ACCESS, methods: [ GET ] }
         - { path: ^/countries, roles: IS_AUTHENTICATED_FULLY, methods: [POST,PUT,DELETE] }
-        - { path: ^/currencies, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [ GET ] }
+        - { path: ^/currencies, roles: PUBLIC_ACCESS, methods: [ GET ] }
         - { path: ^/currencies, roles: IS_AUTHENTICATED_FULLY, methods: [ POST,PUT,DELETE ] }
-        - { path: ^/timezones, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [ GET ] }
+        - { path: ^/timezones, roles: PUBLIC_ACCESS, methods: [ GET ] }
         - { path: ^/timezones, roles: IS_AUTHENTICATED_FULLY, methods: [ POST,PUT,DELETE ] }
 
-        - { path: ^/payments/stripe/checkout/callback, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [ POST ] }
-        - { path: ^/payments/stripe/webhook, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [ POST ] }
+        - { path: ^/payments/stripe/checkout/callback, roles: PUBLIC_ACCESS, methods: [ POST ] }
+        - { path: ^/payments/stripe/webhook, roles: PUBLIC_ACCESS, methods: [ POST ] }
 
-        - { path: ^/health, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/doc, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/demo, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/public/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/health, roles: PUBLIC_ACCESS }
+        - { path: ^/doc, roles: PUBLIC_ACCESS }
+        - { path: ^/demo, roles: PUBLIC_ACCESS }
+        - { path: ^/public/, roles: PUBLIC_ACCESS }
 
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
