@@ -82,6 +82,7 @@ class Video
     public function setUser(User $user): self
     {
         $this->user = $user;
+        $this->userId = $user->getId();
 
         return $this;
     }
@@ -213,5 +214,40 @@ class Video
         $this->videoMoments->add($videoMoment);
 
         return $this;
+    }
+
+    public function hasMoment(Moment $moment): bool
+    {
+        return !$this->videoMoments->filter(
+            fn (VideoMoment $videoMoment) => $moment->getId()->equals($videoMoment->getId())
+        )->isEmpty();
+    }
+
+    public function updateMoment(Moment $moment, int $position): void
+    {
+        $videoMoment = $this->videoMoments->filter(
+            fn (VideoMoment $videoMoment) => $moment->getId()->equals($videoMoment->getId())
+        )->first();
+
+        if (null === $videoMoment) {
+            return;
+        }
+
+        $videoMoment->position = $position;
+
+        $this->videoMoments->set(
+            $this->videoMoments->indexOf($videoMoment),
+            $videoMoment
+        );
+    }
+
+    public function removeMoment(Moment $moment): void
+    {
+        /** @var VideoMoment $videoMoment */
+        foreach ($this->videoMoments as $videoMoment) {
+            if ($videoMoment->getMomentId()->equals($moment->getId())) {
+                $this->videoMoments->removeElement($videoMoment);
+            }
+        }
     }
 }

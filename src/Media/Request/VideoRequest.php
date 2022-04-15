@@ -3,6 +3,7 @@
 namespace App\Media\Request;
 
 use App\Core\Request\AbstractRequest;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -21,8 +22,14 @@ class VideoRequest extends AbstractRequest
     #[OA\Property]
     public ?string $thumbnail;
 
-    #[OA\Property(type: "array", items: new OA\Items(type: "string"))]
+    #[OA\Property(type: "array", items: new OA\Items(type: 'string'))]
     public ?array $locations;
+
+    /** @var VideoMomentRequest[] */
+    #[OA\Property(type: "array", items: new OA\Items(ref: new Model(type: VideoMomentRequest::class)))]
+    #[Assert\All([new Assert\Type(type: VideoMomentRequest::class)])]
+    #[Assert\Valid]
+    public ?array $moments;
 
     #[OA\Property]
     #[Assert\Type('int')]

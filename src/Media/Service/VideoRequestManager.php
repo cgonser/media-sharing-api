@@ -3,6 +3,7 @@
 namespace App\Media\Service;
 
 use App\Media\Entity\Video;
+use App\Media\Provider\MomentProvider;
 use App\Media\Request\VideoRequest;
 use App\User\Provider\UserProvider;
 use Ramsey\Uuid\Uuid;
@@ -11,6 +12,7 @@ class VideoRequestManager
 {
     public function __construct(
         private VideoManager $videoManager,
+        private MomentProvider $momentProvider,
         private UserProvider $userProvider,
     ) {
     }
@@ -57,6 +59,10 @@ class VideoRequestManager
             $video->setLocations($videoRequest->locations);
         }
 
+        if ($videoRequest->has('moments')) {
+            $this->mapVideoMoments($video, $videoRequest->moments);
+        }
+
         if ($videoRequest->has('duration')) {
             $video->setDuration($videoRequest->duration);
         }
@@ -65,6 +71,22 @@ class VideoRequestManager
             $video->setRecordedAt(
                 \DateTime::createFromFormat(\DateTimeInterface::ATOM, $videoRequest->recordedAt)
             );
+        }
+    }
+
+    private function mapVideoMoments(Video $video, ?array $videoMomentRequests): void
+    {
+        foreach ($videoMomentRequests as $videoMomentRequest) {
+            $moment = $this->momentProvider->getByUserAndId(
+                $video->getUserId(),
+                Uuid::fromString($videoMomentRequest->momentId)
+            );
+
+            if ($video->hasMoment($moment)) {
+                $video->updateMoment($moment, $videoMomentRequest->position);
+            } else {
+                $video->addMoment($moment, $videoMomentRequest->position);
+            }
         }
     }
 }

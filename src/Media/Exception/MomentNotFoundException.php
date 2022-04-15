@@ -6,5 +6,5 @@ use App\Core\Exception\ResourceNotFoundException;
 
 class MomentNotFoundException extends ResourceNotFoundException
 {
-    protected $message = 'Media not found';
+    protected $message = 'Moment not found';
 }

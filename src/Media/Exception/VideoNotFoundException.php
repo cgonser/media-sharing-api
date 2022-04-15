@@ -6,5 +6,5 @@ use App\Core\Exception\ResourceNotFoundException;
 
 class VideoNotFoundException extends ResourceNotFoundException
 {
-    protected $message = 'Media not found';
+    protected $message = 'Video not found';
 }
