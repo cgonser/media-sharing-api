@@ -23,6 +23,6 @@ class UserFollowVoter extends AbstractUserAuthorizationVoter
      */
     protected function canRead($subject, User $user): bool
     {
-        return !$subject->isProfilePrivate() || $this->userFollowProvider->isFollowing($user, $subject);
+        return !$subject->isProfilePrivate() || $this->userFollowProvider->isFollowing($user->getId(), $subject->getId());
     }
 }

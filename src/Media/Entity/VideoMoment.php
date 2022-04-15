@@ -26,7 +26,7 @@ class VideoMoment implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(type: 'uuid')]
     private UuidInterface $videoId;
 
-    #[ORM\ManyToOne(targetEntity: Video::class)]
+    #[ORM\ManyToOne(targetEntity: Video::class, inversedBy: 'videoMoments')]
     private Video $video;
 
     #[ORM\Column(type: 'uuid')]
@@ -35,7 +35,7 @@ class VideoMoment implements TimestampableInterface, SoftDeletableInterface
     #[ORM\ManyToOne(targetEntity: Moment::class)]
     private Moment $moment;
 
-    #[ORM\Column(type: 'int', nullable: true)]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $position = null;
 
     public function getId(): ?UuidInterface

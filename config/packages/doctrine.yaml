@@ -11,7 +11,7 @@ doctrine:
 
         filters:
             softdeleteable:
-                class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
+                class: App\Core\ORM\SoftDeletableFilter
                 enabled: true
 
         mappings:
@@ -20,6 +20,12 @@ doctrine:
                 type: attribute
                 dir: '%kernel.project_dir%/src/Localization/Entity'
                 prefix: 'App\Localization\Entity'
+
+            App\Media:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/src/Media/Entity'
+                prefix: 'App\Media\Entity'
 
             App\User:
                 is_bundle: false

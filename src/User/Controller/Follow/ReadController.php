@@ -5,6 +5,7 @@ namespace App\User\Controller\Follow;
 use App\Core\Response\ApiJsonResponse;
 use App\Core\Security\AuthorizationVoterInterface;
 use App\User\Dto\UserFollowDto;
+use App\User\Entity\User;
 use App\User\Provider\UserFollowProvider;
 use App\User\Provider\UserProvider;
 use App\User\Request\UserFollowSearchRequest;
@@ -42,16 +43,17 @@ class ReadController extends AbstractController
         content: new OA\JsonContent(type: "array", items: new OA\Items(ref: new Model(type: UserFollowDto::class)))
     )]
     #[Route(name: 'user_follow_find', methods: 'GET')]
-    #[ParamConverter(data: 'user', converter: 'user.user_entity')]
     #[ParamConverter(data: 'searchRequest', converter: 'querystring')]
-    public function find(string $userId, UserFollowSearchRequest $searchRequest): Response
+    #[ParamConverter(data: 'user', converter: 'user.user_entity')]
+    public function find(User $user, UserFollowSearchRequest $searchRequest): Response
     {
-        if ('current' === $userId) {
+        if ($user === $this->getUser()) {
             $user = $this->getUser();
         } else {
-            $user = $this->userProvider->get(Uuid::fromString($userId));
-
             $this->denyAccessUnlessGranted(AuthorizationVoterInterface::READ, $user);
+
+            $searchRequest->isApproved = true;
+            $searchRequest->isPending = false;
         }
 
         $searchRequest->userId = $user->getId()->toString();

@@ -13,7 +13,7 @@ class VideoResponseMapper
         $videoDto = new VideoDto();
         $videoDto->id = $video->getId()->toString();
         $videoDto->userId = $video->getUser()->getId()->toString();
-        $videoDto->description = $video->getMood();
+        $videoDto->description = $video->getDescription();
         $videoDto->mood = $video->getMood();
         $videoDto->thumbnail = $video->getThumbnail();
         $videoDto->locations = $video->getLocations();

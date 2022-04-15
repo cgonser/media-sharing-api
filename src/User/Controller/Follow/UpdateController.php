@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[OA\Tag(name: 'User / Follow')]
-#[Route(path: '/users/{userId}/follows')]
+#[Route(path: '/users/current/follows')]
 class UpdateController extends AbstractController
 {
     public function __construct(
@@ -25,14 +25,11 @@ class UpdateController extends AbstractController
 
     #[OA\Response(response: 204, description: "Success")]
     #[OA\Response(response: 404, description: "Not found")]
-    #[Route(path: '/{userFollowId}/approval', name: 'user_follow_approval', methods: ['PATCH'])]
-    #[ParamConverter(data: 'user', converter: 'user.user_entity')]
-    public function approve(#[OA\PathParameter] string $userFollowId, User $user): Response
+    #[Route(path: '/{userFollowId}/approval', name: 'user_follow_approval', methods: ['PUT'])]
+    public function approve(#[OA\PathParameter] string $userFollowId): Response
     {
-        $this->denyAccessUnlessGranted(AuthorizationVoterInterface::UPDATE, $user);
-
-        $userFollow = $this->userFollowProvider->getByUserAndId(
-            $user->getId(),
+        $userFollow = $this->userFollowProvider->getByFollowingAndId(
+            $this->getUser()->getId(),
             Uuid::fromString($userFollowId)
         );
 
@@ -43,14 +40,11 @@ class UpdateController extends AbstractController
 
     #[OA\Response(response: 204, description: "Success")]
     #[OA\Response(response: 404, description: "Not found")]
-    #[Route(path: '/{userFollowId}/refusal', name: 'user_follow_refusal', methods: ['PATCH'])]
-    #[ParamConverter(data: 'user', converter: 'user.user_entity')]
-    public function refuse(#[OA\PathParameter] string $userFollowId, User $user): Response
+    #[Route(path: '/{userFollowId}/refusal', name: 'user_follow_refusal', methods: ['PUT'])]
+    public function refuse(#[OA\PathParameter] string $userFollowId): Response
     {
-        $this->denyAccessUnlessGranted(AuthorizationVoterInterface::UPDATE, $user);
-
-        $userFollow = $this->userFollowProvider->getByUserAndId(
-            $user->getId(),
+        $userFollow = $this->userFollowProvider->getByFollowingAndId(
+            $this->getUser()->getId(),
             Uuid::fromString($userFollowId)
         );
 

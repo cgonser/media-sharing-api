@@ -23,16 +23,16 @@ class Moment
     #[Assert\NotBlank]
     private User $user;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?string $mood = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?string $location = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $duration = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: "datetime", nullable: true)]
     private ?\DateTimeInterface $recordedAt = null;
 
     public function getId(): UuidInterface

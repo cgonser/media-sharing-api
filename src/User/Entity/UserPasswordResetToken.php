@@ -10,7 +10,7 @@ use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
 #[ORM\Entity(repositoryClass: UserPasswordResetTokenRepository::class)]
-#[ORM\Table()]
+#[ORM\Table]
 class UserPasswordResetToken implements TimestampableInterface
 {
     use TimestampableTrait;

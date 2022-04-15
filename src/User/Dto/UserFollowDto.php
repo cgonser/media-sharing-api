@@ -12,7 +12,7 @@ class UserFollowDto
 
     public PublicUserDto $following;
 
-    public ?bool $isApproved;
+    public ?bool $isApproved = null;
 
     public string $createdAt;
 

@@ -56,6 +56,7 @@ abstract class AbstractApiTest extends WebTestCase
         $user->setPassword(
             static::getContainer()->get(UserPasswordManager::class)->encodePassword($user, $userData['password'])
         );
+        $user->setIsProfilePrivate($userData['isProfilePrivate'] ?? false);
 
         static::getContainer()->get(UserManager::class)->create($user);
 
@@ -65,5 +66,13 @@ abstract class AbstractApiTest extends WebTestCase
     protected function promoteUser(User $user): void
     {
         static::getContainer()->get(UserManager::class)->promote($user);
+    }
+
+    public static function assertArraySubset($expected, $actual): void
+    {
+        foreach ($expected as $key => $value) {
+            static::assertArrayHasKey($key, $actual);
+            static::assertSame($value, $actual[$key]);
+        }
     }
 }

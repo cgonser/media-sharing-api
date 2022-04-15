@@ -65,6 +65,10 @@ class ApiExceptionEventSubscriber implements EventSubscriberInterface
             ]
         );
 
-        return new ApiJsonErrorResponse($e->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
+        $errorCode = $e->getCode() && $e->getCode() >= 100 && $e->getCode() <= 600
+            ? $e->getCode()
+            : Response::HTTP_INTERNAL_SERVER_ERROR;
+
+        return new ApiJsonErrorResponse($errorCode, $e->getMessage());
     }
 }

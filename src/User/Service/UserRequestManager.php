@@ -85,6 +85,10 @@ class UserRequestManager
             );
         }
 
+        if ($userRequest->has('isProfilePrivate')) {
+            $user->setIsProfilePrivate($userRequest->isProfilePrivate);
+        }
+
         if ($userRequest->has('isActive')) {
             $user->setIsActive($userRequest->isActive);
         }

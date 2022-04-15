@@ -38,5 +38,8 @@ class UserRequest extends AbstractRequest
     public ?bool $allowEmailMarketing;
 
     #[OA\Property]
+    public ?bool $isProfilePrivate;
+
+    #[OA\Property]
     public ?bool $isActive;
 }

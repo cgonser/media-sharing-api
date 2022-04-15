@@ -35,12 +35,11 @@ class CreateController extends AbstractController
     )]
     #[OA\Response(response: 400, description: "Invalid input")]
     #[Route(path: '/{followingId}', name: 'user_follow_create', methods: 'POST')]
-    #[ParamConverter(data: 'user', converter: 'user.user_entity')]
-    public function create(#[OA\PathParameter] string $followingId, User $user): Response
+    public function create(#[OA\PathParameter] string $followingId): Response
     {
         $following = $this->userProvider->get(Uuid::fromString($followingId));
 
-        $userFollow = $this->userFollowManager->follow($user, $following);
+        $userFollow = $this->userFollowManager->follow($this->getUser(), $following);
 
         return new ApiJsonResponse(
             Response::HTTP_CREATED,

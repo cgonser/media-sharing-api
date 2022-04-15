@@ -13,4 +13,10 @@ class UserFollowSearchRequest extends SearchRequest
 
     #[OA\Property]
     public ?string $followeeId = null;
+
+    #[OA\Property]
+    public ?bool $isPending = null;
+
+    #[OA\Property]
+    public ?bool $isApproved = null;
 }

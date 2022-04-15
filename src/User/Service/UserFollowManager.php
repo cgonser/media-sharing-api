@@ -7,6 +7,7 @@ use App\User\Entity\User;
 use App\User\Entity\UserFollow;
 use App\User\Provider\UserFollowProvider;
 use App\User\Repository\UserFollowRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class UserFollowManager
 {

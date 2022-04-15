@@ -2,7 +2,7 @@
 
 namespace App\User\Entity;
 
-use App\User\Repository\UserActivityRepository;
+use App\User\Repository\UserFollowRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
@@ -12,8 +12,8 @@ use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-#[ORM\Entity(repositoryClass: UserActivityRepository::class)]
-#[UniqueEntity(fields: ['follower', 'following'])]
+#[ORM\Entity(repositoryClass: UserFollowRepository::class)]
+#[UniqueEntity(fields: ['followerId', 'followingId'])]
 class UserFollow implements TimestampableInterface, SoftDeletableInterface
 {
     use TimestampableTrait;
@@ -24,19 +24,19 @@ class UserFollow implements TimestampableInterface, SoftDeletableInterface
     private UuidInterface $id;
 
     #[ORM\Column(type: 'uuid')]
-    private UuidInterface $followerId;
+    private ?UuidInterface $followerId = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    private User $follower;
+    private ?User $follower = null;
 
     #[ORM\Column(type: 'uuid')]
-    private UuidInterface $followingId;
+    private ?UuidInterface $followingId = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    private User $following;
+    private ?User $following = null;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    private ?bool $isApproved;
+    private ?bool $isApproved = null;
 
     public function getId(): ?UuidInterface
     {
@@ -63,6 +63,7 @@ class UserFollow implements TimestampableInterface, SoftDeletableInterface
     public function setFollower(User $follower): self
     {
         $this->follower = $follower;
+        $this->followerId = $follower->getId();
 
         return $this;
     }
@@ -87,6 +88,7 @@ class UserFollow implements TimestampableInterface, SoftDeletableInterface
     public function setFollowing(User $following): self
     {
         $this->following = $following;
+        $this->followingId = $following->getId();
 
         return $this;
     }

@@ -35,10 +35,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
 
     #[ORM\Column]
     #[Assert\NotBlank]
-    private string $name;
+    private ?string $name = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
-    private string $displayName;
+    private ?string $displayName = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $bio = null;
@@ -98,7 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
         return $this->id;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -110,7 +110,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
         return $this;
     }
 
-    public function getDisplayName(): string
+    public function getDisplayName(): ?string
     {
         return $this->displayName;
     }

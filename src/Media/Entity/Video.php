@@ -25,31 +25,31 @@ class Video
     #[Assert\NotBlank]
     private User $user;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?string $mood = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?string $thumbnail = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?array $locations = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $duration = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $likes = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $comments = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: "datetime", nullable: true)]
     private ?\DateTimeInterface $recordedAt = null;
 
-    #[ORM\ManyToOne(targetEntity: VideoMoment::class)]
+    #[ORM\OneToMany(mappedBy: 'video', targetEntity: VideoMoment::class, cascade: ["persist"])]
     private Collection $videoMoments;
 
     public function __construct()

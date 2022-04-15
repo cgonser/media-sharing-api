@@ -26,12 +26,11 @@ class DeleteController extends AbstractController
     #[OA\Response(response: 400, description: "Invalid input")]
     #[OA\Response(response: 404, description: "Resource not found")]
     #[Route(path: '/{followingId}', name: 'user_follow_delete', methods: 'DELETE')]
-    #[ParamConverter(data: 'user', converter: 'user.user_entity')]
-    public function delete(#[OA\PathParameter] string $followingId, User $user): Response
+    public function delete(#[OA\PathParameter] string $followingId): Response
     {
         $following = $this->userProvider->get(Uuid::fromString($followingId));
 
-        $this->userFollowManager->unfollow($user, $following);
+        $this->userFollowManager->unfollow($this->getUser(), $following);
 
         return new Response(null, Response::HTTP_NO_CONTENT);
     }
