@@ -98,7 +98,6 @@ class UpdateControllerTest extends AbstractUserTest
         $response = $client->getResponse();
         $this->assertJson($response->getContent());
         $responseData = json_decode($response->getContent(), true);
-
         static::assertSame(count($responseData), 0);
 
         $client->jsonRequest('GET', '/users/current/follows?isApproved=1');
@@ -106,7 +105,6 @@ class UpdateControllerTest extends AbstractUserTest
         $response = $client->getResponse();
         $this->assertJson($response->getContent());
         $responseData = json_decode($response->getContent(), true);
-
         static::assertSame(count($responseData), 0);
     }
 }

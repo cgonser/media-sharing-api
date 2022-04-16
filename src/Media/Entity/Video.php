@@ -52,9 +52,17 @@ class Video
     #[ORM\OneToMany(mappedBy: 'video', targetEntity: VideoMoment::class, cascade: ["persist"])]
     private Collection $videoMoments;
 
+    #[ORM\OneToMany(mappedBy: 'video', targetEntity: VideoLike::class, cascade: ["persist"])]
+    private Collection $videoLikes;
+
+    #[ORM\OneToMany(mappedBy: 'video', targetEntity: VideoComment::class, cascade: ["persist"])]
+    private Collection $videoComments;
+
     public function __construct()
     {
         $this->videoMoments = new ArrayCollection();
+        $this->videoLikes = new ArrayCollection();
+        $this->videoComments = new ArrayCollection();
     }
 
     public function getId(): UuidInterface
@@ -249,5 +257,15 @@ class Video
                 $this->videoMoments->removeElement($videoMoment);
             }
         }
+    }
+
+    public function getVideoLikes(): Collection
+    {
+        return $this->videoLikes;
+    }
+
+    public function getVideoComments(): Collection
+    {
+        return $this->videoComments;
     }
 }
