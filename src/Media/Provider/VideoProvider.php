@@ -38,11 +38,12 @@ class VideoProvider extends AbstractProvider
 
     protected function addFilters(QueryBuilder $queryBuilder, array $filters): void
     {
-        $queryBuilder->innerJoin('root.User', 'videoOwner');
+        $queryBuilder->innerJoin('root.user', 'videoOwner');
 
         if (isset($filters['root.followerId'])) {
             $queryBuilder->leftJoin('videoOwner.followers', 'follower', 'WITH', 'follower.isApproved = TRUE')
-                ->andWhere('videoOwner.isProfilePrivate = FALSE OR follower.followerId = ?', ':followerId');
+                ->andWhere('videoOwner.isProfilePrivate = FALSE OR follower.followerId = :followerId')
+                ->setParameter('followerId', $filters['root.followerId']);
 
             unset($filters['root.followerId']);
         } else {

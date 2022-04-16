@@ -119,5 +119,42 @@ class ReadControllerTest extends AbstractMediaTest
 
     public function testFind(): void
     {
+        $client = static::createClient();
+
+        $userData = $this->getUserDummyData();
+        $userData['email'] = 'test-user-1@itinair.com';
+        $userData['isProfilePrivate'] = true;
+        $user = $this->createUserDummy($userData);
+
+        $followerData = $this->getUserDummyData();
+        $followerData['email'] = 'test-user-2@itinair.com';
+        $follower = $this->createUserDummy($followerData);
+
+        $nonFollowerData = $this->getUserDummyData();
+        $nonFollowerData['email'] = 'test-user-3@itinair.com';
+        $nonFollower = $this->createUserDummy($nonFollowerData);
+
+        static::getContainer()->get(UserFollowManager::class)->approve(
+            static::getContainer()->get(UserFollowManager::class)->follow($follower, $user)
+        );
+
+        $createData = $this->getVideoDummyData();
+        $this->authenticateClient($client, $userData['email'], $userData['password']);
+
+        $client->jsonRequest('POST', '/videos', $createData);
+        static::assertResponseStatusCodeSame('201');
+        $createResponseData = json_decode($client->getResponse()->getContent(), true);
+
+        $this->authenticateClient($client, $followerData['email'], $followerData['password']);
+        $client->jsonRequest('GET', '/videos');
+        static::assertResponseStatusCodeSame('200');
+        $findResponseData = json_decode($client->getResponse()->getContent(), true);
+        static::assertCount(1, $findResponseData);
+
+        $this->authenticateClient($client, $nonFollowerData['email'], $nonFollowerData['password']);
+        $client->jsonRequest('GET', '/videos');
+        static::assertResponseStatusCodeSame('200');
+        $findResponseData = json_decode($client->getResponse()->getContent(), true);
+        static::assertCount(0, $findResponseData);
     }
 }
