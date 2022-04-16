@@ -9,7 +9,6 @@ use App\Media\Provider\MomentProvider;
 use App\Media\Request\MomentRequest;
 use App\Media\ResponseMapper\MomentResponseMapper;
 use App\Media\Service\MomentRequestManager;
-use App\User\Entity\User;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Ramsey\Uuid\Uuid;
@@ -39,7 +38,6 @@ class UpdateController extends AbstractController
     #[OA\Response(response: 400, description: "Invalid input")]
     #[OA\Response(response: 404, description: "Not found")]
     #[Route(path: '/{momentId}', name: 'moments_update', methods: ['PATCH', 'PUT'])]
-    #[ParamConverter(data: 'user', converter: 'user.user_entity')]
     #[ParamConverter(
         data: 'momentRequest',
         options: ['deserializationContext' => ['allow_extra_attributes' => false]],
@@ -48,11 +46,10 @@ class UpdateController extends AbstractController
     public function update(
         #[OA\PathParameter] string $momentId,
         MomentRequest $momentRequest,
-        User $user,
         ConstraintViolationListInterface $validationErrors,
     ): Response {
         $moment = $this->momentProvider->getByUserAndId(
-            $user->getId(),
+            $this->getUser()->getId(),
             Uuid::fromString($momentId)
         );
 

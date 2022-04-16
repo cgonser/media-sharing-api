@@ -10,6 +10,11 @@ use DateTimeInterface;
 
 class VideoResponseMapper
 {
+    public function __construct(
+        private MomentResponseMapper $momentResponseMapper,
+    ) {
+    }
+
     public function map(Video $video): VideoDto
     {
         $videoDto = new VideoDto();
@@ -46,6 +51,7 @@ class VideoResponseMapper
         foreach ($videoMoments as $videoMoment) {
             $videoMomentDto = new VideoMomentDto();
             $videoMomentDto->momentId = $videoMoment->getMoment()->getId();
+            $videoMomentDto->moment = $this->momentResponseMapper->map($videoMoment->getMoment());
             $videoMomentDto->position = $videoMoment->getPosition();
 
             $videoMomentDtos[] = $videoMomentDto;

@@ -3,7 +3,6 @@
 namespace App\Tests\Api\Media\Video;
 
 use App\Tests\Api\Media\AbstractMediaTest;
-use Ramsey\Uuid\Uuid;
 
 class CreateControllerTest extends AbstractMediaTest
 {
@@ -48,12 +47,7 @@ class CreateControllerTest extends AbstractMediaTest
         $this->createUserDummy();
         $this->authenticateClient($client, $userData['email'], $userData['password']);
 
-        $momentRequestData = [
-            'mood' => 'happy',
-            'location' => 'Luxembourg',
-            'duration' => 3,
-            'recordedAt' => (new \DateTime())->format(\DateTimeInterface::ATOM),
-        ];
+        $momentRequestData = $this->getMomentDummyData();
         $client->jsonRequest('POST', '/moments', $momentRequestData);
         static::assertResponseStatusCodeSame('201');
         static::assertResponseHeaderSame('Content-Type', 'application/json');
@@ -61,21 +55,12 @@ class CreateControllerTest extends AbstractMediaTest
         $this->assertJson($response->getContent());
         $momentResponseData = json_decode($response->getContent(), true);
 
-        $videoRequestData = [
-            'description' => 'Video Description',
-            'mood' => 'happy',
-            'locations' => [
-                'Luxembourg',
-                'Italy',
-            ],
-            'moments' => [
-                [
-                    'momentId' => $momentResponseData['id'],
-                    'position' => 1,
-                ]
-            ],
-            'duration' => 9,
-            'recordedAt' => (new \DateTime())->format(\DateTimeInterface::ATOM),
+        $videoRequestData = $this->getVideoDummyData();
+        $videoRequestData['moments'] = [
+            [
+                'position' => 1,
+                'momentId' => $momentResponseData['id'],
+            ]
         ];
 
         $client->jsonRequest('POST', '/videos', $videoRequestData);
@@ -84,6 +69,7 @@ class CreateControllerTest extends AbstractMediaTest
         $response = $client->getResponse();
         $this->assertJson($response->getContent());
         $videoResponseData = json_decode($response->getContent(), true);
+        $videoRequestData['moments'][0]['moment'] = $momentResponseData;
 
         self::assertArraySubset($videoRequestData, $videoResponseData);
     }

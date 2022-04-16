@@ -67,7 +67,7 @@ abstract class AbstractUserAuthorizationVoter extends Voter implements Authoriza
 
     protected function userCanModifyEntity(object $subject, User $user): bool
     {
-        return $user->hasRole(User::ROLE_ADMIN) || $user === $subject->getUser();
+        return $user === $subject->getUser();
     }
 
     protected function canCreate($subject, User $user): bool

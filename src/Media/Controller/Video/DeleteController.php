@@ -6,10 +6,8 @@ use App\Core\Response\ApiJsonResponse;
 use App\Core\Security\AuthorizationVoterInterface;
 use App\Media\Provider\VideoProvider;
 use App\Media\Service\VideoManager;
-use App\User\Entity\User;
 use OpenApi\Attributes as OA;
 use Ramsey\Uuid\Uuid;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,11 +25,10 @@ class DeleteController extends AbstractController
     #[OA\Response(response: 204, description: "Success")]
     #[OA\Response(response: 404, description: "Media not found")]
     #[Route(path: '/{videoId}', name: 'videos_delete', methods: ['DELETE'])]
-    #[ParamConverter(data: 'user', converter: 'user.user_entity')]
-    public function delete(User $user, #[OA\PathParameter] string $videoId): Response
+    public function delete(#[OA\PathParameter] string $videoId): Response
     {
         $video = $this->videoProvider->getByUserAndId(
-            $user->getId(),
+            $this->getUser()->getId(),
             Uuid::fromString($videoId)
         );
 

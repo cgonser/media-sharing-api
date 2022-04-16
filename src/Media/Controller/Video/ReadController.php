@@ -44,9 +44,7 @@ class ReadController extends AbstractController
     {
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::FIND, Video::class);
 
-        if (!$this->getUser()->hasRole(User::ROLE_ADMIN)) {
-            $searchRequest->userId = $this->getUser()->getId()->toString();
-        }
+        $searchRequest->followerId = $this->getUser()->getId()->toString();
 
         $results = $this->videoProvider->search($searchRequest);
         $count = $this->videoProvider->count($searchRequest);

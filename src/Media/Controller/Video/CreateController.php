@@ -47,9 +47,7 @@ class CreateController extends AbstractController
     ): Response {
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::CREATE, Video::class);
 
-        if (!$videoRequest->has('userId') || !$this->getUser()->hasRole(User::ROLE_ADMIN)) {
-            $videoRequest->userId = $this->getUser()->getId()->toString();
-        }
+        $videoRequest->userId = $this->getUser()->getId()->toString();
 
         $video = $this->videoManager->createFromRequest($videoRequest);
 

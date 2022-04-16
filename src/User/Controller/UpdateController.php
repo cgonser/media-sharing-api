@@ -39,9 +39,11 @@ class UpdateController extends AbstractController
         options: ['deserializationContext' => ['allow_extra_attributes' => false]],
         converter: 'fos_rest.request_body'
     )]
-    #[ParamConverter(data: 'user', converter: 'user.user_entity')]
-    public function update(User $user, UserRequest $userRequest): Response
+    public function update(UserRequest $userRequest): Response
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::UPDATE, $user);
 
         $this->userManager->updateFromRequest($user, $userRequest);

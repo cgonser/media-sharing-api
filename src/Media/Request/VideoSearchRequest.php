@@ -16,4 +16,7 @@ class VideoSearchRequest extends SearchRequest
 
     #[OA\Property]
     public ?string $userId = null;
+
+    #[OA\Property]
+    public ?string $followerId = null;
 }

@@ -23,6 +23,9 @@ class UserRequest extends AbstractRequest
     public ?string $profilePicture;
 
     #[OA\Property]
+    public ?string $phoneNumber;
+
+    #[OA\Property]
     public ?string $country;
 
     #[OA\Property]

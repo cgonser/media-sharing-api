@@ -10,16 +10,16 @@ class DeleteControllerTest extends AbstractUserTest
     {
         $client = static::createClient();
 
-        $user1Data = $this->getUserDummyData();
-        $user1Data['email'] = 'test-user-1@itinair.com';
-        $this->createUserDummy($user1Data);
+        $followerData = $this->getUserDummyData();
+        $followerData['email'] = 'test-user-1@itinair.com';
+        $this->createUserDummy($followerData);
 
-        $user2Data = $this->getUserDummyData();
-        $user2Data['email'] = 'test-user-2@itinair.com';
-        $user2 = $this->createUserDummy($user2Data);
+        $userData = $this->getUserDummyData();
+        $userData['email'] = 'test-user-2@itinair.com';
+        $user = $this->createUserDummy($userData);
 
-        $this->authenticateClient($client, $user1Data['email'], $user1Data['password']);
-        $client->jsonRequest('POST', '/users/current/follows/'.$user2->getId()->toString());
+        $this->authenticateClient($client, $followerData['email'], $followerData['password']);
+        $client->jsonRequest('POST', '/users/current/follows/'.$user->getId()->toString());
         static::assertResponseStatusCodeSame('201');
 
         $client->jsonRequest('GET', '/users/current/follows');

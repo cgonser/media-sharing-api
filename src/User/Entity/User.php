@@ -3,6 +3,8 @@
 namespace App\User\Entity;
 
 use App\User\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
@@ -55,6 +57,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
     private array $roles = [];
 
     #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $phoneNumber = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $country = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
@@ -92,6 +97,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $adminNotes = null;
+
+    #[ORM\OneToMany(mappedBy: 'following', targetEntity: UserFollow::class)]
+    private Collection $followers;
+
+    #[ORM\OneToMany(mappedBy: 'follower', targetEntity: UserFollow::class)]
+    private Collection $following;
+
+    public function __construct()
+    {
+        $this->followers = new ArrayCollection();
+        $this->following = new ArrayCollection();
+    }
 
     public function getId(): UuidInterface
     {
@@ -154,6 +171,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
     public function setPassword(?string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(?string $phoneNumber): self
+    {
+        $this->phoneNumber = $phoneNumber;
 
         return $this;
     }

@@ -14,9 +14,9 @@ class UserDto
 
     public ?string $email;
 
-    public ?string $phone;
-
     public ?string $profilePicture;
+
+    public ?string $phoneNumber;
 
     public ?string $country;
 

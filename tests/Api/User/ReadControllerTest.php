@@ -2,6 +2,8 @@
 
 namespace App\Tests\Api\User;
 
+use App\User\Service\UserFollowManager;
+
 class ReadControllerTest extends AbstractUserTest
 {
     public function testGet(): void
@@ -48,28 +50,87 @@ class ReadControllerTest extends AbstractUserTest
 
         $response = $client->getResponse();
         $this->assertJson($response->getContent());
-
         $responseData = json_decode($response->getContent(), true);
+
         $this->assertSame($requestData['name'], $responseData['name']);
         $this->assertSame($requestData['email'], $responseData['email']);
         $this->assertTrue($responseData['isActive']);
     }
 
-    public function testGetAnother(): void
+    public function testGetAnotherPublic(): void
     {
         $client = static::createClient();
 
-        $requestData = $this->getUserDummyData();
-        $this->createUserDummy();
+        $userData = $this->getUserDummyData();
+        $this->createUserDummy($userData);
 
-        $secondUserData = $requestData;
+        $secondUserData = $this->getUserDummyData();
+        $secondUserData['displayName'] = 'This is the Display Name';
         $secondUserData['email'] = 'another-test@itinair.com';
+        $secondUserData['phoneNumber'] = '999999999';
         $secondUser = $this->createUserDummy($secondUserData);
 
-        $this->authenticateClient($client, $requestData['email'], $requestData['password']);
+        $this->authenticateClient($client, $userData['email'], $userData['password']);
 
         $client->jsonRequest('GET', '/users/'.$secondUser->getId()->toString());
+        static::assertResponseStatusCodeSame('200');
 
+        $response = $client->getResponse();
+        $this->assertJson($response->getContent());
+        $responseData = json_decode($response->getContent(), true);
+
+        self::assertArrayHasKey('displayName', $responseData);
+        self::assertSame($secondUserData['displayName'], $responseData['displayName']);
+        self::assertArrayNotHasKey('email', $responseData);
+        self::assertArrayNotHasKey('phoneNumber', $responseData);
+    }
+
+    public function testGetAnotherPrivateNotFollowing(): void
+    {
+        $client = static::createClient();
+
+        $privateUserData = $this->getUserDummyData();
+        $privateUserData['isProfilePrivate'] = true;
+        $privateUser = $this->createUserDummy($privateUserData);
+
+        $secondUserData = $this->getUserDummyData();
+        $secondUserData['email'] = 'another-test@itinair.com';
+        $this->createUserDummy($secondUserData);
+
+        $this->authenticateClient($client, $secondUserData['email'], $secondUserData['password']);
+
+        $client->jsonRequest('GET', '/users/'.$privateUser->getId()->toString());
         static::assertResponseStatusCodeSame('403');
+    }
+
+    public function testGetAnotherPrivateFollowing(): void
+    {
+        $client = static::createClient();
+
+        $privateUserData = $this->getUserDummyData();
+        $privateUserData['displayName'] = 'This is a private profile';
+        $privateUserData['isProfilePrivate'] = true;
+        $privateUser = $this->createUserDummy($privateUserData);
+
+        $followerData = $this->getUserDummyData();
+        $followerData['email'] = 'another-test@itinair.com';
+        $follower = $this->createUserDummy($followerData);
+
+        static::getContainer()->get(UserFollowManager::class)->approve(
+            static::getContainer()->get(UserFollowManager::class)->follow($follower, $privateUser)
+        );
+
+        $this->authenticateClient($client, $followerData['email'], $followerData['password']);
+        $client->jsonRequest('GET', '/users/'.$privateUser->getId()->toString());
+        static::assertResponseStatusCodeSame('200');
+
+        $response = $client->getResponse();
+        $this->assertJson($response->getContent());
+        $responseData = json_decode($response->getContent(), true);
+
+        self::assertArrayHasKey('displayName', $responseData);
+        self::assertSame($privateUserData['displayName'], $responseData['displayName']);
+        self::assertArrayNotHasKey('email', $responseData);
+        self::assertArrayNotHasKey('phoneNumber', $responseData);
     }
 }

@@ -47,9 +47,7 @@ class CreateController extends AbstractController
     ): Response {
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::CREATE, Moment::class);
 
-        if (!$momentRequest->has('userId') || !$this->getUser()->hasRole(User::ROLE_ADMIN)) {
-            $momentRequest->userId = $this->getUser()->getId()->toString();
-        }
+        $momentRequest->userId = $this->getUser()->getId()->toString();
 
         $moment = $this->momentManager->createFromRequest($momentRequest);
 

@@ -63,6 +63,10 @@ class UserRequestManager
             $user->setPassword($this->userPasswordManager->encodePassword($user, $userRequest->password));
         }
 
+        if ($userRequest->has('phoneNumber')) {
+            $user->setPhoneNumber($userRequest->phoneNumber);
+        }
+
         if ($userRequest->has('country')) {
             $user->setCountry($userRequest->country);
         }

@@ -4,7 +4,10 @@ namespace App\Media\Dto;
 
 class VideoMomentDto
 {
+    public ?int $position;
+
     public ?string $momentId;
 
-    public ?int $position;
+    public ?MomentDto $moment;
+
 }

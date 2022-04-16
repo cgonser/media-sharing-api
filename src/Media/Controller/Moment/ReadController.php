@@ -44,9 +44,7 @@ class ReadController extends AbstractController
     {
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::FIND, Moment::class);
 
-        if (!$this->getUser()->hasRole(User::ROLE_ADMIN)) {
-            $searchRequest->userId = $this->getUser()->getId()->toString();
-        }
+        $searchRequest->userId = $this->getUser()->getId()->toString();
 
         $results = $this->momentProvider->search($searchRequest);
         $count = $this->momentProvider->count($searchRequest);

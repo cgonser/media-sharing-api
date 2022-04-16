@@ -53,7 +53,11 @@ class ReadController extends AbstractController
     {
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::READ, $user);
 
-        // TODO: map public or private
-        return new ApiJsonResponse(Response::HTTP_OK, $this->userResponseMapper->map($user));
+        return new ApiJsonResponse(
+            Response::HTTP_OK,
+            $user->getId()->equals($this->getUser()->getId())
+                ? $this->userResponseMapper->map($user)
+                : $this->userResponseMapper->mapPublic($user)
+        );
     }
 }

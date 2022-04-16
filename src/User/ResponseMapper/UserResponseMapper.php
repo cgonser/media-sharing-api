@@ -25,6 +25,7 @@ class UserResponseMapper
         $userDto->email = $user->getEmail();
         $userDto->timezone = $user->getTimezone();
         $userDto->locale = $user->getLocale();
+        $userDto->phoneNumber = $user->getPhoneNumber();
         $userDto->country = $user->getCountry();
         $userDto->allowEmailMarketing = $user->allowEmailMarketing();
         $userDto->isProfilePrivate = $user->isProfilePrivate();

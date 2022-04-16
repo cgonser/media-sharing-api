@@ -10,28 +10,28 @@ class UpdateControllerTest extends AbstractUserTest
     {
         $client = static::createClient();
 
-        $user1Data = $this->getUserDummyData();
-        $user1Data['email'] = 'test-user-1@itinair.com';
-        $this->createUserDummy($user1Data);
+        $follower1Data = $this->getUserDummyData();
+        $follower1Data['email'] = 'test-user-1@itinair.com';
+        $this->createUserDummy($follower1Data);
 
-        $user2Data = $this->getUserDummyData();
-        $user2Data['email'] = 'test-user-2@itinair.com';
-        $this->createUserDummy($user2Data);
+        $follower2Data = $this->getUserDummyData();
+        $follower2Data['email'] = 'test-user-2@itinair.com';
+        $this->createUserDummy($follower2Data);
 
-        $user3Data = $this->getUserDummyData();
-        $user3Data['email'] = 'test-user-3@itinair.com';
-        $user3Data['isProfilePrivate'] = true;
-        $user3 = $this->createUserDummy($user3Data);
+        $userData = $this->getUserDummyData();
+        $userData['email'] = 'test-user-3@itinair.com';
+        $userData['isProfilePrivate'] = true;
+        $user = $this->createUserDummy($userData);
 
-        $this->authenticateClient($client, $user1Data['email'], $user1Data['password']);
-        $client->jsonRequest('POST', '/users/current/follows/'.$user3->getId()->toString());
+        $this->authenticateClient($client, $follower1Data['email'], $follower1Data['password']);
+        $client->jsonRequest('POST', '/users/current/follows/'.$user->getId()->toString());
         static::assertResponseStatusCodeSame('201');
 
-        $this->authenticateClient($client, $user2Data['email'], $user2Data['password']);
-        $client->jsonRequest('POST', '/users/current/follows/'.$user3->getId()->toString());
+        $this->authenticateClient($client, $follower2Data['email'], $follower2Data['password']);
+        $client->jsonRequest('POST', '/users/current/follows/'.$user->getId()->toString());
         static::assertResponseStatusCodeSame('201');
 
-        $this->authenticateClient($client, $user3Data['email'], $user3Data['password']);
+        $this->authenticateClient($client, $userData['email'], $userData['password']);
 
         $client->jsonRequest('GET', '/users/current/follows?isPending=1');
         static::assertResponseStatusCodeSame('200');
@@ -54,32 +54,33 @@ class UpdateControllerTest extends AbstractUserTest
 
         static::assertSame(count($responseData), $pendingApprovals);
     }
+
     public function testFollowRefuse(): void
     {
         $client = static::createClient();
 
-        $user1Data = $this->getUserDummyData();
-        $user1Data['email'] = 'test-user-1@itinair.com';
-        $this->createUserDummy($user1Data);
+        $follower1Data = $this->getUserDummyData();
+        $follower1Data['email'] = 'test-user-1@itinair.com';
+        $this->createUserDummy($follower1Data);
 
-        $user2Data = $this->getUserDummyData();
-        $user2Data['email'] = 'test-user-2@itinair.com';
-        $this->createUserDummy($user2Data);
+        $follower2Data = $this->getUserDummyData();
+        $follower2Data['email'] = 'test-user-2@itinair.com';
+        $this->createUserDummy($follower2Data);
 
-        $user3Data = $this->getUserDummyData();
-        $user3Data['email'] = 'test-user-3@itinair.com';
-        $user3Data['isProfilePrivate'] = true;
-        $user3 = $this->createUserDummy($user3Data);
+        $userData = $this->getUserDummyData();
+        $userData['email'] = 'test-user-3@itinair.com';
+        $userData['isProfilePrivate'] = true;
+        $user = $this->createUserDummy($userData);
 
-        $this->authenticateClient($client, $user1Data['email'], $user1Data['password']);
-        $client->jsonRequest('POST', '/users/current/follows/'.$user3->getId()->toString());
+        $this->authenticateClient($client, $follower1Data['email'], $follower1Data['password']);
+        $client->jsonRequest('POST', '/users/current/follows/'.$user->getId()->toString());
         static::assertResponseStatusCodeSame('201');
 
-        $this->authenticateClient($client, $user2Data['email'], $user2Data['password']);
-        $client->jsonRequest('POST', '/users/current/follows/'.$user3->getId()->toString());
+        $this->authenticateClient($client, $follower2Data['email'], $follower2Data['password']);
+        $client->jsonRequest('POST', '/users/current/follows/'.$user->getId()->toString());
         static::assertResponseStatusCodeSame('201');
 
-        $this->authenticateClient($client, $user3Data['email'], $user3Data['password']);
+        $this->authenticateClient($client, $userData['email'], $userData['password']);
 
         $client->jsonRequest('GET', '/users/current/follows?isPending=1');
         static::assertResponseStatusCodeSame('200');

@@ -39,7 +39,6 @@ class UpdateController extends AbstractController
     #[OA\Response(response: 400, description: "Invalid input")]
     #[OA\Response(response: 404, description: "Not found")]
     #[Route(path: '/{videoId}', name: 'videos_update', methods: ['PATCH', 'PUT'])]
-    #[ParamConverter(data: 'user', converter: 'user.user_entity')]
     #[ParamConverter(
         data: 'videoRequest',
         options: ['deserializationContext' => ['allow_extra_attributes' => false]],
@@ -48,11 +47,10 @@ class UpdateController extends AbstractController
     public function update(
         #[OA\PathParameter] string $videoId,
         VideoRequest $videoRequest,
-        User $user,
         ConstraintViolationListInterface $validationErrors,
     ): Response {
         $video = $this->videoProvider->getByUserAndId(
-            $user->getId(),
+            $this->getUser()->getId(),
             Uuid::fromString($videoId)
         );
 

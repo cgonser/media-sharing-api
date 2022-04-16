@@ -1,33 +1,31 @@
 <?php
 
-namespace App\Tests\Api\Media\Moment;
+namespace App\Tests\Api\Media\Video;
 
 use App\Tests\Api\Media\AbstractMediaTest;
 
-class CreateControllerTest extends AbstractMediaTest
+class DeleteControllerTest extends AbstractMediaTest
 {
-    public function testCreate(): void
+    public function testDeleteVideo(): void
     {
         $client = static::createClient();
         $userData = $this->getUserDummyData();
         $this->createUserDummy();
-
-        $requestData = $this->getMomentDummyData();
-
-        $client->jsonRequest('POST', '/moments', $requestData);
-        static::assertResponseStatusCodeSame('401');
-
         $this->authenticateClient($client, $userData['email'], $userData['password']);
-        $client->jsonRequest('POST', '/moments', $requestData);
+
+        $requestData = $this->getVideoDummyData();
+        $client->jsonRequest('POST', '/videos', $requestData);
         static::assertResponseStatusCodeSame('201');
         static::assertResponseHeaderSame('Content-Type', 'application/json');
 
         $response = $client->getResponse();
-
         $this->assertJson($response->getContent());
-
         $responseData = json_decode($response->getContent(), true);
 
-        self::assertArraySubset($requestData, $responseData);
+        $client->jsonRequest('DELETE', '/videos/'.$responseData['id']);
+        static::assertResponseStatusCodeSame('204');
+
+        $client->jsonRequest('GET', '/videos/'.$responseData['id']);
+        static::assertResponseStatusCodeSame('404');
     }
 }

@@ -3,25 +3,19 @@
 namespace App\User\Security;
 
 use App\User\Entity\User;
+use App\User\Provider\UserFollowProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class UserVoter extends AbstractUserAuthorizationVoter
 {
-    public const MODIFY_ROLES = 'modify_roles';
+    public function __construct(
+        private UserFollowProvider $userFollowProvider,
+    ) {
+    }
 
     public function isSubjectSupported($subject): bool
     {
         return $subject instanceof User || User::class === $subject;
-    }
-
-    protected function getActionsHandled(): array
-    {
-        return array_merge(
-            parent::getActionsHandled(),
-            [
-                self::MODIFY_ROLES,
-            ]
-        );
     }
 
     public function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
@@ -35,16 +29,21 @@ class UserVoter extends AbstractUserAuthorizationVoter
 
     protected function userCanModifyEntity(object $subject, User $user): bool
     {
-        return $user->hasRole(User::ROLE_ADMIN) || $user === $subject;
+        return $user === $subject;
     }
 
     protected function canFind($subject, User $user): bool
     {
-        return $user->hasRole(User::ROLE_ADMIN);
+        return true;
     }
 
-    protected function canModifyRoles($subject, User $user): bool
+    /**
+     * @param User $subject
+     */
+    protected function canRead($subject, User $user): bool
     {
-        return $user->hasRole(User::ROLE_ADMIN);
+        return $user->getId()->equals($subject->getId())
+            || !$subject->isProfilePrivate()
+            || $this->userFollowProvider->isFollowing($user->getId(), $subject->getId());
     }
 }

@@ -52,6 +52,8 @@ abstract class AbstractApiTest extends WebTestCase
 
         $user = new User();
         $user->setName($userData['name']);
+        $user->setDisplayName($userData['displayName'] ?? $userData['name']);
+        $user->setPhoneNumber($userData['phoneNumber'] ?? null);
         $user->setEmail($userData['email']);
         $user->setPassword(
             static::getContainer()->get(UserPasswordManager::class)->encodePassword($user, $userData['password'])
