@@ -40,6 +40,20 @@ class VideoProvider extends AbstractProvider
     {
         $queryBuilder->innerJoin('root.user', 'videoOwner');
 
+        if (isset($filters['root.location'])) {
+            $queryBuilder->andWhere('JSONB_EXISTS(root.locations, :location) = TRUE')
+                ->setParameter('location', $filters['root.location']);
+
+            unset ($filters['root.location']);
+        }
+
+        if (isset($filters['root.mood'])) {
+            $queryBuilder->andWhere('JSONB_EXISTS(root.moods, :mood) = TRUE')
+                ->setParameter('mood', $filters['root.mood']);
+
+            unset ($filters['root.mood']);
+        }
+
         if (isset($filters['root.followerId'])) {
             $queryBuilder->leftJoin('videoOwner.followers', 'follower', 'WITH', 'follower.isApproved = TRUE')
                 ->andWhere('videoOwner.isProfilePrivate = FALSE OR follower.followerId = :followerId')

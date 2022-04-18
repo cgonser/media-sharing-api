@@ -143,7 +143,6 @@ class ReadControllerTest extends AbstractMediaTest
 
         $client->jsonRequest('POST', '/videos', $createData);
         static::assertResponseStatusCodeSame('201');
-        $createResponseData = json_decode($client->getResponse()->getContent(), true);
 
         $this->authenticateClient($client, $followerData['email'], $followerData['password']);
         $client->jsonRequest('GET', '/videos');

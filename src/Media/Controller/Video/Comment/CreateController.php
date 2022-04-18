@@ -34,7 +34,6 @@ class CreateController extends AbstractController
         description: "Success",
         content: new OA\JsonContent(ref: new Model(type: VideoCommentDto::class)))
     ]
-    #[OA\Response(response: 201, description: "Success")]
     #[OA\Response(response: 400, description: "Invalid input")]
     #[OA\Response(response: 404, description: "Not found")]
     #[Route(name: 'videos_comments_create', methods: ['POST'])]

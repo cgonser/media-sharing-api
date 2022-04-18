@@ -23,7 +23,7 @@ class CreateControllerTest extends AbstractMediaTest
         $this->authenticateClient($client, $nonFollowerData['email'], $nonFollowerData['password']);
 
         $client->jsonRequest('POST', '/videos/'.$videoResponseData['id'].'/comments', ['comment' => 'my comment']);
-        static::assertResponseStatusCodeSame('204');
+        static::assertResponseStatusCodeSame('201');
     }
 
     public function testCommentPrivateVideoNonFollower(): void
@@ -67,6 +67,6 @@ class CreateControllerTest extends AbstractMediaTest
 
         $this->authenticateClient($client, $followerData['email'], $followerData['password']);
         $client->jsonRequest('POST', '/videos/'.$videoResponseData['id'].'/comments', ['comment' => 'my comment']);
-        static::assertResponseStatusCodeSame('204');
+        static::assertResponseStatusCodeSame('201');
     }
 }

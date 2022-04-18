@@ -47,8 +47,8 @@ class VideoRequestManager
             $video->setDescription($videoRequest->description);
         }
 
-        if ($videoRequest->has('mood')) {
-            $video->setMood($videoRequest->mood);
+        if ($videoRequest->has('moods')) {
+            $video->setMoods($videoRequest->moods);
         }
 
         if ($videoRequest->has('thumbnail')) {

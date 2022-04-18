@@ -12,16 +12,7 @@ class CreateControllerTest extends AbstractMediaTest
         $userData = $this->getUserDummyData();
         $this->createUserDummy();
 
-        $requestData = [
-            'description' => 'Video Description',
-            'mood' => 'happy',
-            'locations' => [
-                'Luxembourg',
-                'Italy',
-            ],
-            'duration' => 9,
-            'recordedAt' => (new \DateTime())->format(\DateTimeInterface::ATOM),
-        ];
+        $requestData = $this->getVideoDummyData();
 
         $client->jsonRequest('POST', '/videos', $requestData);
         static::assertResponseStatusCodeSame('401');

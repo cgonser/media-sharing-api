@@ -21,13 +21,12 @@ class VideoResponseMapper
         $videoDto->id = $video->getId()->toString();
         $videoDto->userId = $video->getUser()->getId()->toString();
         $videoDto->description = $video->getDescription();
-        $videoDto->mood = $video->getMood();
+        $videoDto->moods = $video->getMoods();
         $videoDto->thumbnail = $video->getThumbnail();
         $videoDto->locations = $video->getLocations();
         $videoDto->moments = $this->mapMultipleVideoMoments($videoDto, $video->getVideoMoments()->toArray());
         $videoDto->duration = $video->getDuration();
         $videoDto->recordedAt = $video->getRecordedAt()?->format(DateTimeInterface::ATOM);
-
 
         return $videoDto;
     }

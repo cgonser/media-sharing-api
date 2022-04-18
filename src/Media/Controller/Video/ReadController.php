@@ -46,6 +46,10 @@ class ReadController extends AbstractController
 
         $searchRequest->followerId = $this->getUser()->getId()->toString();
 
+        if ('current' === $searchRequest->userId) {
+            $searchRequest->userId = $this->getUser()->getId()->toString();
+        }
+
         $results = $this->videoProvider->search($searchRequest);
         $count = $this->videoProvider->count($searchRequest);
 

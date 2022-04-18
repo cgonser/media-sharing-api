@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e6d65f6ad0eab89e3dc9ff6375a8273",
+    "content-hash": "707e7dc8417b7275e8cd041034403834",
     "packages": [
         {
             "name": "async-aws/core",
@@ -3581,6 +3581,83 @@
                 }
             ],
             "time": "2022-04-08T12:31:19+00:00"
+        },
+        {
+            "name": "martin-georgiev/postgresql-for-doctrine",
+            "version": "v1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/martin-georgiev/postgresql-for-doctrine.git",
+                "reference": "6b515bf979d9cfec23af1bf6ca93aa75ef79d58c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/martin-georgiev/postgresql-for-doctrine/zipball/6b515bf979d9cfec23af1bf6ca93aa75ef79d58c",
+                "reference": "6b515bf979d9cfec23af1bf6ca93aa75ef79d58c",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/dbal": "~2.5||~3.0",
+                "ext-ctype": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": "^7.2||^8.0"
+            },
+            "require-dev": {
+                "doctrine/orm": "~2.5||~3.0",
+                "friendsofphp/php-cs-fixer": "^3.2",
+                "php-coveralls/php-coveralls": "^2.5",
+                "phpstan/phpstan": "^1.1",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^8.5||^9.5",
+                "qossmic/deptrac-shim": "^0.14",
+                "symfony/cache": "^4.0||^5.0||^6.0"
+            },
+            "suggest": {
+                "doctrine/orm": "~2.5||~3.0",
+                "php": "^7.4||^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MartinGeorgiev\\": "src/MartinGeorgiev/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Martin Georgiev",
+                    "email": "martin.georgiev@gmail.com",
+                    "role": "author"
+                }
+            ],
+            "description": "Adds PostgreSQL enhancements to Doctrine. Provides support for JSON, JSONB and some array data types. Provides functions, operators and common expressions used when working with JSON data, arrays and features related to text search.",
+            "keywords": [
+                "array data types",
+                "dbal",
+                "doctrine",
+                "json",
+                "jsonb",
+                "martin georgiev",
+                "postgres",
+                "postgresql",
+                "text search",
+                "tsvector"
+            ],
+            "support": {
+                "issues": "https://github.com/martin-georgiev/postgresql-for-doctrine/issues",
+                "source": "https://github.com/martin-georgiev/postgresql-for-doctrine/tree/v1.7.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/martin-georgiev",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-02-10T17:41:35+00:00"
         },
         {
             "name": "maxmind-db/reader",
@@ -14384,5 +14461,5 @@
         "ext-pdo": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }

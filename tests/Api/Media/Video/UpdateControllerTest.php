@@ -24,7 +24,9 @@ class UpdateControllerTest extends AbstractMediaTest
 
         $updateRequest = [
             'description' => 'This is a new description',
-            'mood' => 'joy',
+            'moods' => [
+                'angry',
+            ],
             'locations' => ['London'],
             'duration' => 12,
         ];

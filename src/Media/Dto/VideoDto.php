@@ -15,7 +15,8 @@ class VideoDto
 
     public ?string $thumbnail;
 
-    public ?string $mood;
+    #[OA\Property(type: "array", items: new OA\Items(type: "string"))]
+    public ?array $moods;
 
     #[OA\Property(type: "array", items: new OA\Items(type: "string"))]
     public ?array $locations;

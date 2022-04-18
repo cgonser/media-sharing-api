@@ -21,16 +21,16 @@ class DeleteControllerTest extends AbstractMediaTest
         $this->createUserDummy($nonFollowerData);
         $this->authenticateClient($client, $nonFollowerData['email'], $nonFollowerData['password']);
 
-        $client->jsonRequest('DELETE', '/videos/'.$videoResponseData['id'].'/like');
+        $client->jsonRequest('DELETE', '/videos/'.$videoResponseData['id'].'/likes');
         static::assertResponseStatusCodeSame('404');
 
-        $client->jsonRequest('PUT', '/videos/'.$videoResponseData['id'].'/like');
+        $client->jsonRequest('PUT', '/videos/'.$videoResponseData['id'].'/likes');
         static::assertResponseStatusCodeSame('204');
 
-        $client->jsonRequest('DELETE', '/videos/'.$videoResponseData['id'].'/like');
+        $client->jsonRequest('DELETE', '/videos/'.$videoResponseData['id'].'/likes');
         static::assertResponseStatusCodeSame('204');
 
-        $client->jsonRequest('DELETE', '/videos/'.$videoResponseData['id'].'/like');
+        $client->jsonRequest('DELETE', '/videos/'.$videoResponseData['id'].'/likes');
         static::assertResponseStatusCodeSame('404');
     }
 }

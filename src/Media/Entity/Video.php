@@ -28,13 +28,13 @@ class Video
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?string $mood = null;
+    #[ORM\Column(type: 'jsonb', nullable: true)]
+    private ?array $moods = null;
 
     #[ORM\Column(nullable: true)]
     private ?string $thumbnail = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: 'jsonb', nullable: true)]
     private ?array $locations = null;
 
     #[ORM\Column(nullable: true)]
@@ -107,14 +107,14 @@ class Video
         return $this;
     }
 
-    public function getMood(): ?string
+    public function getMoods(): ?array
     {
-        return $this->mood;
+        return $this->moods;
     }
 
-    public function setMood(?string $mood): self
+    public function setMoods(?array $moods): self
     {
-        $this->mood = $mood;
+        $this->moods = $moods;
 
         return $this;
     }

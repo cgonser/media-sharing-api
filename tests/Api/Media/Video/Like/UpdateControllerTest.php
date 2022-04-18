@@ -22,10 +22,10 @@ class UpdateControllerTest extends AbstractMediaTest
         $this->createUserDummy($nonFollowerData);
         $this->authenticateClient($client, $nonFollowerData['email'], $nonFollowerData['password']);
 
-        $client->jsonRequest('PUT', '/videos/'.$videoResponseData['id'].'/like');
+        $client->jsonRequest('PUT', '/videos/'.$videoResponseData['id'].'/likes');
         static::assertResponseStatusCodeSame('204');
 
-        $client->jsonRequest('PUT', '/videos/'.$videoResponseData['id'].'/like');
+        $client->jsonRequest('PUT', '/videos/'.$videoResponseData['id'].'/likes');
         static::assertResponseStatusCodeSame('400');
     }
 
@@ -45,7 +45,7 @@ class UpdateControllerTest extends AbstractMediaTest
         $this->createUserDummy($nonFollowerData);
         $this->authenticateClient($client, $nonFollowerData['email'], $nonFollowerData['password']);
 
-        $client->jsonRequest('PUT', '/videos/'.$videoResponseData['id'].'/like');
+        $client->jsonRequest('PUT', '/videos/'.$videoResponseData['id'].'/likes');
         static::assertResponseStatusCodeSame('403');
     }
 
@@ -69,7 +69,7 @@ class UpdateControllerTest extends AbstractMediaTest
         $videoResponseData = json_decode($client->getResponse()->getContent(), true);
 
         $this->authenticateClient($client, $followerData['email'], $followerData['password']);
-        $client->jsonRequest('PUT', '/videos/'.$videoResponseData['id'].'/like');
+        $client->jsonRequest('PUT', '/videos/'.$videoResponseData['id'].'/likes');
         static::assertResponseStatusCodeSame('204');
     }
 }

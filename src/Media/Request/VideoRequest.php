@@ -16,8 +16,8 @@ class VideoRequest extends AbstractRequest
     #[OA\Property]
     public ?string $description;
 
-    #[OA\Property]
-    public ?string $mood;
+    #[OA\Property(type: "array", items: new OA\Items(type: 'string'))]
+    public ?array $moods;
 
     #[OA\Property]
     public ?string $thumbnail;
