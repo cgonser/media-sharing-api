@@ -3,7 +3,7 @@
 namespace App\Media\Service;
 
 use App\Media\Entity\Moment;
-use App\Media\Request\MomentRequest;
+use App\Media\Request\MomentMediaItemRequest;
 use App\User\Provider\UserProvider;
 use Ramsey\Uuid\Uuid;
 
@@ -15,7 +15,7 @@ class MomentRequestManager
     ) {
     }
 
-    public function createFromRequest(MomentRequest $momentRequest): Moment
+    public function createFromRequest(MomentMediaItemRequest $momentRequest): Moment
     {
         $moment = new Moment();
 
@@ -26,14 +26,14 @@ class MomentRequestManager
         return $moment;
     }
 
-    public function updateFromRequest(Moment $moment, MomentRequest $momentRequest): void
+    public function updateFromRequest(Moment $moment, MomentMediaItemRequest $momentRequest): void
     {
         $this->mapFromRequest($moment, $momentRequest);
 
         $this->momentManager->update($moment);
     }
 
-    public function mapFromRequest(Moment $moment, MomentRequest $momentRequest): void
+    public function mapFromRequest(Moment $moment, MomentMediaItemRequest $momentRequest): void
     {
         if ($momentRequest->has('userId')) {
             $moment->setUser(

@@ -2,8 +2,7 @@
 
 namespace App\Media\Entity;
 
-use App\Media\Repository\VideoLikeRepository;
-use App\User\Entity\User;
+use App\Media\Repository\VideoMediaItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
@@ -11,10 +10,9 @@ use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableTrait;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-#[ORM\Entity(repositoryClass: VideoCommentRepository::class)]
-class VideoComment implements TimestampableInterface, SoftDeletableInterface
+#[ORM\Entity(repositoryClass: VideoMediaItemRepository::class)]
+class VideoMediaItem implements TimestampableInterface, SoftDeletableInterface
 {
     use TimestampableTrait;
     use SoftDeletableTrait;
@@ -26,17 +24,14 @@ class VideoComment implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(type: 'uuid')]
     private UuidInterface $videoId;
 
-    #[ORM\ManyToOne(targetEntity: Video::class, inversedBy: 'videoComments')]
+    #[ORM\ManyToOne(targetEntity: Video::class, inversedBy: 'videoMediaItems')]
     private Video $video;
 
     #[ORM\Column(type: 'uuid')]
-    private UuidInterface $userId;
+    private UuidInterface $mediaItemId;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    private User $user;
-
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $comment = null;
+    #[ORM\ManyToOne(targetEntity: MediaItem::class)]
+    private MediaItem $mediaItem;
 
     public function getId(): ?UuidInterface
     {
@@ -67,39 +62,26 @@ class VideoComment implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getUserId(): UuidInterface
+    public function getMediaItemId(): UuidInterface
     {
-        return $this->userId;
+        return $this->mediaItemId;
     }
 
-    public function setUserId(UuidInterface $userId): self
+    public function setMediaItemId(UuidInterface $mediaItemId): self
     {
-        $this->userId = $userId;
+        $this->mediaItemId = $mediaItemId;
 
         return $this;
     }
 
-    public function getUser(): User
+    public function getMediaItem(): MediaItem
     {
-        return $this->user;
+        return $this->mediaItem;
     }
 
-    public function setUser(User $user): self
+    public function setMediaItem(MediaItem $mediaItem): self
     {
-        $this->user = $user;
-        $this->userId = $user->getId();
-
-        return $this;
-    }
-
-    public function getComment(): ?string
-    {
-        return $this->comment;
-    }
-
-    public function setComment(?string $comment): self
-    {
-        $this->comment = $comment;
+        $this->mediaItem = $mediaItem;
 
         return $this;
     }

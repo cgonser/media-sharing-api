@@ -4,10 +4,18 @@ namespace App\Media\ResponseMapper;
 
 use App\Media\Dto\MomentDto;
 use App\Media\Entity\Moment;
+use App\Media\Service\MomentMediaItemManager;
 use DateTimeInterface;
+use Doctrine\Common\Collections\Collection;
 
 class MomentResponseMapper
 {
+    public function __construct(
+        private MediaItemResponseMapper $mediaItemResponseMapper,
+        private MomentMediaItemManager $momentMediaItemManager,
+    ) {
+    }
+
     public function map(Moment $moment): MomentDto
     {
         $momentDto = new MomentDto();
@@ -17,18 +25,26 @@ class MomentResponseMapper
         $momentDto->location = $moment->getLocation();
         $momentDto->duration = $moment->getDuration();
         $momentDto->recordedAt = $moment->getRecordedAt()?->format(DateTimeInterface::ATOM);
+        $momentDto->mediaItems = $this->mapMediaItems(
+            $this->momentMediaItemManager->extractActiveMediaItems($moment->getMomentMediaItems())
+        );
 
         return $momentDto;
     }
 
     public function mapMultiple(array $moments): array
     {
-        $momentDtos = [];
+        return array_map(
+            fn ($moment) => $this->map($moment),
+            $moments
+        );
+    }
 
-        foreach ($moments as $moment) {
-            $momentDtos[] = $this->map($moment);
-        }
-
-        return $momentDtos;
+    private function mapMediaItems(array $momentMediaItems): array
+    {
+        return array_map(
+            fn ($momentMediaItem) => $this->mediaItemResponseMapper->map($momentMediaItem->getMediaItem()),
+            $momentMediaItems
+        );
     }
 }

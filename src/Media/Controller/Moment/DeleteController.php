@@ -23,7 +23,7 @@ class DeleteController extends AbstractController
     }
 
     #[OA\Response(response: 204, description: "Success")]
-    #[OA\Response(response: 404, description: "Media not found")]
+    #[OA\Response(response: 404, description: "MediaItem not found")]
     #[Route(path: '/{momentId}', name: 'moments_delete', methods: ['DELETE'])]
     public function delete(#[OA\PathParameter] string $momentId): Response
     {

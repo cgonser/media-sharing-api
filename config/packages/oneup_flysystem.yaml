@@ -6,7 +6,16 @@ oneup_flysystem:
                 client: Aws\S3\S3Client
                 bucket: '%user.image.s3_bucket%'
 
+        media_item_adapter:
+            awss3v3:
+                client: Aws\S3\S3Client
+                bucket: '%media_item.s3_bucket%'
+
     filesystems:
         user_image_filesystem:
             adapter: user_image_adapter
             alias: userImageFileSystem
+
+        media_item_filesystem:
+            adapter: media_item_adapter
+            alias: mediaItemFileSystem

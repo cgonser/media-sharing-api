@@ -55,7 +55,7 @@ class ReadController extends AbstractController
 
         return new ApiJsonResponse(
             Response::HTTP_OK,
-            $this->videoResponseMapper->mapMultiple($results),
+            $this->videoResponseMapper->mapMultiplePublic($results),
             [
                 'X-Total-Count' => $count,
             ]
@@ -70,10 +70,16 @@ class ReadController extends AbstractController
     #[Route(path: '/{videoId}', name: 'videos_get_one', methods: ['GET'])]
     public function getOne(#[OA\PathParameter] string $videoId): Response
     {
+        /** @var Video $video */
         $video = $this->videoProvider->get(Uuid::fromString($videoId));
 
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::READ, $video);
 
-        return new ApiJsonResponse(Response::HTTP_OK, $this->videoResponseMapper->map($video));
+        return new ApiJsonResponse(
+            Response::HTTP_OK,
+            $video->getUserId()->equals($this->getUser()->getId())
+                ? $this->videoResponseMapper->map($video)
+                : $this->videoResponseMapper->mapPublic($video)
+        );
     }
 }

@@ -5,7 +5,7 @@ namespace App\Media\Dto;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 
-class VideoDto
+class PublicVideoDto
 {
     public ?string $id;
 
@@ -24,7 +24,7 @@ class VideoDto
     #[OA\Property(type: "array", items: new OA\Items(ref: new Model(type: MomentDto::class)))]
     public ?array $moments;
 
-    #[OA\Property(type: "array", items: new OA\Items(ref: new Model(type: MediaItemDto::class)))]
+    #[OA\Property(type: "array", items: new OA\Items(ref: new Model(type: PublicMediaItemDto::class)))]
     public ?array $mediaItems;
 
     public ?int $duration;

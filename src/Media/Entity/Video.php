@@ -58,11 +58,15 @@ class Video
     #[ORM\OneToMany(mappedBy: 'video', targetEntity: VideoComment::class, cascade: ["persist"])]
     private Collection $videoComments;
 
+    #[ORM\OneToMany(mappedBy: 'video', targetEntity: VideoMediaItem::class, cascade: ["persist"])]
+    private Collection $videoMediaItems;
+
     public function __construct()
     {
         $this->videoMoments = new ArrayCollection();
         $this->videoLikes = new ArrayCollection();
         $this->videoComments = new ArrayCollection();
+        $this->videoMediaItems = new ArrayCollection();
     }
 
     public function getId(): UuidInterface
@@ -267,5 +271,10 @@ class Video
     public function getVideoComments(): Collection
     {
         return $this->videoComments;
+    }
+
+    public function getVideoMediaItems(): Collection
+    {
+        return $this->videoMediaItems;
     }
 }

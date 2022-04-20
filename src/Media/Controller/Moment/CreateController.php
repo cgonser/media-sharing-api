@@ -9,7 +9,6 @@ use App\Media\Entity\Moment;
 use App\Media\Request\MomentRequest;
 use App\Media\ResponseMapper\MomentResponseMapper;
 use App\Media\Service\MomentRequestManager;
-use App\User\Entity\User;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;

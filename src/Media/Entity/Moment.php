@@ -4,6 +4,8 @@ namespace App\Media\Entity;
 
 use App\Media\Repository\MomentRepository;
 use App\User\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
@@ -34,6 +36,14 @@ class Moment
 
     #[ORM\Column(type: "datetime", nullable: true)]
     private ?\DateTimeInterface $recordedAt = null;
+
+    #[ORM\OneToMany(mappedBy: 'moment', targetEntity: MomentMediaItem::class, cascade: ["persist"])]
+    private Collection $momentMediaItems;
+
+    public function __construct()
+    {
+        $this->momentMediaItems = new ArrayCollection();
+    }
 
     public function getId(): UuidInterface
     {
@@ -110,5 +120,10 @@ class Moment
         $this->recordedAt = $recordedAt;
 
         return $this;
+    }
+
+    public function getMomentMediaItems(): Collection
+    {
+        return $this->momentMediaItems;
     }
 }
