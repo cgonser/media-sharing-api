@@ -67,6 +67,10 @@ class UserRequestManager
             $user->setPhoneNumber($userRequest->phoneNumber);
         }
 
+        if ($userRequest->has('bio')) {
+            $user->setBio($userRequest->bio);
+        }
+
         if ($userRequest->has('country')) {
             $user->setCountry($userRequest->country);
         }

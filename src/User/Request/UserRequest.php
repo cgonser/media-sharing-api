@@ -13,6 +13,9 @@ class UserRequest extends AbstractRequest
     public ?string $name;
 
     #[OA\Property]
+    public ?string $bio;
+
+    #[OA\Property]
     #[Assert\Email]
     public ?string $email;
 
