@@ -13,6 +13,8 @@ security:
         api_token_refresh:
             pattern:  ^/users/token/refresh
             stateless: true
+            refresh_jwt:
+                check_path: user_token_refresh
 
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/

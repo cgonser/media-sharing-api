@@ -2,5 +2,5 @@
 #    path: /
 #    controller: App\Controller\DefaultController::index
 
-api_refresh_token:
-    path: /users/token/refresh
+#api_refresh_token:
+#    path: /users/token/refresh
