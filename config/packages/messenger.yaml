@@ -29,5 +29,7 @@ framework:
         routing:
             'App\User\Message\UserCreatedEvent': async
             'App\User\Message\UserUpdatedEvent': void
+            'App\User\Message\UserFollowApprovedEvent': async
+            'App\User\Message\UserFollowUnfollowedEvent': async
 
             'Symfony\Component\Mailer\Messenger\SendEmailMessage': async

@@ -18,11 +18,9 @@ class UserResponseMapper
     public function map(User $user): UserDto
     {
         $userDto = new UserDto();
-        $userDto->id = $user->getId();
+        $this->mapBaseData($userDto, $user);
+
         $userDto->name = $user->getName();
-        $userDto->username = $user->getUsername();
-        $userDto->displayName = $user->getDisplayName();
-        $userDto->bio = $user->getBio();
         $userDto->email = $user->getEmail();
         $userDto->timezone = $user->getTimezone();
         $userDto->locale = $user->getLocale();
@@ -34,27 +32,31 @@ class UserResponseMapper
         $userDto->lastLoginAt = $user->getLastLoginAt()?->format(\DateTimeInterface::ATOM);
         $userDto->emailValidatedAt = $user->getEmailValidatedAt()?->format(\DateTimeInterface::ATOM);
 
-        if (null !== $user->getProfilePicture()) {
-            $userDto->profilePicture = $this->getProfilePictureUrl($user);
-        }
-
         return $userDto;
     }
 
     public function mapPublic(User $user): PublicUserDto
     {
         $userDto = new PublicUserDto();
+
+        $this->mapBaseData($userDto, $user);
+
+        return $userDto;
+    }
+
+    private function mapBaseData(UserDto|PublicUserDto $userDto, User $user): void
+    {
         $userDto->id = $user->getId();
         $userDto->username = $user->getUsername();
         $userDto->displayName = $user->getDisplayName();
         $userDto->bio = $user->getBio();
         $userDto->isProfilePrivate = $user->isProfilePrivate();
+        $userDto->followersCount = $user->getFollowersCount();
+        $userDto->followingCount = $user->getFollowingCount();
 
         if (null !== $user->getProfilePicture()) {
             $userDto->profilePicture = $this->getProfilePictureUrl($user);
         }
-
-        return $userDto;
     }
 
     public function getProfilePictureUrl(User $user): ?string

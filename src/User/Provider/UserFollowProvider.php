@@ -78,6 +78,22 @@ class UserFollowProvider extends AbstractProvider
         ]);
     }
 
+    public function countByFollowerId(UuidInterface $followerId): int
+    {
+        return $this->repository->count([
+            'followerId' => $followerId,
+            'isApproved' => true,
+        ]);
+    }
+
+    public function countByFollowingId(UuidInterface $followingId): int
+    {
+        return $this->repository->count([
+            'followingId' => $followingId,
+            'isApproved' => true,
+        ]);
+    }
+
     public function isFollowing(UuidInterface $followerId, UuidInterface $followingId): bool
     {
         return null !== $this->findOneByFollowerAndFollowing($followerId, $followingId);

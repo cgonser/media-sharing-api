@@ -108,6 +108,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
     #[ORM\OneToMany(mappedBy: 'follower', targetEntity: UserFollow::class)]
     private Collection $following;
 
+    #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
+    private int $followersCount = 0;
+
+    #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
+    private int $followingCount = 0;
+
     public function __construct()
     {
         $this->followers = new ArrayCollection();
@@ -321,6 +327,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
         $this->isBlocked = $isBlocked;
 
         return $this;
+    }
+
+    public function getFollowersCount(): int
+    {
+        return $this->followersCount;
+    }
+
+    public function setFollowersCount(int $followersCount): self
+    {
+        $this->followersCount = $followersCount;
+
+        return $this;
+    }
+
+    public function getFollowingCount(): int
+    {
+        return $this->followingCount;
+    }
+
+    public function setFollowingCount(int $followingCount): self
+    {
+        $this->followingCount = $followingCount;
+
+        return $this;
+    }
+
+    public function getFollowers(): ArrayCollection|Collection
+    {
+        return $this->followers;
+    }
+
+    public function getFollowing(): ArrayCollection|Collection
+    {
+        return $this->following;
     }
 
     public function getAdminNotes(): ?string

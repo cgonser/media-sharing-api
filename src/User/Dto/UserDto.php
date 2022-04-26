@@ -32,6 +32,10 @@ class UserDto
 
     public ?bool $allowEmailMarketing;
 
+    public int $followersCount;
+
+    public int $followingCount;
+
     public ?string $emailValidatedAt;
 
     public ?string $lastLoginAt;

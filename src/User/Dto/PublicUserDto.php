@@ -14,5 +14,9 @@ class PublicUserDto
 
     public ?string $profilePicture;
 
+    public int $followersCount;
+
+    public int $followingCount;
+
     public bool $isProfilePrivate;
 }
