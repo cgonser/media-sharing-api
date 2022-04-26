@@ -19,9 +19,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'user_account')]
-#[ORM\Index(fields: ['email'])]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['email'])]
+#[UniqueEntity(fields: ['username'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDeletableInterface, TimestampableInterface
 {
     use TimestampableTrait;
@@ -49,6 +49,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
     #[Assert\NotBlank]
     #[Assert\Email]
     private string $email;
+
+    #[ORM\Column(unique: true)]
+    #[Assert\NotBlank]
+    private ?string $username = null;
 
     #[ORM\Column(nullable: true)]
     private ?string $password = null;
@@ -404,7 +408,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
 
     public function getUsername(): string
     {
-        return $this->getEmail();
+        return $this->username;
+    }
+
+    public function setUsername(?string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
     }
 
     public function getSalt(): ?string

@@ -20,6 +20,7 @@ class UserResponseMapper
         $userDto = new UserDto();
         $userDto->id = $user->getId();
         $userDto->name = $user->getName();
+        $userDto->username = $user->getUsername();
         $userDto->displayName = $user->getDisplayName();
         $userDto->bio = $user->getBio();
         $userDto->email = $user->getEmail();
@@ -44,6 +45,7 @@ class UserResponseMapper
     {
         $userDto = new PublicUserDto();
         $userDto->id = $user->getId();
+        $userDto->username = $user->getUsername();
         $userDto->displayName = $user->getDisplayName();
         $userDto->bio = $user->getBio();
         $userDto->isProfilePrivate = $user->isProfilePrivate();

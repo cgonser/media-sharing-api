@@ -11,14 +11,17 @@ class UpdateControllerTest extends AbstractUserTest
         $client = static::createClient();
 
         $follower1Data = $this->getUserDummyData();
+        $follower1Data['username'] = 'test-user-1';
         $follower1Data['email'] = 'test-user-1@itinair.com';
         $this->createUserDummy($follower1Data);
 
         $follower2Data = $this->getUserDummyData();
+        $follower2Data['username'] = 'test-user-2';
         $follower2Data['email'] = 'test-user-2@itinair.com';
         $this->createUserDummy($follower2Data);
 
         $userData = $this->getUserDummyData();
+        $userData['username'] = 'test-user-3';
         $userData['email'] = 'test-user-3@itinair.com';
         $userData['isProfilePrivate'] = true;
         $user = $this->createUserDummy($userData);
@@ -61,14 +64,17 @@ class UpdateControllerTest extends AbstractUserTest
 
         $follower1Data = $this->getUserDummyData();
         $follower1Data['email'] = 'test-user-1@itinair.com';
+        $follower1Data['username'] = 'test-user-1';
         $this->createUserDummy($follower1Data);
 
         $follower2Data = $this->getUserDummyData();
         $follower2Data['email'] = 'test-user-2@itinair.com';
+        $follower2Data['username'] = 'test-user-2';
         $this->createUserDummy($follower2Data);
 
         $userData = $this->getUserDummyData();
         $userData['email'] = 'test-user-3@itinair.com';
+        $userData['username'] = 'test-user-3';
         $userData['isProfilePrivate'] = true;
         $user = $this->createUserDummy($userData);
 

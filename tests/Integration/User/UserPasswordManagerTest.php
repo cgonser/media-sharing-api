@@ -19,6 +19,7 @@ class UserPasswordManagerTest extends KernelTestCase
     {
         $userRequest = new UserRequest();
         $userRequest->name = 'Test User';
+        $userRequest->username = 'test-user';
         $userRequest->email = 'test-user@itinair.com';
         $userRequest->password = '123';
 

@@ -19,6 +19,7 @@ class UpdateControllerTest extends AbstractMediaTest
 
         $nonFollowerData = $this->getUserDummyData();
         $nonFollowerData['email'] = 'test-user-1@itinair.com';
+        $nonFollowerData['username'] = 'test-user-1';
         $this->createUserDummy($nonFollowerData);
         $this->authenticateClient($client, $nonFollowerData['email'], $nonFollowerData['password']);
 
@@ -42,6 +43,7 @@ class UpdateControllerTest extends AbstractMediaTest
 
         $nonFollowerData = $this->getUserDummyData();
         $nonFollowerData['email'] = 'test-user-1@itinair.com';
+        $nonFollowerData['username'] = 'test-user-1';
         $this->createUserDummy($nonFollowerData);
         $this->authenticateClient($client, $nonFollowerData['email'], $nonFollowerData['password']);
 
@@ -58,6 +60,7 @@ class UpdateControllerTest extends AbstractMediaTest
 
         $followerData = $this->getUserDummyData();
         $followerData['email'] = 'test-user-1@itinair.com';
+        $followerData['username'] = 'test-user-1';
         $follower = $this->createUserDummy($followerData);
 
         static::getContainer()->get(UserFollowManager::class)->approve(

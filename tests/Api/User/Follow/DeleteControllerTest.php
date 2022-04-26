@@ -15,6 +15,7 @@ class DeleteControllerTest extends AbstractUserTest
         $this->createUserDummy($followerData);
 
         $userData = $this->getUserDummyData();
+        $userData['username'] = 'test-user-2';
         $userData['email'] = 'test-user-2@itinair.com';
         $user = $this->createUserDummy($userData);
 

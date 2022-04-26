@@ -39,6 +39,7 @@ abstract class AbstractApiTest extends WebTestCase
     {
         return [
             'name' => 'Test User',
+            'username' => 'test-user',
             'email' => 'test-user@itinair.com',
             'password' => '123',
         ];
@@ -52,6 +53,7 @@ abstract class AbstractApiTest extends WebTestCase
 
         $user = new User();
         $user->setName($userData['name']);
+        $user->setUsername($userData['username']);
         $user->setDisplayName($userData['displayName'] ?? $userData['name']);
         $user->setPhoneNumber($userData['phoneNumber'] ?? null);
         $user->setEmail($userData['email']);

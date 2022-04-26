@@ -66,6 +66,7 @@ class ReadControllerTest extends AbstractUserTest
 
         $secondUserData = $this->getUserDummyData();
         $secondUserData['displayName'] = 'This is the Display Name';
+        $secondUserData['username'] = 'another-test';
         $secondUserData['email'] = 'another-test@itinair.com';
         $secondUserData['phoneNumber'] = '999999999';
         $secondUser = $this->createUserDummy($secondUserData);
@@ -94,6 +95,7 @@ class ReadControllerTest extends AbstractUserTest
         $privateUser = $this->createUserDummy($privateUserData);
 
         $secondUserData = $this->getUserDummyData();
+        $secondUserData['username'] = 'another-test';
         $secondUserData['email'] = 'another-test@itinair.com';
         $this->createUserDummy($secondUserData);
 
@@ -113,6 +115,7 @@ class ReadControllerTest extends AbstractUserTest
         $privateUser = $this->createUserDummy($privateUserData);
 
         $followerData = $this->getUserDummyData();
+        $followerData['username'] = 'another-test';
         $followerData['email'] = 'another-test@itinair.com';
         $follower = $this->createUserDummy($followerData);
 

@@ -21,6 +21,7 @@ class UserRequestManagerTest extends KernelTestCase
     {
         $userRequest = new UserRequest();
         $userRequest->name = 'Test User';
+        $userRequest->username = 'test-user';
         $userRequest->email = 'test-user@itinair.com';
         $userRequest->password = '123';
 
@@ -36,6 +37,7 @@ class UserRequestManagerTest extends KernelTestCase
     {
         $userRequest = new UserRequest();
         $userRequest->name = 'Test User';
+        $userRequest->username = 'test-user';
         $userRequest->email = 'test-user@itinair.com';
         $userRequest->password = '123';
 
@@ -54,6 +56,7 @@ class UserRequestManagerTest extends KernelTestCase
         $userRequest = new UserRequest();
         $userRequest->name = 'Test User';
         $userRequest->email = 'test-user@itinair.com';
+        $userRequest->username = 'test-user';
         $userRequest->password = '123';
 
         $user = $this->getService()->createFromRequest($userRequest);
@@ -61,6 +64,7 @@ class UserRequestManagerTest extends KernelTestCase
         $userUpdateRequest = new UserRequest();
         $userUpdateRequest->name = 'Test User 2';
         $userUpdateRequest->email = 'test-user-2@itinair.com';
+        $userUpdateRequest->username = 'test-user-2';
         $this->getService()->updateFromRequest($user, $userUpdateRequest);
 
         $this->assertEquals($userUpdateRequest->name, $user->getName());
@@ -72,6 +76,7 @@ class UserRequestManagerTest extends KernelTestCase
         $user = new User();
         $user->setName('Test User');
         $user->setEmail('test-user@itinair.com');
+        $user->setUsername('test-user');
 
         $this->getService()->addRole($user, User::ROLE_ADMIN);
         $this->assertEquals([User::ROLE_ADMIN], $user->getRoles());
@@ -95,6 +100,7 @@ class UserRequestManagerTest extends KernelTestCase
         $user = new User();
         $user->setName('Test User');
         $user->setEmail('test-user@itinair.com');
+        $user->setUsername('test-user');
 
         $this->getService()->addRole($user, User::ROLE_ADMIN);
         $this->assertEquals([User::ROLE_ADMIN], $user->getRoles());

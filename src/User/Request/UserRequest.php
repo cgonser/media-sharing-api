@@ -20,6 +20,9 @@ class UserRequest extends AbstractRequest
     public ?string $email;
 
     #[OA\Property]
+    public ?string $username;
+
+    #[OA\Property]
     public ?string $password;
 
     #[OA\Property]

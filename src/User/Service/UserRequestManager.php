@@ -59,6 +59,10 @@ class UserRequestManager
             $user->setEmail(strtolower($userRequest->email));
         }
 
+        if ($userRequest->has('username')) {
+            $user->setUsername(strtolower($userRequest->username));
+        }
+
         if ($userRequest->has('password') && null === $user->getPassword()) {
             $user->setPassword($this->userPasswordManager->encodePassword($user, $userRequest->password));
         }

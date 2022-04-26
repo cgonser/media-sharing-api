@@ -6,6 +6,8 @@ class PublicUserDto
 {
     public string $id;
 
+    public ?string $username;
+
     public ?string $displayName;
 
     public ?string $bio;

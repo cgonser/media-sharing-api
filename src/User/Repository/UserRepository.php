@@ -16,13 +16,15 @@ class UserRepository extends BaseRepository implements UserLoaderInterface
 
     public function loadUserByIdentifier(string $identifier): ?User
     {
-        return $this->findOneBy([
-            'email' => strtolower($identifier),
-        ]);
-    }
+        $entityManager = $this->getEntityManager();
 
-    public function loadUserByUsername(string $username): ?User
-    {
-        return $this->loadUserByIdentifier($username);
+        return $entityManager->createQuery(
+            'SELECT u
+                FROM App\User\Entity\User u
+                WHERE u.username = :identifier
+                OR u.email = :identifier'
+            )
+            ->setParameter('identifier', strtolower($identifier))
+            ->getOneOrNullResult();
     }
 }

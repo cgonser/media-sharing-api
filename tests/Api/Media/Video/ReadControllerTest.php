@@ -36,10 +36,12 @@ class ReadControllerTest extends AbstractMediaTest
 
         $user1Data = $this->getUserDummyData();
         $user1Data['email'] = 'test-user-1@itinair.com';
+        $user1Data['username'] = 'test-user-1';
         $this->createUserDummy($user1Data);
 
         $user2Data = $this->getUserDummyData();
         $user2Data['email'] = 'test-user-2@itinair.com';
+        $user2Data['username'] = 'test-user-2';
         $this->createUserDummy($user2Data);
 
         $createData = $this->getVideoDummyData();
@@ -63,11 +65,13 @@ class ReadControllerTest extends AbstractMediaTest
 
         $user1Data = $this->getUserDummyData();
         $user1Data['email'] = 'test-user-1@itinair.com';
+        $user1Data['username'] = 'test-user-1';
         $user1Data['isProfilePrivate'] = true;
         $this->createUserDummy($user1Data);
 
         $user2Data = $this->getUserDummyData();
         $user2Data['email'] = 'test-user-2@itinair.com';
+        $user2Data['username'] = 'test-user-2';
         $this->createUserDummy($user2Data);
 
         $createData = $this->getVideoDummyData();
@@ -91,11 +95,13 @@ class ReadControllerTest extends AbstractMediaTest
 
         $userData = $this->getUserDummyData();
         $userData['email'] = 'test-user-1@itinair.com';
+        $userData['username'] = 'test-user-1';
         $userData['isProfilePrivate'] = true;
         $user = $this->createUserDummy($userData);
 
         $followerData = $this->getUserDummyData();
         $followerData['email'] = 'test-user-2@itinair.com';
+        $followerData['username'] = 'test-user-2';
         $follower = $this->createUserDummy($followerData);
 
         static::getContainer()->get(UserFollowManager::class)->approve(
@@ -123,15 +129,18 @@ class ReadControllerTest extends AbstractMediaTest
 
         $userData = $this->getUserDummyData();
         $userData['email'] = 'test-user-1@itinair.com';
+        $userData['username'] = 'test-user-1';
         $userData['isProfilePrivate'] = true;
         $user = $this->createUserDummy($userData);
 
         $followerData = $this->getUserDummyData();
         $followerData['email'] = 'test-user-2@itinair.com';
+        $followerData['username'] = 'test-user-2';
         $follower = $this->createUserDummy($followerData);
 
         $nonFollowerData = $this->getUserDummyData();
         $nonFollowerData['email'] = 'test-user-3@itinair.com';
+        $nonFollowerData['username'] = 'test-user-3';
         $nonFollower = $this->createUserDummy($nonFollowerData);
 
         static::getContainer()->get(UserFollowManager::class)->approve(

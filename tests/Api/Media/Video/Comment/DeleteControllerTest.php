@@ -19,6 +19,7 @@ class DeleteControllerTest extends AbstractMediaTest
 
         $nonFollowerData = $this->getUserDummyData();
         $nonFollowerData['email'] = 'test-user-1@itinair.com';
+        $nonFollowerData['username'] = 'test-user-1';
         $this->createUserDummy($nonFollowerData);
         $this->authenticateClient($client, $nonFollowerData['email'], $nonFollowerData['password']);
 

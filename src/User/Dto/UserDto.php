@@ -8,6 +8,8 @@ class UserDto
 
     public ?string $name;
 
+    public ?string $username;
+
     public ?string $displayName;
 
     public ?string $bio;
