@@ -55,6 +55,10 @@ class UserRequestManager
             $user->setName($userRequest->name);
         }
 
+        if ($userRequest->has('displayName')) {
+            $user->setDisplayName($userRequest->displayName);
+        }
+
         if ($userRequest->has('email')) {
             $user->setEmail(strtolower($userRequest->email));
         }
