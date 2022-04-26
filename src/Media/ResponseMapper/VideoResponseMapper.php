@@ -8,6 +8,7 @@ use App\Media\Dto\VideoMomentDto;
 use App\Media\Entity\Video;
 use App\Media\Entity\VideoMoment;
 use App\Media\Service\VideoMediaItemManager;
+use App\User\ResponseMapper\UserResponseMapper;
 use DateTimeInterface;
 
 class VideoResponseMapper
@@ -15,6 +16,7 @@ class VideoResponseMapper
     public function __construct(
         private MomentResponseMapper $momentResponseMapper,
         private MediaItemResponseMapper $mediaItemResponseMapper,
+        private UserResponseMapper $userResponseMapper,
         private VideoMediaItemManager $videoMediaItemManager,
     ) {
     }
@@ -34,7 +36,6 @@ class VideoResponseMapper
     public function mapPublic(Video $video): PublicVideoDto
     {
         $videoDto = new PublicVideoDto();
-        $this->mapBaseData($videoDto, $video);
 
         $videoDto->mediaItems = $this->mapPublicMediaItems(
             $this->videoMediaItemManager->extractActiveMediaItems($video->getVideoMediaItems())
@@ -78,6 +79,7 @@ class VideoResponseMapper
     private function mapBaseData(VideoDto|PublicVideoDto $videoDto, Video $video): void
     {
         $videoDto->id = $video->getId()->toString();
+        $videoDto->user = $this->userResponseMapper->mapPublic($video->getUser());
         $videoDto->userId = $video->getUser()->getId()->toString();
         $videoDto->description = $video->getDescription();
         $videoDto->moods = $video->getMoods();

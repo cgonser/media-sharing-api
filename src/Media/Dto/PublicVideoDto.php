@@ -2,6 +2,7 @@
 
 namespace App\Media\Dto;
 
+use App\User\Dto\PublicUserDto;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 
@@ -10,6 +11,8 @@ class PublicVideoDto
     public ?string $id;
 
     public ?string $userId;
+
+    public ?PublicUserDto $user;
 
     public ?string $description;
 
