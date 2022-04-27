@@ -22,7 +22,7 @@ class Moment
     private ?UuidInterface $userId = null;
 
     #[ORM\ManyToOne]
-    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private User $user;
 
     #[ORM\Column(nullable: true)]
@@ -34,7 +34,8 @@ class Moment
     #[ORM\Column(nullable: true)]
     private ?int $duration = null;
 
-    #[ORM\Column(type: "datetime", nullable: true)]
+    #[ORM\Column(type: "datetime", nullable: false)]
+    #[Assert\NotNull]
     private ?\DateTimeInterface $recordedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'moment', targetEntity: MomentMediaItem::class, cascade: ["persist"])]

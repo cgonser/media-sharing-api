@@ -49,9 +49,13 @@ class ReadController extends AbstractController
         $results = $this->momentProvider->search($searchRequest);
         $count = $this->momentProvider->count($searchRequest);
 
+        $mappedResults = null !== $searchRequest->groupBy
+            ? $this->momentResponseMapper->mapGroupedBy($results, $searchRequest->groupBy)
+            : $this->momentResponseMapper->mapMultiple($results);
+
         return new ApiJsonResponse(
             Response::HTTP_OK,
-            $this->momentResponseMapper->mapMultiple($results),
+            $mappedResults,
             [
                 'X-Total-Count' => $count,
             ]

@@ -16,4 +16,7 @@ class MomentSearchRequest extends SearchRequest
 
     #[OA\Property]
     public ?string $userId = null;
+
+    #[OA\Property]
+    public ?string $groupBy = null;
 }

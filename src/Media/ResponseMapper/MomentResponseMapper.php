@@ -24,6 +24,7 @@ class MomentResponseMapper
         $momentDto->mood = $moment->getMood();
         $momentDto->location = $moment->getLocation();
         $momentDto->duration = $moment->getDuration();
+        $momentDto->recordedOn = $moment->getRecordedAt()?->format('Y-m-d');
         $momentDto->recordedAt = $moment->getRecordedAt()?->format(DateTimeInterface::ATOM);
         $momentDto->mediaItems = $this->mapMediaItems(
             $this->momentMediaItemManager->extractActiveMediaItems($moment->getMomentMediaItems())
@@ -46,5 +47,25 @@ class MomentResponseMapper
             fn ($momentMediaItem) => $this->mediaItemResponseMapper->map($momentMediaItem->getMediaItem()),
             $momentMediaItems
         );
+    }
+
+    public function mapGroupedBy(array $moments, ?string $groupBy): array
+    {
+        $groupedResults = [];
+
+        $momentDtos = $this->mapMultiple($moments);
+
+        /** @var MomentDto $momentDto */
+        foreach ($momentDtos as $momentDto) {
+            $groupByValue = $momentDto->{$groupBy};
+
+            if (!isset($groupedResults[$groupByValue])) {
+                $groupedResults[$groupByValue] = [];
+            }
+
+            $groupedResults[$groupByValue][] = $momentDto;
+        }
+
+        return $groupedResults;
     }
 }

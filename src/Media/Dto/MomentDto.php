@@ -20,5 +20,7 @@ class MomentDto
     #[OA\Property(type: "array", items: new OA\Items(ref: new Model(type: MediaItemDto::class)))]
     public ?array $mediaItems;
 
+    public ?string $recordedOn;
+
     public ?string $recordedAt;
 }
