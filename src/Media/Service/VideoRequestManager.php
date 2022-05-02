@@ -51,10 +51,6 @@ class VideoRequestManager
             $video->setMoods($videoRequest->moods);
         }
 
-        if ($videoRequest->has('thumbnail')) {
-            $video->setThumbnail($videoRequest->thumbnail);
-        }
-
         if ($videoRequest->has('locations')) {
             $video->setLocations($videoRequest->locations);
         }

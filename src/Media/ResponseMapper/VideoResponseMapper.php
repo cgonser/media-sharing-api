@@ -6,6 +6,7 @@ use App\Media\Dto\PublicVideoDto;
 use App\Media\Dto\VideoDto;
 use App\Media\Dto\VideoMomentDto;
 use App\Media\Entity\Video;
+use App\Media\Entity\VideoMediaItem;
 use App\Media\Entity\VideoMoment;
 use App\Media\Service\VideoMediaItemManager;
 use App\User\ResponseMapper\UserResponseMapper;
@@ -14,10 +15,9 @@ use DateTimeInterface;
 class VideoResponseMapper
 {
     public function __construct(
-        private MomentResponseMapper $momentResponseMapper,
-        private MediaItemResponseMapper $mediaItemResponseMapper,
-        private UserResponseMapper $userResponseMapper,
-        private VideoMediaItemManager $videoMediaItemManager,
+        private readonly MomentResponseMapper $momentResponseMapper,
+        private readonly UserResponseMapper $userResponseMapper,
+        private readonly VideoMediaItemManager $videoMediaItemManager,
     ) {
     }
 
@@ -26,20 +26,13 @@ class VideoResponseMapper
         $videoDto = new VideoDto();
         $this->mapBaseData($videoDto, $video);
 
-        $videoDto->mediaItems = $this->mapMediaItems(
-            $this->videoMediaItemManager->extractActiveMediaItems($video->getVideoMediaItems())
-        );
-
         return $videoDto;
     }
 
     public function mapPublic(Video $video): PublicVideoDto
     {
         $videoDto = new PublicVideoDto();
-
-        $videoDto->mediaItems = $this->mapPublicMediaItems(
-            $this->videoMediaItemManager->extractActiveMediaItems($video->getVideoMediaItems())
-        );
+        $this->mapBaseData($videoDto, $video);
 
         return $videoDto;
     }
@@ -62,18 +55,14 @@ class VideoResponseMapper
 
     private function mapMediaItems(array $videoMediaItems): array
     {
-        return array_map(
-            fn ($videoMediaItem) => $this->mediaItemResponseMapper->map($videoMediaItem->getMediaItem()),
-            $videoMediaItems
-        );
-    }
+        $return = [];
 
-    private function mapPublicMediaItems(array $videoMediaItems): array
-    {
-        return array_map(
-            fn ($videoMediaItem) => $this->mediaItemResponseMapper->mapPublic($videoMediaItem->getMediaItem()),
-            $videoMediaItems
-        );
+        /** @var VideoMediaItem $videoMediaItem */
+        foreach ($videoMediaItems as $videoMediaItem) {
+            $return[$videoMediaItem->getMediaItem()->getType()] = $videoMediaItem->getMediaItem()->getPublicUrl();
+        }
+
+        return $return;
     }
 
     private function mapBaseData(VideoDto|PublicVideoDto $videoDto, Video $video): void
@@ -83,11 +72,13 @@ class VideoResponseMapper
         $videoDto->userId = $video->getUser()->getId()->toString();
         $videoDto->description = $video->getDescription();
         $videoDto->moods = $video->getMoods();
-        $videoDto->thumbnail = $video->getThumbnail();
         $videoDto->locations = $video->getLocations();
         $videoDto->moments = $this->mapVideoMoments($video->getVideoMoments()->toArray());
         $videoDto->duration = $video->getDuration();
         $videoDto->recordedAt = $video->getRecordedAt()?->format(DateTimeInterface::ATOM);
+        $videoDto->mediaItems = $this->mapMediaItems(
+            $this->videoMediaItemManager->extractActiveMediaItems($video->getVideoMediaItems())
+        );
     }
 
     private function mapVideoMoments(array $videoMoments): array

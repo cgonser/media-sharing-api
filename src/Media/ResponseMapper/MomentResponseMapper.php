@@ -5,15 +5,14 @@ namespace App\Media\ResponseMapper;
 use App\Media\Dto\MomentDateDto;
 use App\Media\Dto\MomentDto;
 use App\Media\Entity\Moment;
+use App\Media\Entity\MomentMediaItem;
 use App\Media\Service\MomentMediaItemManager;
 use DateTimeInterface;
-use Doctrine\Common\Collections\Collection;
 
 class MomentResponseMapper
 {
     public function __construct(
-        private MediaItemResponseMapper $mediaItemResponseMapper,
-        private MomentMediaItemManager $momentMediaItemManager,
+        private readonly MomentMediaItemManager $momentMediaItemManager,
     ) {
     }
 
@@ -44,10 +43,14 @@ class MomentResponseMapper
 
     private function mapMediaItems(array $momentMediaItems): array
     {
-        return array_map(
-            fn ($momentMediaItem) => $this->mediaItemResponseMapper->map($momentMediaItem->getMediaItem()),
-            $momentMediaItems
-        );
+        $return = [];
+
+        /** @var MomentMediaItem $momentMediaItems */
+        foreach ($momentMediaItems as $momentMediaItem) {
+            $return[$momentMediaItem->getMediaItem()->getType()] = $momentMediaItem->getMediaItem()->getPublicUrl();
+        }
+
+        return $return;
     }
 
     public function mapGroupedBy(array $moments, ?string $groupBy): array

@@ -16,8 +16,6 @@ class PublicVideoDto
 
     public ?string $description;
 
-    public ?string $thumbnail;
-
     #[OA\Property(type: "array", items: new OA\Items(type: "string"))]
     public ?array $moods;
 
@@ -27,7 +25,7 @@ class PublicVideoDto
     #[OA\Property(type: "array", items: new OA\Items(ref: new Model(type: MomentDto::class)))]
     public ?array $moments;
 
-    #[OA\Property(type: "array", items: new OA\Items(ref: new Model(type: PublicMediaItemDto::class)))]
+    #[OA\Property(type: "array", items: new OA\Items(type: "object"))]
     public ?array $mediaItems;
 
     public ?int $duration;

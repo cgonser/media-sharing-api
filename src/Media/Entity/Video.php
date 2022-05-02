@@ -31,9 +31,6 @@ class Video
     #[ORM\Column(type: 'jsonb', nullable: true)]
     private ?array $moods = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?string $thumbnail = null;
-
     #[ORM\Column(type: 'jsonb', nullable: true)]
     private ?array $locations = null;
 
@@ -119,18 +116,6 @@ class Video
     public function setMoods(?array $moods): self
     {
         $this->moods = $moods;
-
-        return $this;
-    }
-
-    public function getThumbnail(): ?string
-    {
-        return $this->thumbnail;
-    }
-
-    public function setThumbnail(?string $thumbnail): self
-    {
-        $this->thumbnail = $thumbnail;
 
         return $this;
     }

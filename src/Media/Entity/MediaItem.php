@@ -17,8 +17,8 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
     public const STATUS_UPLOAD_PENDING = 'upload_pending';
     public const STATUS_AVAILABLE = 'available';
 
-    public const TYPE_MOMENT = 'moment';
     public const TYPE_VIDEO = 'video';
+    public const TYPE_THUMBNAIL = 'thumbnail';
 
     use TimestampableTrait;
     use SoftDeletableTrait;

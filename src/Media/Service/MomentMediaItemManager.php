@@ -13,15 +13,15 @@ use Doctrine\ORM\EntityNotFoundException;
 class MomentMediaItemManager
 {
     public function __construct(
-        private MomentMediaItemRepository $momentMediaItemRepository,
-        private MediaItemManager $mediaItemManager,
-        private EntityValidator $validator,
+        private readonly MomentMediaItemRepository $momentMediaItemRepository,
+        private readonly MediaItemManager $mediaItemManager,
+        private readonly EntityValidator $validator,
     ) {
     }
 
     public function createForMoment(Moment $moment, string $extension): MomentMediaItem
     {
-        $mediaItem = $this->mediaItemManager->createUploadableItem(MediaItem::TYPE_MOMENT, $extension);
+        $mediaItem = $this->mediaItemManager->createUploadableItem(MediaItem::TYPE_VIDEO, $extension);
 
         $momentMediaItem = new MomentMediaItem();
         $momentMediaItem->setMediaItem($mediaItem);
