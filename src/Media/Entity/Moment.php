@@ -123,6 +123,7 @@ class Moment
     public function setRecordedAt(?\DateTimeInterface $recordedAt): self
     {
         $this->recordedAt = $recordedAt;
+        $this->setRecordedOn($recordedAt);
 
         return $this;
     }
