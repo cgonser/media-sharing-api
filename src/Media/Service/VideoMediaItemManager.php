@@ -8,6 +8,7 @@ use App\Media\Entity\Video;
 use App\Media\Entity\VideoMediaItem;
 use App\Media\Repository\VideoMediaItemRepository;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityNotFoundException;
 
 class VideoMediaItemManager
 {
@@ -59,20 +60,26 @@ class VideoMediaItemManager
 
         /** @var VideoMediaItem $videoMediaItem */
         foreach ($videoMediaItems as $videoMediaItem) {
-            $mediaItem = $videoMediaItem->getMediaItem();
+            try {
+                $mediaItem = $videoMediaItem->getMediaItem();
 
-            if (
-                MediaItem::STATUS_UPLOAD_PENDING === $mediaItem->getStatus()
-                || null === $mediaItem->getPublicUrl()
-            ) {
-                $this->mediaItemManager->updateUploadStatus($mediaItem);
+                if (
+                    MediaItem::STATUS_UPLOAD_PENDING === $mediaItem->getStatus()
+                    || null === $mediaItem->getPublicUrl()
+                ) {
+                    $this->mediaItemManager->updateUploadStatus($mediaItem);
 
-                if ($mediaItem->isDeleted()) {
-                    continue;
+                    if ($mediaItem->isDeleted()) {
+                        $this->delete($videoMediaItem);
+
+                        continue;
+                    }
                 }
-            }
 
-            $return[] = $videoMediaItem;
+                $return[] = $videoMediaItem;
+            } catch (EntityNotFoundException) {
+                $this->delete($videoMediaItem);
+            }
         }
 
         return $return;

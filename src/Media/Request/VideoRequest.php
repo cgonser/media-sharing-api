@@ -3,6 +3,7 @@
 namespace App\Media\Request;
 
 use App\Core\Request\AbstractRequest;
+use DateTimeInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -36,5 +37,6 @@ class VideoRequest extends AbstractRequest
     public ?int $duration;
 
     #[OA\Property]
+    #[Assert\DateTime(format: DateTimeInterface::ATOM)]
     public ?string $recordedAt;
 }

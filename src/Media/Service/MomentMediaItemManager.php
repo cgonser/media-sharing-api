@@ -8,6 +8,7 @@ use App\Media\Entity\Moment;
 use App\Media\Entity\MomentMediaItem;
 use App\Media\Repository\MomentMediaItemRepository;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityNotFoundException;
 
 class MomentMediaItemManager
 {
@@ -59,17 +60,26 @@ class MomentMediaItemManager
 
         /** @var MomentMediaItem $momentMediaItem */
         foreach ($momentMediaItems as $momentMediaItem) {
-            $mediaItem = $momentMediaItem->getMediaItem();
+            try {
+                $mediaItem = $momentMediaItem->getMediaItem();
 
-            if (MediaItem::STATUS_UPLOAD_PENDING === $mediaItem->getStatus()) {
-                $this->mediaItemManager->updateUploadStatus($mediaItem);
+                if (
+                    MediaItem::STATUS_UPLOAD_PENDING === $mediaItem->getStatus()
+                    || null === $mediaItem->getPublicUrl()
+                ) {
+                    $this->mediaItemManager->updateUploadStatus($mediaItem);
 
-                if ($mediaItem->isDeleted()) {
-                    continue;
+                    if ($mediaItem->isDeleted()) {
+                        $this->delete($momentMediaItem);
+
+                        continue;
+                    }
                 }
-            }
 
-            $return[] = $momentMediaItem;
+                $return[] = $momentMediaItem;
+            } catch (EntityNotFoundException) {
+                $this->delete($momentMediaItem);
+            }
         }
 
         return $return;
