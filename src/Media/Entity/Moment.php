@@ -38,6 +38,10 @@ class Moment
     #[Assert\NotNull]
     private ?\DateTimeInterface $recordedAt = null;
 
+    #[ORM\Column(type: "date", nullable: false)]
+    #[Assert\NotNull]
+    private ?\DateTimeInterface $recordedOn = null;
+
     #[ORM\OneToMany(mappedBy: 'moment', targetEntity: MomentMediaItem::class, cascade: ["persist"])]
     private Collection $momentMediaItems;
 
@@ -119,6 +123,18 @@ class Moment
     public function setRecordedAt(?\DateTimeInterface $recordedAt): self
     {
         $this->recordedAt = $recordedAt;
+
+        return $this;
+    }
+
+    public function getRecordedOn(): ?\DateTimeInterface
+    {
+        return $this->recordedOn;
+    }
+
+    public function setRecordedOn(?\DateTimeInterface $recordedOn): self
+    {
+        $this->recordedOn = $recordedOn;
 
         return $this;
     }

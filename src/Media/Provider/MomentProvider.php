@@ -3,9 +3,11 @@
 namespace App\Media\Provider;
 
 use App\Core\Provider\AbstractProvider;
+use App\Core\Request\SearchRequest;
 use App\Media\Entity\Moment;
 use App\Media\Exception\MomentNotFoundException;
 use App\Media\Repository\MomentRepository;
+use App\Media\Request\MomentSearchRequest;
 use Ramsey\Uuid\UuidInterface;
 
 class MomentProvider extends AbstractProvider
@@ -30,6 +32,37 @@ class MomentProvider extends AbstractProvider
         return $moment;
     }
 
+    public function searchRecordedOnDates(MomentSearchRequest $searchRequest): array
+    {
+        $orderExpression = $this->getOrderExpression($searchRequest);
+        $orderDirection = $this->getOrderDirection($searchRequest);
+
+        $limit = $searchRequest->resultsPerPage ?: self::RESULTS_PER_PAGE;
+        $offset = ($searchRequest->page - 1) * $limit;
+
+        $queryBuilder = $this->buildSearchQueryBuilder($searchRequest)
+            ->select('root.recordedOn AS recordedOn')
+            ->addSelect('COUNT(root.id) AS count')
+            ->groupBy('root.recordedOn')
+            ->orderBy($orderExpression, $orderDirection)
+            ->setMaxResults($limit)
+            ->setFirstResult($offset);
+
+        return $queryBuilder->getQuery()
+            ->useQueryCache(true)
+            ->getResult();
+    }
+
+    public function countRecordedOnDates(MomentSearchRequest $searchRequest): int
+    {
+        $queryBuilder = $this->buildSearchQueryBuilder($searchRequest);
+
+        return (int)$queryBuilder->select('COUNT(DISTINCT root.recordedOn)')
+            ->getQuery()
+            ->useQueryCache(true)
+            ->getSingleScalarResult();
+    }
+
     protected function throwNotFoundException(): void
     {
         throw new MomentNotFoundException();
@@ -46,6 +79,7 @@ class MomentProvider extends AbstractProvider
     {
         return [
             'userId',
+            'recordedOn',
             'location',
             'mood',
         ];

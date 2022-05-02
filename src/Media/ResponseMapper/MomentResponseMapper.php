@@ -2,6 +2,7 @@
 
 namespace App\Media\ResponseMapper;
 
+use App\Media\Dto\MomentDateDto;
 use App\Media\Dto\MomentDto;
 use App\Media\Entity\Moment;
 use App\Media\Service\MomentMediaItemManager;
@@ -67,5 +68,20 @@ class MomentResponseMapper
         }
 
         return $groupedResults;
+    }
+
+    public function mapRecordedOnDates(array $results): array
+    {
+        $return = [];
+
+        foreach ($results as $result) {
+            $momentDateDto = new MomentDateDto();
+            $momentDateDto->recordedOn = $result['recordedOn']->format('Y-m-d');
+            $momentDateDto->count = $result['count'];
+
+            $return[] = $momentDateDto;
+        }
+
+        return $return;
     }
 }

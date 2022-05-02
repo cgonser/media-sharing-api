@@ -9,7 +9,6 @@ use App\Media\Entity\Moment;
 use App\Media\Provider\MomentProvider;
 use App\Media\Request\MomentSearchRequest;
 use App\Media\ResponseMapper\MomentResponseMapper;
-use App\User\Entity\User;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Ramsey\Uuid\Uuid;
@@ -67,7 +66,12 @@ class ReadController extends AbstractController
         description: "Success",
         content: new OA\JsonContent(ref: new Model(type: MomentDto::class))
      )]
-    #[Route(path: '/{momentId}', name: 'moments_get_one', methods: ['GET'])]
+    #[Route(
+        path: '/{momentId}',
+        name: 'moments_get_one',
+        requirements: [ 'momentId' => '%routing.uuid_mask%' ],
+        methods: ['GET']
+    )]
     public function getOne(#[OA\PathParameter] string $momentId): Response
     {
         $moment = $this->momentProvider->get(Uuid::fromString($momentId));
@@ -75,5 +79,62 @@ class ReadController extends AbstractController
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::READ, $moment);
 
         return new ApiJsonResponse(Response::HTTP_OK, $this->momentResponseMapper->map($moment));
+    }
+
+    #[OA\Parameter(
+        name: "filters",
+        in: "query",
+        schema: new OA\Schema(ref: new Model(type: MomentSearchRequest::class)),
+    )]
+    #[OA\Response(
+        response: 200,
+        description: "Success",
+        content: new OA\JsonContent(type: "array", items: new OA\Items(ref: new Model(type: MomentDto::class))),
+    )]
+    #[ParamConverter(data: 'searchRequest', converter: 'querystring')]
+    #[Route(path: '/dates', name: 'moments_dates_find', methods: ['GET'])]
+    public function searchDates(MomentSearchRequest $searchRequest): Response
+    {
+        $this->denyAccessUnlessGranted(AuthorizationVoterInterface::FIND, Moment::class);
+
+        $searchRequest->userId = $this->getUser()->getId()->toString();
+        $searchRequest->orderDirection = 'DESC';
+        $searchRequest->orderProperty = 'recordedOn';
+
+        if (null === $searchRequest->resultsPerPage) {
+            $searchRequest->resultsPerPage = 100;
+        }
+
+        $results = $this->momentProvider->searchRecordedOnDates($searchRequest);
+        $count = $this->momentProvider->countRecordedOnDates($searchRequest);
+
+        return new ApiJsonResponse(
+            Response::HTTP_OK,
+            $this->momentResponseMapper->mapRecordedOnDates($results),
+            [
+                'X-Total-Count' => $count,
+            ]
+        );
+    }
+
+    #[OA\Response(
+        response: 200,
+        description: "Success",
+        content: new OA\JsonContent(type: "array", items: new OA\Items(ref: new Model(type: MomentDto::class)))
+    )]
+    #[Route(
+        path: '/dates/{recordedOn}',
+        name: 'moments_search_by_date',
+        methods: ['GET'],
+    )]
+    public function searchByDate(#[OA\PathParameter] string $recordedOn): Response
+    {
+        $searchRequest = new MomentSearchRequest();
+        $searchRequest->recordedOn = $recordedOn;
+        $searchRequest->orderProperty = 'recordedAt';
+        $searchRequest->orderDirection = 'ASC';
+        $searchRequest->resultsPerPage = 100;
+
+        return $this->find($searchRequest);
     }
 }

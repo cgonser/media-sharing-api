@@ -2,7 +2,7 @@ parameters:
     locale: 'en'
     timezone: 'Europe/Luxembourg'
     app.env:  '%env(APP_ENV)%'
-    routing.uuid: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+    routing.uuid_mask: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 
 services:
     _defaults:

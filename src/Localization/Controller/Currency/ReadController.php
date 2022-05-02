@@ -45,7 +45,7 @@ class ReadController extends AbstractController
     )]    #[Route(
         path: '/currencies/{currencyId}',
         name: 'currencies_get_by_id',
-        requirements: ['"currencyId"' => '%routing.uuid%'],
+        requirements: ['"currencyId"' => '%routing.uuid_mask%'],
         methods: ['GET']
     )]
     public function getCurrencyById(#[OA\PathParameter] string $currencyId): Response
