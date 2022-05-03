@@ -58,6 +58,7 @@ class MomentMediaItem implements TimestampableInterface, SoftDeletableInterface
     public function setMoment(Moment $moment): self
     {
         $this->moment = $moment;
+        $this->momentId = $moment->getId();
 
         return $this;
     }
@@ -82,6 +83,7 @@ class MomentMediaItem implements TimestampableInterface, SoftDeletableInterface
     public function setMediaItem(MediaItem $mediaItem): self
     {
         $this->mediaItem = $mediaItem;
+        $this->mediaItemId = $mediaItem->getId();
 
         return $this;
     }

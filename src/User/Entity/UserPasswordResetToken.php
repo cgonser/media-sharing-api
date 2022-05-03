@@ -56,6 +56,7 @@ class UserPasswordResetToken implements TimestampableInterface
     public function setUser(User $user): self
     {
         $this->user = $user;
+        $this->userId = $user->getId();
 
         return $this;
     }
