@@ -20,6 +20,11 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
     public const TYPE_VIDEO = 'video';
     public const TYPE_THUMBNAIL = 'thumbnail';
 
+    public const TYPES = [
+        self::TYPE_VIDEO,
+        self::TYPE_THUMBNAIL,
+    ];
+
     use TimestampableTrait;
     use SoftDeletableTrait;
 

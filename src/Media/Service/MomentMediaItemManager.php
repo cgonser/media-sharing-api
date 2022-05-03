@@ -19,9 +19,9 @@ class MomentMediaItemManager
     ) {
     }
 
-    public function createForMoment(Moment $moment, string $extension): MomentMediaItem
+    public function createForMoment(Moment $moment, string $type, string $extension): MomentMediaItem
     {
-        $mediaItem = $this->mediaItemManager->createUploadableItem(MediaItem::TYPE_VIDEO, $extension);
+        $mediaItem = $this->mediaItemManager->createUploadableItem($type, $extension);
 
         $momentMediaItem = new MomentMediaItem();
         $momentMediaItem->setMediaItem($mediaItem);

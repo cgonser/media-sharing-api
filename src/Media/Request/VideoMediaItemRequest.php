@@ -3,11 +3,19 @@
 namespace App\Media\Request;
 
 use App\Core\Request\AbstractRequest;
+use App\Media\Entity\MediaItem;
 use OpenApi\Attributes as OA;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[OA\RequestBody]
 class VideoMediaItemRequest extends AbstractRequest
 {
     #[OA\Property]
+    #[Assert\NotBlank]
     public ?string $extension;
+
+    #[OA\Property]
+    #[Assert\NotBlank]
+    #[Assert\Choice(MediaItem::TYPES)]
+    public ?string $type;
 }

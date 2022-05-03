@@ -19,9 +19,9 @@ class VideoMediaItemManager
     ) {
     }
 
-    public function createForVideo(Video $video, string $extension): VideoMediaItem
+    public function createForVideo(Video $video, string $type, string $extension): VideoMediaItem
     {
-        $mediaItem = $this->mediaItemManager->createUploadableItem(MediaItem::TYPE_VIDEO, $extension);
+        $mediaItem = $this->mediaItemManager->createUploadableItem($type, $extension);
 
         $videoMediaItem = new VideoMediaItem();
         $videoMediaItem->setMediaItem($mediaItem);
