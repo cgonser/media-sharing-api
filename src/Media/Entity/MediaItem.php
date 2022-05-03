@@ -25,6 +25,14 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
         self::TYPE_THUMBNAIL,
     ];
 
+    public const EXTENSIONS = [
+        'jpeg',
+        'jpg',
+        'mp4',
+        'mov',
+        'png',
+    ];
+
     use TimestampableTrait;
     use SoftDeletableTrait;
 

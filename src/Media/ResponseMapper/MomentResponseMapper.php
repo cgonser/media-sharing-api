@@ -26,9 +26,9 @@ class MomentResponseMapper
         $momentDto->duration = $moment->getDuration();
         $momentDto->recordedOn = $moment->getRecordedAt()?->format('Y-m-d');
         $momentDto->recordedAt = $moment->getRecordedAt()?->format(DateTimeInterface::ATOM);
-        $momentDto->mediaItems = $this->mapMediaItems(
-            $this->momentMediaItemManager->extractActiveMediaItems($moment->getMomentMediaItems())
-        );
+        $momentDto->mediaItems = !$moment->getMomentMediaItems()->isEmpty()
+            ? $this->mapMediaItems($this->momentMediaItemManager->extractActiveMediaItems($moment->getMomentMediaItems()))
+            : null;
 
         return $momentDto;
     }

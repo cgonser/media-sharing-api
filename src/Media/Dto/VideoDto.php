@@ -25,7 +25,7 @@ class VideoDto
     #[OA\Property(type: "array", items: new OA\Items(ref: new Model(type: MomentDto::class)))]
     public ?array $moments;
 
-    #[OA\Property(type: "array", items: new OA\Items(type: "object"))]
+    #[OA\Property(type: "object")]
     public ?array $mediaItems;
 
     public ?int $duration;

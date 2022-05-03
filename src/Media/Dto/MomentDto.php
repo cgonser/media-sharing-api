@@ -17,7 +17,7 @@ class MomentDto
 
     public ?int $duration;
 
-    #[OA\Property(type: "array", items: new OA\Items(ref: new Model(type: MediaItemDto::class)))]
+    #[OA\Property(type: "object")]
     public ?array $mediaItems;
 
     public ?string $recordedOn;

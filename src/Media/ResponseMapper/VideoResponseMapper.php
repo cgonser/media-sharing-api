@@ -76,9 +76,9 @@ class VideoResponseMapper
         $videoDto->moments = $this->mapVideoMoments($video->getVideoMoments()->toArray());
         $videoDto->duration = $video->getDuration();
         $videoDto->recordedAt = $video->getRecordedAt()?->format(DateTimeInterface::ATOM);
-        $videoDto->mediaItems = $this->mapMediaItems(
-            $this->videoMediaItemManager->extractActiveMediaItems($video->getVideoMediaItems())
-        );
+        $videoDto->mediaItems = !$video->getVideoMediaItems()->isEmpty()
+            ? $this->mapMediaItems($this->videoMediaItemManager->extractActiveMediaItems($video->getVideoMediaItems()))
+            : null;
     }
 
     private function mapVideoMoments(array $videoMoments): array
