@@ -63,6 +63,7 @@ class VideoMoment implements TimestampableInterface, SoftDeletableInterface
     public function setVideo(Video $video): self
     {
         $this->video = $video;
+        $this->videoId = $video->getId();
 
         return $this;
     }
@@ -87,6 +88,7 @@ class VideoMoment implements TimestampableInterface, SoftDeletableInterface
     public function setMoment(Moment $moment): self
     {
         $this->moment = $moment;
+        $this->momentId = $moment->getId();
 
         return $this;
     }

@@ -216,14 +216,14 @@ class Video
     public function hasMoment(Moment $moment): bool
     {
         return !$this->videoMoments->filter(
-            fn (VideoMoment $videoMoment) => $moment->getId()->equals($videoMoment->getId())
+            fn (VideoMoment $videoMoment) => $moment->getId()->equals($videoMoment->getMomentId())
         )->isEmpty();
     }
 
     public function updateMoment(Moment $moment, int $position): void
     {
         $videoMoment = $this->videoMoments->filter(
-            fn (VideoMoment $videoMoment) => $moment->getId()->equals($videoMoment->getId())
+            fn (VideoMoment $videoMoment) => $moment->getId()->equals($videoMoment->getMomentId())
         )->first();
 
         if (null === $videoMoment) {
