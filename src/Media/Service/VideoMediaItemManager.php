@@ -6,9 +6,11 @@ use App\Core\Validation\EntityValidator;
 use App\Media\Entity\MediaItem;
 use App\Media\Entity\Video;
 use App\Media\Entity\VideoMediaItem;
+use App\Media\Message\VideoMediaItemUploadedEvent;
 use App\Media\Repository\VideoMediaItemRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityNotFoundException;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class VideoMediaItemManager
 {
@@ -16,6 +18,7 @@ class VideoMediaItemManager
         private VideoMediaItemRepository $videoMediaItemRepository,
         private MediaItemManager $mediaItemManager,
         private EntityValidator $validator,
+        private MessageBusInterface $messageBus,
     ) {
     }
 
@@ -73,6 +76,10 @@ class VideoMediaItemManager
                         $this->delete($videoMediaItem);
 
                         continue;
+                    }
+
+                    if (MediaItem::STATUS_AVAILABLE === $mediaItem->getStatus()) {
+                        $this->messageBus->dispatch(new VideoMediaItemUploadedEvent($videoMediaItem->getId()));
                     }
                 }
 

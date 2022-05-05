@@ -57,6 +57,7 @@ class UserResponseMapper
         $userDto->isProfilePrivate = $user->isProfilePrivate();
         $userDto->followersCount = $user->getFollowersCount();
         $userDto->followingCount = $user->getFollowingCount();
+        $userDto->videoCount = $user->getVideoCount();
 
         if (null !== $user->getProfilePicture()) {
             $userDto->profilePicture = $this->getProfilePictureUrl($user);

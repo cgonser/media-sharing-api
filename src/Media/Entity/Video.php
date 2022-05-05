@@ -14,6 +14,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
 class Video
 {
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_PUBLISHED = 'published';
+    public const STATUS_HIDDEN = 'hidden';
+
+    public const STATUSES = [
+        self::STATUS_PENDING,
+        self::STATUS_PUBLISHED,
+        self::STATUS_HIDDEN,
+    ];
+
     #[ORM\Id, ORM\GeneratedValue('CUSTOM'), ORM\CustomIdGenerator(UuidGenerator::class)]
     #[ORM\Column(type: 'uuid', unique: true)]
     private ?UuidInterface $id = null;
@@ -24,6 +34,9 @@ class Video
     #[ORM\ManyToOne]
     #[Assert\NotBlank]
     private User $user;
+
+    #[ORM\Column(type: 'string', nullable: false)]
+    private string $status;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
@@ -46,6 +59,9 @@ class Video
     #[ORM\Column(type: "datetime", nullable: true)]
     private ?\DateTimeInterface $recordedAt = null;
 
+    #[ORM\Column(type: "datetime", nullable: true)]
+    private ?\DateTimeInterface $publishedAt = null;
+
     #[ORM\OneToMany(mappedBy: 'video', targetEntity: VideoMoment::class, cascade: ["persist"])]
     private Collection $videoMoments;
 
@@ -64,6 +80,7 @@ class Video
         $this->videoLikes = new ArrayCollection();
         $this->videoComments = new ArrayCollection();
         $this->videoMediaItems = new ArrayCollection();
+        $this->status = self::STATUS_PENDING;
     }
 
     public function getId(): UuidInterface
@@ -92,6 +109,18 @@ class Video
     {
         $this->user = $user;
         $this->userId = $user->getId();
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
@@ -176,6 +205,18 @@ class Video
     public function setRecordedAt(?\DateTimeInterface $recordedAt): self
     {
         $this->recordedAt = $recordedAt;
+
+        return $this;
+    }
+
+    public function getPublishedAt(): ?\DateTimeInterface
+    {
+        return $this->publishedAt;
+    }
+
+    public function setPublishedAt(?\DateTimeInterface $publishedAt): self
+    {
+        $this->publishedAt = $publishedAt;
 
         return $this;
     }

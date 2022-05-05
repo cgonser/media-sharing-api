@@ -87,6 +87,7 @@ class VideoProvider extends AbstractProvider
     {
         return [
             'userId',
+            'status',
             'followerId',
             'followingOnly',
             'location',

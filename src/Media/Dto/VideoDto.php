@@ -14,6 +14,8 @@ class VideoDto
 
     public ?PublicUserDto $user;
 
+    public ?string $status;
+
     public ?string $description;
 
     #[OA\Property(type: "array", items: new OA\Items(type: "string"))]

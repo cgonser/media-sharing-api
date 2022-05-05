@@ -114,6 +114,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
     #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
     private int $followingCount = 0;
 
+    #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
+    private int $videoCount = 0;
+
     public function __construct()
     {
         $this->followers = new ArrayCollection();
@@ -349,6 +352,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
     public function setFollowingCount(int $followingCount): self
     {
         $this->followingCount = $followingCount;
+
+        return $this;
+    }
+
+    public function getVideoCount(): int
+    {
+        return $this->videoCount;
+    }
+
+    public function setVideoCount(int $videoCount): self
+    {
+        $this->videoCount = $videoCount;
 
         return $this;
     }

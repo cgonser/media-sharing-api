@@ -18,6 +18,8 @@ class PublicUserDto
 
     public int $followingCount;
 
+    public int $videoCount;
+
     public ?bool $isFollowed = null;
 
     public bool $isProfilePrivate;

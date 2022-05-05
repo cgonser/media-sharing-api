@@ -4,13 +4,17 @@ namespace App\Media\Service;
 
 use App\Core\Validation\EntityValidator;
 use App\Media\Entity\Video;
+use App\Media\Message\VideoPublishedEvent;
 use App\Media\Repository\VideoRepository;
+use DateTime;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class VideoManager
 {
     public function __construct(
-        private VideoRepository $videoRepository,
-        private EntityValidator $validator,
+        private readonly VideoRepository $videoRepository,
+        private readonly EntityValidator $validator,
+        private readonly MessageBusInterface $messageBus,
     ) {
     }
 
@@ -34,5 +38,21 @@ class VideoManager
         $this->validator->validate($video);
 
         $this->videoRepository->save($video);
+    }
+
+    public function publish(Video $video): void
+    {
+        $video->setStatus(Video::STATUS_PUBLISHED);
+        $video->setPublishedAt(new DateTime());
+
+        $this->update($video);
+
+        $this->messageBus->dispatch(
+            new VideoPublishedEvent(
+                $video->getId(),
+                $video->getUserId(),
+                $video->getPublishedAt(),
+            )
+        );
     }
 }

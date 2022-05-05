@@ -25,6 +25,7 @@ class VideoResponseMapper
     {
         $videoDto = new VideoDto();
         $this->mapBaseData($videoDto, $video);
+        $videoDto->status = $video->getStatus();
 
         return $videoDto;
     }

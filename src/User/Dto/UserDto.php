@@ -36,6 +36,8 @@ class UserDto
 
     public int $followingCount;
 
+    public int $videoCount;
+
     public ?string $emailValidatedAt;
 
     public ?string $lastLoginAt;

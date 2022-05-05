@@ -15,6 +15,7 @@ use OpenApi\Attributes as OA;
 use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,8 +24,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class ReadController extends AbstractController
 {
     public function __construct(
-        private VideoProvider $videoProvider,
-        private VideoResponseMapper $videoResponseMapper,
+        private readonly VideoProvider $videoProvider,
+        private readonly VideoResponseMapper $videoResponseMapper,
     ) {
     }
 
@@ -40,7 +41,7 @@ class ReadController extends AbstractController
     )]
     #[ParamConverter(data: 'searchRequest', converter: 'querystring')]
     #[Route(name: 'videos_find', methods: ['GET'])]
-    public function find(VideoSearchRequest $searchRequest): Response
+    public function find(VideoSearchRequest $searchRequest, Request $request): Response
     {
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::FIND, Video::class);
 
@@ -50,12 +51,13 @@ class ReadController extends AbstractController
             $searchRequest->userId = $this->getUser()->getId()->toString();
         }
 
-        $results = $this->videoProvider->search($searchRequest);
         $count = $this->videoProvider->count($searchRequest);
 
         return new ApiJsonResponse(
             Response::HTTP_OK,
-            $this->videoResponseMapper->mapMultiplePublic($results),
+            $request->isMethod(Request::METHOD_GET)
+                ? $this->videoResponseMapper->mapMultiplePublic($this->videoProvider->search($searchRequest))
+                : null,
             [
                 'X-Total-Count' => $count,
             ]
