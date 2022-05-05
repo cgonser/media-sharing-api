@@ -17,12 +17,12 @@ class ReadControllerTest extends AbstractUserTest
         $responseData = json_decode($response->getContent(), true);
         $userId = $responseData['id'];
 
-        $client->jsonRequest('GET', '/users/'.$userId);
+        $client->jsonRequest('GET', '/users/current');
         static::assertResponseStatusCodeSame('401');
 
         $this->authenticateClient($client, $requestData['email'], $requestData['password']);
 
-        $client->jsonRequest('GET', '/users/'.$userId);
+        $client->jsonRequest('GET', '/users/current');
         $response = $client->getResponse();
         $responseData = json_decode($response->getContent(), true);
 

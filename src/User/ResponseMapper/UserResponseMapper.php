@@ -93,7 +93,7 @@ class UserResponseMapper
 
     public function appendMultipleFollowingDetails(array $userDtos, array $followingIds): array
     {
-        foreach ($userDtos as $key => $userDto) {
+        foreach ($userDtos as $userDto) {
             $this->appendFollowingFlag($userDto, $followingIds);
         }
 
