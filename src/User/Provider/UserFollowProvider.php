@@ -69,6 +69,14 @@ class UserFollowProvider extends AbstractProvider
         return $userFollow;
     }
 
+    public function findByFollowerId(UuidInterface $followerId): array
+    {
+        return $this->repository->findBy([
+            'followerId' => $followerId,
+            'isApproved' => true,
+        ]);
+    }
+
     public function findOneByFollowerAndFollowing(UuidInterface $followerId, UuidInterface $followingId): ?UserFollow
     {
         return $this->repository->findOneBy([

@@ -2,9 +2,11 @@
 
 namespace App\User\Service;
 
+use App\Core\Exception\InvalidEntityException;
 use App\Core\Validation\EntityValidator;
 use App\User\Entity\User;
 use App\User\Entity\UserFollow;
+use App\User\Exception\UserFollowAlreadyExistsException;
 use App\User\Message\UserFollowApprovedEvent;
 use App\User\Message\UserFollowUnfollowedEvent;
 use App\User\Provider\UserFollowProvider;
@@ -26,7 +28,12 @@ class UserFollowManager
         $userFollow = new UserFollow();
         $userFollow->setFollower($follower);
         $userFollow->setFollowing($following);
-        $this->save($userFollow);
+
+        try {
+            $this->save($userFollow);
+        } catch (InvalidEntityException) {
+            throw new UserFollowAlreadyExistsException();
+        }
 
         if (!$following->isProfilePrivate()) {
             $this->approve($userFollow);

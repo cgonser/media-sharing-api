@@ -71,23 +71,30 @@ class UserResponseMapper
         );
     }
 
-    public function mapMultiple(array $users): array
-    {
-        $userDtos = [];
-
-        foreach ($users as $user) {
-            $userDtos[] = $this->map($user);
-        }
-
-        return $userDtos;
-    }
-
-    public function mapMultiplePublic(array $users): array
+    public function mapMultiple(array $users, ?array $followingIds = null): array
     {
         $userDtos = [];
 
         foreach ($users as $user) {
             $userDtos[] = $this->mapPublic($user);
+        }
+
+        if (null !== $followingIds) {
+            $this->appendMultipleFollowingDetails($userDtos, $followingIds);
+        }
+
+        return $userDtos;
+    }
+
+    public function appendFollowingFlag(PublicUserDto $userDto, array $followingIds): void
+    {
+        $userDto->isFollowed = count(array_filter($followingIds, fn($followingId) => $userDto->id === $followingId));
+    }
+
+    public function appendMultipleFollowingDetails(array $userDtos, array $followingIds): array
+    {
+        foreach ($userDtos as $key => $userDto) {
+            $this->appendFollowingFlag($userDto, $followingIds);
         }
 
         return $userDtos;

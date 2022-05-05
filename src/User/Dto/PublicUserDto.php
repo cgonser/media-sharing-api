@@ -18,5 +18,7 @@ class PublicUserDto
 
     public int $followingCount;
 
+    public ?bool $isFollowed = null;
+
     public bool $isProfilePrivate;
 }

@@ -23,4 +23,20 @@ class UserProvider extends AbstractProvider
     {
         return $this->repository->findOneBy(['email' => strtolower($emailAddress)]);
     }
+
+    protected function getFilterableFields(): array
+    {
+        return [
+            'userId',
+            'username',
+        ];
+    }
+
+    protected function getSearchableFields(): array
+    {
+        return [
+            'username' => 'text',
+            'bio' => 'text',
+        ];
+    }
 }
