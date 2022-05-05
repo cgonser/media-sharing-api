@@ -56,7 +56,12 @@ class ReadController extends AbstractController
         description: "Success",
         content: new OA\JsonContent(ref: new Model(type: UserDto::class))
     )]
-    #[Route(path: '/users/current', name: 'users_get_current', methods: ['GET'])]
+    #[Route(
+        path: '/users/current',
+        name: 'users_get_current',
+        methods: ['GET'],
+        priority: 100,
+    )]
     public function getCurrentUser(): Response
     {
         return new ApiJsonResponse(
@@ -72,18 +77,43 @@ class ReadController extends AbstractController
     )]
     #[Route(
         path: '/users/{userId}',
-        name: 'users_get_one',
+        name: 'users_get_one_by_id',
         requirements: [ 'userId' => '%routing.uuid_mask%' ],
         methods: ['GET'],
+        priority: 50,
     )]
     #[ParamConverter(data: 'user', converter: 'user.user_entity')]
     public function getUserById(User $user): Response
     {
-        $this->denyAccessUnlessGranted(AuthorizationVoterInterface::READ, $user);
-
         return new ApiJsonResponse(
             Response::HTTP_OK,
-            $this->userResponseMapper->mapPublic($user)
+            $this->userResponseMapper->mapPublic(
+                $user,
+                $this->userFollowProvider->isFollowing($this->getUser()->getId(), $user->getId(), null),
+            )
+        );
+    }
+
+    #[OA\Response(
+        response: 200,
+        description: "Success",
+        content: new OA\JsonContent(ref: new Model(type: PublicUserDto::class))
+    )]
+    #[Route(
+        path: '/users/{username}',
+        name: 'users_get_one_by_username',
+        methods: ['GET'],
+        priority: 50,
+    )]
+    #[ParamConverter(data: 'user', converter: 'user.user_entity')]
+    public function getUserByUsername(User $user): Response
+    {
+        return new ApiJsonResponse(
+            Response::HTTP_OK,
+            $this->userResponseMapper->mapPublic(
+                $user,
+                $this->userFollowProvider->isFollowing($this->getUser()->getId(), $user->getId(), null),
+            )
         );
     }
 }

@@ -112,9 +112,12 @@ class UserFollowProvider extends AbstractProvider
         ]);
     }
 
-    public function isFollowing(UuidInterface $followerId, UuidInterface $followingId): bool
-    {
-        return null !== $this->findOneByFollowerAndFollowing($followerId, $followingId);
+    public function isFollowing(
+        UuidInterface $followerId,
+        UuidInterface $followingId,
+        ?bool $isApproved = true,
+    ): bool {
+        return null !== $this->findOneByFollowerAndFollowing($followerId, $followingId, $isApproved);
     }
 
     protected function addFilters(QueryBuilder $queryBuilder, array $filters): void

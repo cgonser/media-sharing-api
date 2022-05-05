@@ -35,11 +35,15 @@ class UserResponseMapper
         return $userDto;
     }
 
-    public function mapPublic(User $user): PublicUserDto
+    public function mapPublic(User $user, ?bool $isFollowed = null): PublicUserDto
     {
         $userDto = new PublicUserDto();
 
         $this->mapBaseData($userDto, $user);
+
+        if (null !== $isFollowed) {
+            $userDto->isFollowed = $isFollowed;
+        }
 
         return $userDto;
     }

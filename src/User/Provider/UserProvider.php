@@ -19,6 +19,16 @@ class UserProvider extends AbstractProvider
         throw new UserNotFoundException();
     }
 
+    public function findOneByUsername(string $username): ?User
+    {
+        return $this->repository->findOneBy(['username' => strtolower($username)]);
+    }
+
+    public function getByUsername(string $username): User
+    {
+        return $this->findOneByUsername($username) ?? $this->throwNotFoundException();
+    }
+
     public function findOneByEmail(string $emailAddress): ?User
     {
         return $this->repository->findOneBy(['email' => strtolower($emailAddress)]);
