@@ -55,11 +55,20 @@ class VideoProvider extends AbstractProvider
         }
 
         if (isset($filters['root.followerId'])) {
-            $queryBuilder->leftJoin('videoOwner.followers', 'follower', 'WITH', 'follower.isApproved = TRUE')
-                ->andWhere('videoOwner.isProfilePrivate = FALSE OR follower.followerId = :followerId')
-                ->setParameter('followerId', $filters['root.followerId']);
+            $queryBuilder
+                ->leftJoin('videoOwner.followers', 'follower', 'WITH', 'follower.isApproved = TRUE')
+                ->andWhere(
+                    $filters['root.followingOnly']
+                        ? 'follower.followerId = :followerId'
+                        : 'videoOwner.isProfilePrivate = FALSE OR follower.followerId = :followerId'
+                )
+                ->setParameter('followerId', $filters['root.followerId'])
+            ;
 
-            unset($filters['root.followerId']);
+            unset(
+                $filters['root.followingOnly'],
+                $filters['root.followerId'],
+            );
         } else {
             $queryBuilder->andWhere('videoOwner.isProfilePrivate = FALSE');
         }
@@ -79,6 +88,7 @@ class VideoProvider extends AbstractProvider
         return [
             'userId',
             'followerId',
+            'followingOnly',
             'location',
             'mood',
         ];

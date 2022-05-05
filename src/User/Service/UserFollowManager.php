@@ -44,7 +44,7 @@ class UserFollowManager
 
     public function unfollow(User $user, User $following): void
     {
-        $userFollow = $this->userFollowProvider->getByFollowerAndFollowing($user->getId(), $following->getId());
+        $userFollow = $this->userFollowProvider->getByFollowerAndFollowing($user->getId(), $following->getId(), null);
 
         $this->delete($userFollow);
 

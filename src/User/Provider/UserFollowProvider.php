@@ -57,10 +57,13 @@ class UserFollowProvider extends AbstractProvider
         ]);
     }
 
-    public function getByFollowerAndFollowing(UuidInterface $followerId, UuidInterface $followingId): UserFollow
-    {
+    public function getByFollowerAndFollowing(
+        UuidInterface $followerId,
+        UuidInterface $followingId,
+        ?bool $isApproved = true,
+    ): UserFollow {
         /** @var UserFollow|null $userFollow */
-        $userFollow = $this->findOneByFollowerAndFollowing($followerId, $followingId);
+        $userFollow = $this->findOneByFollowerAndFollowing($followerId, $followingId, $isApproved);
 
         if (null === $userFollow) {
             $this->throwNotFoundException();
@@ -73,17 +76,24 @@ class UserFollowProvider extends AbstractProvider
     {
         return $this->repository->findBy([
             'followerId' => $followerId,
-            'isApproved' => true,
         ]);
     }
 
-    public function findOneByFollowerAndFollowing(UuidInterface $followerId, UuidInterface $followingId): ?UserFollow
-    {
-        return $this->repository->findOneBy([
+    public function findOneByFollowerAndFollowing(
+        UuidInterface $followerId,
+        UuidInterface $followingId,
+        ?bool $isApproved = true,
+    ): ?UserFollow {
+        $criteria = [
             'followerId' => $followerId,
             'followingId' => $followingId,
-            'isApproved' => true,
-        ]);
+        ];
+
+        if (null !== $isApproved) {
+            $criteria['isApproved'] = $isApproved;
+        }
+
+        return $this->repository->findOneBy($criteria);
     }
 
     public function countByFollowerId(UuidInterface $followerId): int
