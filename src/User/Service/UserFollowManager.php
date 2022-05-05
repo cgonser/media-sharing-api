@@ -3,6 +3,7 @@
 namespace App\User\Service;
 
 use App\Core\Exception\InvalidEntityException;
+use App\Core\Exception\InvalidInputException;
 use App\Core\Validation\EntityValidator;
 use App\User\Entity\User;
 use App\User\Entity\UserFollow;
@@ -25,6 +26,10 @@ class UserFollowManager
 
     public function follow(User $follower, User $following): UserFollow
     {
+        if ($follower->getId()->equals($following->getId())) {
+            throw new InvalidInputException('You cannot follow yourself');
+        }
+
         $userFollow = new UserFollow();
         $userFollow->setFollower($follower);
         $userFollow->setFollowing($following);
