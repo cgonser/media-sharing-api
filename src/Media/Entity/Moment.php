@@ -4,6 +4,8 @@ namespace App\Media\Entity;
 
 use App\Media\Repository\MomentRepository;
 use App\User\Entity\User;
+use CrEOF\Spatial\PHP\Types\Geography\Point;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -35,19 +37,19 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(nullable: true)]
     private ?string $mood = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?string $location = null;
+    #[ORM\Column(type: 'point', nullable: true)]
+    private ?Point $location = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $duration = null;
 
     #[ORM\Column(type: "datetime", nullable: false)]
     #[Assert\NotNull]
-    private ?\DateTimeInterface $recordedAt = null;
+    private ?DateTimeInterface $recordedAt = null;
 
     #[ORM\Column(type: "date", nullable: false)]
     #[Assert\NotNull]
-    private ?\DateTimeInterface $recordedOn = null;
+    private ?DateTimeInterface $recordedOn = null;
 
     #[ORM\OneToMany(mappedBy: 'moment', targetEntity: MomentMediaItem::class, cascade: ["persist"])]
     private Collection $momentMediaItems;
@@ -98,12 +100,12 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getLocation(): ?string
+    public function getLocation(): ?Point
     {
         return $this->location;
     }
 
-    public function setLocation(?string $location): self
+    public function setLocation(?Point $location): self
     {
         $this->location = $location;
 
@@ -122,12 +124,12 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getRecordedAt(): ?\DateTimeInterface
+    public function getRecordedAt(): ?DateTimeInterface
     {
         return $this->recordedAt;
     }
 
-    public function setRecordedAt(?\DateTimeInterface $recordedAt): self
+    public function setRecordedAt(?DateTimeInterface $recordedAt): self
     {
         $this->recordedAt = $recordedAt;
         $this->setRecordedOn($recordedAt);
@@ -135,12 +137,12 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getRecordedOn(): ?\DateTimeInterface
+    public function getRecordedOn(): ?DateTimeInterface
     {
         return $this->recordedOn;
     }
 
-    public function setRecordedOn(?\DateTimeInterface $recordedOn): self
+    public function setRecordedOn(?DateTimeInterface $recordedOn): self
     {
         $this->recordedOn = $recordedOn;
 

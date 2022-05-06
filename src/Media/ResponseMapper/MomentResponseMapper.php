@@ -2,6 +2,7 @@
 
 namespace App\Media\ResponseMapper;
 
+use App\Media\Dto\LocationDto;
 use App\Media\Dto\MomentDateDto;
 use App\Media\Dto\MomentDto;
 use App\Media\Entity\Moment;
@@ -25,13 +26,19 @@ class MomentResponseMapper
         $momentDto->id = $moment->getId()->toString();
         $momentDto->userId = $moment->getUser()->getId()->toString();
         $momentDto->mood = $moment->getMood();
-        $momentDto->location = $moment->getLocation();
         $momentDto->duration = $moment->getDuration();
         $momentDto->recordedOn = $moment->getRecordedAt()?->format('Y-m-d');
         $momentDto->recordedAt = $moment->getRecordedAt()?->format(DateTimeInterface::ATOM);
         $momentDto->mediaItems = !$moment->getMomentMediaItems()->isEmpty()
             ? $this->mapMediaItems($this->momentMediaItemManager->extractActiveMediaItems($moment->getMomentMediaItems()))
             : null;
+
+        if (null !== $moment->getLocation()) {
+            $locationDto = new LocationDto();
+            $locationDto->lat = $moment->getLocation()->getY();
+            $locationDto->long = $moment->getLocation()->getX();
+            $momentDto->location = $locationDto;
+        }
 
         return $momentDto;
     }

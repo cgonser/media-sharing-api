@@ -13,7 +13,7 @@ class MomentDto
 
     public ?string $mood;
 
-    public ?string $location;
+    public ?LocationDto $location;
 
     public ?int $duration;
 

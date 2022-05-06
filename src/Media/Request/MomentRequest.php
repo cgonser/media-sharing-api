@@ -17,7 +17,8 @@ class MomentRequest extends AbstractRequest
     public ?string $mood;
 
     #[OA\Property]
-    public ?string $location;
+    #[Assert\Valid]
+    public ?LocationRequest $location;
 
     #[OA\Property]
     #[Assert\Type('int')]
