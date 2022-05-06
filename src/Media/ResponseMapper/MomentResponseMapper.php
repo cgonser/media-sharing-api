@@ -6,13 +6,16 @@ use App\Media\Dto\MomentDateDto;
 use App\Media\Dto\MomentDto;
 use App\Media\Entity\Moment;
 use App\Media\Entity\MomentMediaItem;
+use App\Media\Provider\MomentProvider;
 use App\Media\Service\MomentMediaItemManager;
 use DateTimeInterface;
+use Ramsey\Uuid\UuidInterface;
 
 class MomentResponseMapper
 {
     public function __construct(
         private readonly MomentMediaItemManager $momentMediaItemManager,
+        private readonly MomentProvider $momentProvider,
     ) {
     }
 
@@ -73,7 +76,7 @@ class MomentResponseMapper
         return $groupedResults;
     }
 
-    public function mapRecordedOnDates(array $results): array
+    public function mapRecordedOnDates(array $results, ?bool $expandMoments = false, ?UuidInterface $userId = null): array
     {
         $return = [];
 
@@ -81,6 +84,12 @@ class MomentResponseMapper
             $momentDateDto = new MomentDateDto();
             $momentDateDto->recordedOn = $result['recordedOn']->format('Y-m-d');
             $momentDateDto->count = $result['count'];
+
+            if ($expandMoments && null !== $userId) {
+                $momentDateDto->moments = $this->mapMultiple(
+                    $this->momentProvider->findByRecordedOn($userId, $result['recordedOn'])
+                );
+            }
 
             $return[] = $momentDateDto;
         }

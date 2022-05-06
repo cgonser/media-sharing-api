@@ -8,6 +8,7 @@ use App\Media\Entity\Moment;
 use App\Media\Exception\MomentNotFoundException;
 use App\Media\Repository\MomentRepository;
 use App\Media\Request\MomentSearchRequest;
+use DateTimeInterface;
 use Ramsey\Uuid\UuidInterface;
 
 class MomentProvider extends AbstractProvider
@@ -61,6 +62,19 @@ class MomentProvider extends AbstractProvider
             ->getQuery()
             ->useQueryCache(true)
             ->getSingleScalarResult();
+    }
+
+    public function findByRecordedOn(UuidInterface $userId, DateTimeInterface $recordedOn): array
+    {
+        return $this->findBy(
+            [
+                'userId' => $userId,
+                'recordedOn' => $recordedOn,
+            ],
+            [
+                'recordedAt' => 'asc'
+            ]
+        );
     }
 
     protected function throwNotFoundException(): void

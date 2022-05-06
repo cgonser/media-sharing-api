@@ -24,4 +24,7 @@ class MomentSearchRequest extends SearchRequest
 
     #[OA\Property]
     public ?string $groupBy = null;
+
+    #[OA\Property]
+    public ?bool $expandMoments = false;
 }

@@ -110,7 +110,11 @@ class ReadController extends AbstractController
 
         return new ApiJsonResponse(
             Response::HTTP_OK,
-            $this->momentResponseMapper->mapRecordedOnDates($results),
+            $this->momentResponseMapper->mapRecordedOnDates(
+                $results,
+                $searchRequest->expandMoments,
+                $this->getUser()->getId(),
+            ),
             [
                 'X-Total-Count' => $count,
             ]
