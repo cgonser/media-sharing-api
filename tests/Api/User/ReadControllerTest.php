@@ -86,25 +86,6 @@ class ReadControllerTest extends AbstractUserTest
         self::assertArrayNotHasKey('phoneNumber', $responseData);
     }
 
-    public function testGetAnotherPrivateNotFollowing(): void
-    {
-        $client = static::createClient();
-
-        $privateUserData = $this->getUserDummyData();
-        $privateUserData['isProfilePrivate'] = true;
-        $privateUser = $this->createUserDummy($privateUserData);
-
-        $secondUserData = $this->getUserDummyData();
-        $secondUserData['username'] = 'another-test';
-        $secondUserData['email'] = 'another-test@itinair.com';
-        $this->createUserDummy($secondUserData);
-
-        $this->authenticateClient($client, $secondUserData['email'], $secondUserData['password']);
-
-        $client->jsonRequest('GET', '/users/'.$privateUser->getId()->toString());
-        static::assertResponseStatusCodeSame('403');
-    }
-
     public function testGetAnotherPrivateFollowing(): void
     {
         $client = static::createClient();
