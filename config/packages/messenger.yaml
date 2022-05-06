@@ -27,12 +27,12 @@ framework:
 #                    max_delay: 0
 
         routing:
-            'App\User\Message\UserCreatedEvent': async
+            'App\User\Message\UserCreatedEvent': sync
             'App\User\Message\UserUpdatedEvent': void
-            'App\User\Message\UserFollowApprovedEvent': async
-            'App\User\Message\UserFollowUnfollowedEvent': async
+            'App\User\Message\UserFollowApprovedEvent': sync
+            'App\User\Message\UserFollowUnfollowedEvent': sync
 
-            'App\Media\Message\VideoMediaItemUploadedEvent': async
-            'App\Media\Message\VideoPublishedEvent': async
+            'App\Media\Message\VideoMediaItemUploadedEvent': sync
+            'App\Media\Message\VideoPublishedEvent': sync
 
-            'Symfony\Component\Mailer\Messenger\SendEmailMessage': async
+            'Symfony\Component\Mailer\Messenger\SendEmailMessage': sync
