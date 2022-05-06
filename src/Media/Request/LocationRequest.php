@@ -9,13 +9,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[OA\RequestBody]
 class LocationRequest extends AbstractRequest
 {
-    #[OA\Property]
     #[Assert\Type('float')]
     #[Assert\NotBlank]
-    public ?float $lat = null;
+    public ?float $lat;
 
-    #[OA\Property]
     #[Assert\Type('float')]
     #[Assert\NotBlank]
-    public ?float $long = null;
+    public ?float $long;
+
+    #[Assert\NotBlank]
+    public ?string $googlePlaceId;
+
+    public ?string $address;
 }

@@ -5,7 +5,7 @@ namespace App\Media\Service;
 use App\Media\Entity\Moment;
 use App\Media\Request\MomentRequest;
 use App\User\Provider\UserProvider;
-use CrEOF\Spatial\PHP\Types\Geography\Point;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Ramsey\Uuid\Uuid;
 
 class MomentRequestManager
@@ -47,12 +47,20 @@ class MomentRequestManager
         }
 
         if ($momentRequest->has('location')) {
-            $moment->setLocation(
+            $moment->setLocationCoordinates(
                 new Point(
                     $momentRequest->location->long,
                     $momentRequest->location->lat,
                 )
             );
+
+            if ($momentRequest->location->has('googlePlaceId')) {
+                $moment->setLocationGooglePlaceId($momentRequest->location->googlePlaceId);
+            }
+
+            if ($momentRequest->location->has('address')) {
+                $moment->setLocationAddress($momentRequest->location->address);
+            }
         }
 
         if ($momentRequest->has('duration')) {

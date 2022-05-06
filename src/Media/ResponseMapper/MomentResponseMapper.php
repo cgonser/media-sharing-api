@@ -33,10 +33,13 @@ class MomentResponseMapper
             ? $this->mapMediaItems($this->momentMediaItemManager->extractActiveMediaItems($moment->getMomentMediaItems()))
             : null;
 
-        if (null !== $moment->getLocation()) {
+        if (null !== $moment->getLocationCoordinates()) {
             $locationDto = new LocationDto();
-            $locationDto->lat = $moment->getLocation()->getY();
-            $locationDto->long = $moment->getLocation()->getX();
+            $locationDto->lat = $moment->getLocationCoordinates()->getY();
+            $locationDto->long = $moment->getLocationCoordinates()->getX();
+            $locationDto->googlePlaceId = $moment->getLocationGooglePlaceId();
+            $locationDto->address = $moment->getLocationAddress();
+
             $momentDto->location = $locationDto;
         }
 

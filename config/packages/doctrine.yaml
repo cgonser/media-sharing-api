@@ -12,7 +12,8 @@ doctrine:
             bigint[]: MartinGeorgiev\Doctrine\DBAL\Types\BigIntArray
             text[]: MartinGeorgiev\Doctrine\DBAL\Types\TextArray
             geography: CrEOF\Spatial\DBAL\Types\GeographyType
-            point: CrEOF\Spatial\DBAL\Types\Geography\PointType
+            geometry: CrEOF\Spatial\DBAL\Types\GeometryType
+            point: CrEOF\Spatial\DBAL\Types\Geometry\PointType
 
         mapping_types:
             jsonb: jsonb
@@ -26,7 +27,6 @@ doctrine:
             _int8: bigint[]
             text[]: text[]
             _text: text[]
-            point: point
 
     orm:
         auto_generate_proxy_classes: true
@@ -43,7 +43,6 @@ doctrine:
                 st_contains: CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSQL\STContains
                 st_intersects: CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSQL\STIntersects
                 st_buffer: CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSQL\STBuffer
-                ST_GeographyFromText: CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSQL\STGeographyFromText
 
             string_functions:
                 # alternative implementation of ALL() and ANY() where subquery is not required, useful for arrays

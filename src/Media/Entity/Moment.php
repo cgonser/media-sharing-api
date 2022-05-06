@@ -4,7 +4,7 @@ namespace App\Media\Entity;
 
 use App\Media\Repository\MomentRepository;
 use App\User\Entity\User;
-use CrEOF\Spatial\PHP\Types\Geography\Point;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -38,7 +38,13 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
     private ?string $mood = null;
 
     #[ORM\Column(type: 'point', nullable: true)]
-    private ?Point $location = null;
+    private ?Point $locationCoordinates = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $locationGooglePlaceId = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $locationAddress = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $duration = null;
@@ -100,14 +106,38 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getLocation(): ?Point
+    public function getLocationCoordinates(): ?Point
     {
-        return $this->location;
+        return $this->locationCoordinates;
     }
 
-    public function setLocation(?Point $location): self
+    public function setLocationCoordinates(?Point $locationCoordinates): self
     {
-        $this->location = $location;
+        $this->locationCoordinates = $locationCoordinates;
+
+        return $this;
+    }
+
+    public function getLocationGooglePlaceId(): ?string
+    {
+        return $this->locationGooglePlaceId;
+    }
+
+    public function setLocationGooglePlaceId(?string $locationGooglePlaceId): self
+    {
+        $this->locationGooglePlaceId = $locationGooglePlaceId;
+
+        return $this;
+    }
+
+    public function getLocationAddress(): ?string
+    {
+        return $this->locationAddress;
+    }
+
+    public function setLocationAddress(?string $locationAddress): self
+    {
+        $this->locationAddress = $locationAddress;
 
         return $this;
     }
