@@ -65,13 +65,10 @@ class VideoProvider extends AbstractProvider
                 ->setParameter('followerId', $filters['root.followerId'])
             ;
 
-            unset(
-                $filters['root.followingOnly'],
-                $filters['root.followerId'],
-            );
-        } else {
-            $queryBuilder->andWhere('videoOwner.isProfilePrivate = FALSE');
+            unset($filters['root.followerId']);
         }
+
+        unset($filters['root.followingOnly']);
 
         parent::addFilters($queryBuilder, $filters);
     }

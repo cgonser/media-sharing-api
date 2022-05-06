@@ -45,10 +45,12 @@ class ReadController extends AbstractController
     {
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::FIND, Video::class);
 
-        $searchRequest->followerId = $this->getUser()->getId()->toString();
-
         if ('current' === $searchRequest->userId) {
             $searchRequest->userId = $this->getUser()->getId()->toString();
+        }
+
+        if ($this->getUser()->getId()->toString() !== $searchRequest->userId) {
+            $searchRequest->followerId = $this->getUser()->getId()->toString();
         }
 
         $count = $this->videoProvider->count($searchRequest);
