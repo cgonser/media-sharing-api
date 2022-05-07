@@ -8,14 +8,12 @@ use App\Media\Dto\MomentDto;
 use App\Media\Entity\Moment;
 use App\Media\Entity\MomentMediaItem;
 use App\Media\Provider\MomentProvider;
-use App\Media\Service\MomentMediaItemManager;
 use DateTimeInterface;
 use Ramsey\Uuid\UuidInterface;
 
 class MomentResponseMapper
 {
     public function __construct(
-        private readonly MomentMediaItemManager $momentMediaItemManager,
         private readonly MomentProvider $momentProvider,
     ) {
     }
@@ -30,7 +28,7 @@ class MomentResponseMapper
         $momentDto->recordedOn = $moment->getRecordedAt()?->format('Y-m-d');
         $momentDto->recordedAt = $moment->getRecordedAt()?->format(DateTimeInterface::ATOM);
         $momentDto->mediaItems = !$moment->getMomentMediaItems()->isEmpty()
-            ? $this->mapMediaItems($this->momentMediaItemManager->extractActiveMediaItems($moment->getMomentMediaItems()))
+            ? $this->mapMediaItems($moment->getMomentMediaItems()->toArray())
             : null;
 
         if (null !== $moment->getLocationCoordinates()) {

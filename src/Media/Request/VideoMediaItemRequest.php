@@ -12,6 +12,7 @@ class VideoMediaItemRequest extends AbstractRequest
 {
     #[OA\Property]
     #[Assert\NotBlank]
+    #[Assert\Choice(MediaItem::EXTENSIONS)]
     public ?string $extension;
 
     #[OA\Property]

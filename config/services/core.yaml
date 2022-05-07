@@ -24,3 +24,11 @@ services:
     App\Core\ParamConverter\QueryStringConverter:
         tags:
             - { name: request.param_converter, converter: querystring }
+
+    _instanceof:
+        App\Core\Messenger\ExternalJsonMessageSerializerInterface:
+            tags: [ 'app.core.messenger.serializer' ]
+
+    App\Core\Messenger\ExternalJsonMessageSerializer:
+        arguments:
+            $serializers: !tagged_iterator 'app.core.messenger.serializer'

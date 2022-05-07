@@ -23,9 +23,9 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class CreateController extends AbstractController
 {
     public function __construct(
-        private MomentProvider $momentProvider,
-        private MomentMediaItemManager $momentMediaItemManager,
-        private MediaItemResponseMapper $mediaItemResponseMapper,
+        private readonly MomentProvider $momentProvider,
+        private readonly MomentMediaItemManager $momentMediaItemManager,
+        private readonly MediaItemResponseMapper $mediaItemResponseMapper,
     ) {
     }
 
@@ -58,7 +58,7 @@ class CreateController extends AbstractController
         $momentMediaItem = $this->momentMediaItemManager->createForMoment(
             $moment,
             $momentMediaItemRequest->type,
-            $momentMediaItemRequest->extension,
+            strtolower($momentMediaItemRequest->extension),
         );
 
         return new ApiJsonResponse(

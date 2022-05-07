@@ -4,7 +4,7 @@ namespace App\Media\Entity;
 
 use App\Media\Repository\MomentRepository;
 use App\User\Entity\User;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,11 +17,23 @@ use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[ORM\Index(columns: ['location_coordinates'], name: 'idx_moment_location_coordinates')]
+#[ORM\Index(columns: ['location_google_place_id'], name: 'idx_moment_location_google_place_id')]
 #[ORM\Entity(repositoryClass: MomentRepository::class)]
 class Moment implements TimestampableInterface, SoftDeletableInterface
 {
     use TimestampableTrait;
     use SoftDeletableTrait;
+
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_PUBLISHED = 'published';
+    public const STATUS_HIDDEN = 'hidden';
+
+    public const STATUSES = [
+        self::STATUS_PENDING,
+        self::STATUS_PUBLISHED,
+        self::STATUS_HIDDEN,
+    ];
 
     #[ORM\Id, ORM\GeneratedValue('CUSTOM'), ORM\CustomIdGenerator(UuidGenerator::class)]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -33,6 +45,9 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
     #[ORM\ManyToOne]
     #[Assert\NotNull]
     private User $user;
+
+    #[ORM\Column(type: 'string', nullable: false)]
+    private string $status;
 
     #[ORM\Column(nullable: true)]
     private ?string $mood = null;
@@ -57,12 +72,16 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
     #[Assert\NotNull]
     private ?DateTimeInterface $recordedOn = null;
 
+    #[ORM\Column(type: "datetime", nullable: true)]
+    private ?DateTimeInterface $publishedAt = null;
+
     #[ORM\OneToMany(mappedBy: 'moment', targetEntity: MomentMediaItem::class, cascade: ["persist"])]
     private Collection $momentMediaItems;
 
     public function __construct()
     {
         $this->momentMediaItems = new ArrayCollection();
+        $this->status = self::STATUS_PENDING;
     }
 
     public function getId(): UuidInterface
@@ -90,6 +109,19 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
     public function setUser(User $user): self
     {
         $this->user = $user;
+        $this->userId = $user->getId();
+
+        return $this;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
@@ -175,6 +207,18 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
     public function setRecordedOn(?DateTimeInterface $recordedOn): self
     {
         $this->recordedOn = $recordedOn;
+
+        return $this;
+    }
+
+    public function getPublishedAt(): ?DateTimeInterface
+    {
+        return $this->publishedAt;
+    }
+
+    public function setPublishedAt(?DateTimeInterface $publishedAt): self
+    {
+        $this->publishedAt = $publishedAt;
 
         return $this;
     }

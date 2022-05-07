@@ -58,7 +58,7 @@ class CreateController extends AbstractController
         $videoMediaItem = $this->videoMediaItemManager->createForVideo(
             $video,
             $videoMediaItemRequest->type,
-            $videoMediaItemRequest->extension,
+            strtolower($videoMediaItemRequest->extension),
         );
 
         return new ApiJsonResponse(

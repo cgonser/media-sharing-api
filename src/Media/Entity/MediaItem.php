@@ -3,6 +3,7 @@
 namespace App\Media\Entity;
 
 use App\Media\Repository\MediaItemRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
@@ -10,10 +11,14 @@ use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableTrait;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MediaItemRepository::class)]
 class MediaItem implements TimestampableInterface, SoftDeletableInterface
 {
+    use TimestampableTrait;
+    use SoftDeletableTrait;
+
     public const STATUS_UPLOAD_PENDING = 'upload_pending';
     public const STATUS_AVAILABLE = 'available';
 
@@ -33,9 +38,6 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
         'png',
     ];
 
-    use TimestampableTrait;
-    use SoftDeletableTrait;
-
     #[ORM\Id, ORM\GeneratedValue('CUSTOM'), ORM\CustomIdGenerator(UuidGenerator::class)]
     #[ORM\Column(type: 'uuid', unique: true)]
     private UuidInterface $id;
@@ -44,6 +46,7 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
     private string $status;
 
     #[ORM\Column(nullable: false)]
+    #[Assert\Choice(MediaItem::TYPES)]
     private string $type;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -53,6 +56,7 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
     private ?string $filename = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Choice(MediaItem::EXTENSIONS)]
     private ?string $extension = null;
 
     #[ORM\Column(nullable: true)]
@@ -65,7 +69,7 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
     private ?string $uploadUrl = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $uploadUrlValidUntil = null;
+    private ?DateTimeInterface $uploadUrlValidUntil = null;
 
     public function getId(): ?UuidInterface
     {
@@ -168,12 +172,12 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getUploadUrlValidUntil(): ?\DateTimeInterface
+    public function getUploadUrlValidUntil(): ?DateTimeInterface
     {
         return $this->uploadUrlValidUntil;
     }
 
-    public function setUploadUrlValidUntil(?\DateTimeInterface $uploadUrlValidUntil): self
+    public function setUploadUrlValidUntil(?DateTimeInterface $uploadUrlValidUntil): self
     {
         $this->uploadUrlValidUntil = $uploadUrlValidUntil;
 

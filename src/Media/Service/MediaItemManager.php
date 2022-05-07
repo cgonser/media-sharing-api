@@ -12,10 +12,10 @@ class MediaItemManager
     private const S3_UPLOAD_EXPIRES_AFTER = '+24 hour';
 
     public function __construct(
-        private MediaItemRepository $mediaItemRepository,
-        private EntityValidator $validator,
-        private S3Client $s3Client,
-        private string $s3BucketName,
+        private readonly MediaItemRepository $mediaItemRepository,
+        private readonly EntityValidator $validator,
+        private readonly S3Client $s3Client,
+        private readonly string $s3BucketName,
     ) {
     }
 

@@ -18,3 +18,7 @@ services:
         class: App\Media\Service\MediaItemManager
         arguments:
             $s3BucketName: '%media_item.s3_bucket%'
+
+    _instanceof:
+        App\Core\Messenger\ExternalJsonMessageSerializerInterface:
+            tags: [ 'app.core.messenger.serializer' ]

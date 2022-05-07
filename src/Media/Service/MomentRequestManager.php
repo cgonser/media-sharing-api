@@ -5,7 +5,7 @@ namespace App\Media\Service;
 use App\Media\Entity\Moment;
 use App\Media\Request\MomentRequest;
 use App\User\Provider\UserProvider;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
 use Ramsey\Uuid\Uuid;
 
 class MomentRequestManager

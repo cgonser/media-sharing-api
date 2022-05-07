@@ -93,6 +93,7 @@ class MomentProvider extends AbstractProvider
     {
         return [
             'userId',
+            'status',
             'recordedOn',
             'location',
             'mood',

@@ -56,39 +56,4 @@ class VideoMediaItemManager
 
         $this->videoMediaItemRepository->save($videoMediaItem);
     }
-
-    public function extractActiveMediaItems(Collection $videoMediaItems): array
-    {
-        $return = [];
-
-        /** @var VideoMediaItem $videoMediaItem */
-        foreach ($videoMediaItems as $videoMediaItem) {
-            try {
-                $mediaItem = $videoMediaItem->getMediaItem();
-
-                if (
-                    MediaItem::STATUS_UPLOAD_PENDING === $mediaItem->getStatus()
-                    || null === $mediaItem->getPublicUrl()
-                ) {
-                    $this->mediaItemManager->updateUploadStatus($mediaItem);
-
-                    if ($mediaItem->isDeleted()) {
-                        $this->delete($videoMediaItem);
-
-                        continue;
-                    }
-
-                    if (MediaItem::STATUS_AVAILABLE === $mediaItem->getStatus()) {
-                        $this->messageBus->dispatch(new VideoMediaItemUploadedEvent($videoMediaItem->getId()));
-                    }
-                }
-
-                $return[] = $videoMediaItem;
-            } catch (EntityNotFoundException) {
-                $this->delete($videoMediaItem);
-            }
-        }
-
-        return $return;
-    }
 }

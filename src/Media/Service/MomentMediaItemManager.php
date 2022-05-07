@@ -53,35 +53,4 @@ class MomentMediaItemManager
 
         $this->momentMediaItemRepository->save($momentMediaItem);
     }
-
-    public function extractActiveMediaItems(Collection $momentMediaItems): array
-    {
-        $return = [];
-
-        /** @var MomentMediaItem $momentMediaItem */
-        foreach ($momentMediaItems as $momentMediaItem) {
-            try {
-                $mediaItem = $momentMediaItem->getMediaItem();
-
-                if (
-                    MediaItem::STATUS_UPLOAD_PENDING === $mediaItem->getStatus()
-                    || null === $mediaItem->getPublicUrl()
-                ) {
-                    $this->mediaItemManager->updateUploadStatus($mediaItem);
-
-                    if ($mediaItem->isDeleted()) {
-                        $this->delete($momentMediaItem);
-
-                        continue;
-                    }
-                }
-
-                $return[] = $momentMediaItem;
-            } catch (EntityNotFoundException) {
-                $this->delete($momentMediaItem);
-            }
-        }
-
-        return $return;
-    }
 }

@@ -4,35 +4,38 @@ framework:
         # failure_transport: failed
 
         transports:
-            # https://symfony.com/doc/current/messenger.html#transport-configuration
-            # async: '%env(MESSENGER_TRANSPORT_DSN)%'
             # failed: 'doctrine://default?queue_name=failed'
             sync: 'sync://'
             void: 'in-memory://'
 
-            async:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN_ASYNC)%'
+            async_external:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN_ASYNC_EXTERNAL)%'
+                serializer: App\Core\Messenger\ExternalJsonMessageSerializer
                 retry_strategy:
                     max_retries: 10
                     delay: 5000
                     multiplier: 1
                     max_delay: 0
-#
-#            email:
-#                dsn: '%env(MESSENGER_TRANSPORT_DSN_EMAIL)%'
-#                retry_strategy:
-#                    max_retries: 10
-#                    delay: 5000
-#                    multiplier: 1
-#                    max_delay: 0
+
+            async_internal:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN_ASYNC_INTERNAL)%'
+                retry_strategy:
+                    max_retries: 10
+                    delay: 5000
+                    multiplier: 1
+                    max_delay: 0
 
         routing:
-            'App\User\Message\UserCreatedEvent': sync
+            'App\Core\Messenger\MessageBatch': async_internal
+
+            'App\User\Message\UserCreatedEvent': async_internal
             'App\User\Message\UserUpdatedEvent': void
             'App\User\Message\UserFollowApprovedEvent': sync
             'App\User\Message\UserFollowUnfollowedEvent': sync
 
-            'App\Media\Message\VideoMediaItemUploadedEvent': sync
+            'App\Media\Message\MomentMediaItemUploadedEvent': async_internal
+            'App\Media\Message\VideoMediaItemUploadedEvent': async_internal
+            'App\Media\Message\MomentPublishedEvent': void
             'App\Media\Message\VideoPublishedEvent': sync
 
-            'Symfony\Component\Mailer\Messenger\SendEmailMessage': sync
+            'Symfony\Component\Mailer\Messenger\SendEmailMessage': async_internal

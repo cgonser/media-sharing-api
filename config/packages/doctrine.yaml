@@ -11,9 +11,9 @@ doctrine:
             integer[]: MartinGeorgiev\Doctrine\DBAL\Types\IntegerArray
             bigint[]: MartinGeorgiev\Doctrine\DBAL\Types\BigIntArray
             text[]: MartinGeorgiev\Doctrine\DBAL\Types\TextArray
-            geography: CrEOF\Spatial\DBAL\Types\GeographyType
-            geometry: CrEOF\Spatial\DBAL\Types\GeometryType
-            point: CrEOF\Spatial\DBAL\Types\Geometry\PointType
+            geography: LongitudeOne\Spatial\DBAL\Types\GeographyType
+            geometry: LongitudeOne\Spatial\DBAL\Types\GeometryType
+            point: LongitudeOne\Spatial\DBAL\Types\Geometry\PointType
 
         mapping_types:
             jsonb: jsonb
@@ -40,9 +40,9 @@ doctrine:
 
         dql:
             numeric_functions:
-                st_contains: CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSQL\STContains
-                st_intersects: CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSQL\STIntersects
-                st_buffer: CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSQL\STBuffer
+                st_contains: LongitudeOne\Spatial\ORM\Query\AST\Functions\PostgreSQL\STContains
+                st_intersects: LongitudeOne\Spatial\ORM\Query\AST\Functions\PostgreSQL\STIntersects
+                st_buffer: LongitudeOne\Spatial\ORM\Query\AST\Functions\PostgreSQL\STBuffer
 
             string_functions:
                 # alternative implementation of ALL() and ANY() where subquery is not required, useful for arrays

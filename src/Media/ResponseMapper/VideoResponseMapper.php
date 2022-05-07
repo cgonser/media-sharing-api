@@ -8,7 +8,6 @@ use App\Media\Dto\VideoMomentDto;
 use App\Media\Entity\Video;
 use App\Media\Entity\VideoMediaItem;
 use App\Media\Entity\VideoMoment;
-use App\Media\Service\VideoMediaItemManager;
 use App\User\ResponseMapper\UserResponseMapper;
 use DateTimeInterface;
 
@@ -17,7 +16,6 @@ class VideoResponseMapper
     public function __construct(
         private readonly MomentResponseMapper $momentResponseMapper,
         private readonly UserResponseMapper $userResponseMapper,
-        private readonly VideoMediaItemManager $videoMediaItemManager,
     ) {
     }
 
@@ -78,7 +76,7 @@ class VideoResponseMapper
         $videoDto->duration = $video->getDuration();
         $videoDto->recordedAt = $video->getRecordedAt()?->format(DateTimeInterface::ATOM);
         $videoDto->mediaItems = !$video->getVideoMediaItems()->isEmpty()
-            ? $this->mapMediaItems($this->videoMediaItemManager->extractActiveMediaItems($video->getVideoMediaItems()))
+            ? $this->mapMediaItems($video->getVideoMediaItems()->toArray())
             : null;
     }
 
