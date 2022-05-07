@@ -68,7 +68,9 @@ jobs:
             -   name: Deploy new image to ECS Service
                 env:
                     CLUSTER: itinair
-                    SERVICE: api-qa
+                    SERVICE_API: api-qa
+                    SERVICE_WORKER: api-worker-qa
                     REGION: eu-central-1
                 run: |
-                    aws ecs update-service --cluster $CLUSTER --service $SERVICE --force-new-deployment --region $REGION
+                    aws ecs update-service --cluster $CLUSTER --service $SERVICE_API --force-new-deployment --region $REGION
+                    aws ecs update-service --cluster $CLUSTER --service $SERVICE_WORKER --force-new-deployment --region $REGION
