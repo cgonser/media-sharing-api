@@ -131,9 +131,9 @@ class ReadController extends AbstractController
         name: 'moments_search_by_date',
         methods: ['GET'],
     )]
-    public function searchByDate(#[OA\PathParameter] string $recordedOn): Response
+    #[ParamConverter(data: 'searchRequest', converter: 'querystring')]
+    public function searchByDate(#[OA\PathParameter] string $recordedOn, MomentSearchRequest $searchRequest): Response
     {
-        $searchRequest = new MomentSearchRequest();
         $searchRequest->recordedOn = $recordedOn;
         $searchRequest->orderProperty = 'recordedAt';
         $searchRequest->orderDirection = 'ASC';
