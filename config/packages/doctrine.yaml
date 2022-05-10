@@ -1,6 +1,7 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
+        server_version: 13
         types:
             uuid: Ramsey\Uuid\Doctrine\UuidType
             jsonb: MartinGeorgiev\Doctrine\DBAL\Types\Jsonb
