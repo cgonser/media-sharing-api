@@ -8,6 +8,7 @@ services:
         env_file: .env
         environment:
             ENABLE_XDEBUG: 1
+            XDEBUG_MODE: "off"
         expose:
             - 9000
         volumes:

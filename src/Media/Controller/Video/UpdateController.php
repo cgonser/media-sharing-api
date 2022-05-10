@@ -24,9 +24,9 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class UpdateController extends AbstractController
 {
     public function __construct(
-        private VideoProvider $videoProvider,
-        private VideoRequestManager $videoManager,
-        private VideoResponseMapper $videoResponseMapper,
+        private readonly VideoProvider $videoProvider,
+        private readonly VideoRequestManager $videoManager,
+        private readonly VideoResponseMapper $videoResponseMapper,
     ) {
     }
 

@@ -23,10 +23,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class UpdateController extends AbstractController
 {
     public function __construct(
-        private VideoProvider $videoProvider,
-        private VideoCommentProvider $videoCommentProvider,
-        private VideoCommentManager $videoCommentManager,
-        private VideoCommentResponseMapper $videoCommentResponseMapper,
+        private readonly VideoProvider $videoProvider,
+        private readonly VideoCommentProvider $videoCommentProvider,
+        private readonly VideoCommentManager $videoCommentManager,
+        private readonly VideoCommentResponseMapper $videoCommentResponseMapper,
     ) {
     }
 

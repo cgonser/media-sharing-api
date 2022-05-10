@@ -11,11 +11,13 @@ class MomentDto
 
     public ?string $userId;
 
+    public ?string $status;
+
     public ?string $mood;
 
     public ?LocationDto $location;
 
-    public ?int $duration;
+    public ?float $duration;
 
     #[OA\Property(type: "object")]
     public ?array $mediaItems;

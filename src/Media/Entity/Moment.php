@@ -61,8 +61,9 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(nullable: true)]
     private ?string $locationAddress = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $duration = null;
+    #[Assert\NotNull]
+    #[ORM\Column(type: 'decimal', nullable: false, options: ['precision' => 5, 'scale' => 2])]
+    private float $duration;
 
     #[ORM\Column(type: "datetime", nullable: false)]
     #[Assert\NotNull]
@@ -174,12 +175,12 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getDuration(): ?int
+    public function getDuration(): float
     {
         return $this->duration;
     }
 
-    public function setDuration(?int $duration): self
+    public function setDuration(float $duration): self
     {
         $this->duration = $duration;
 

@@ -16,8 +16,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class UpdateController extends AbstractController
 {
     public function __construct(
-        private VideoProvider $videoProvider,
-        private VideoLikeManager $videoLikeManager,
+        private readonly VideoProvider $videoProvider,
+        private readonly VideoLikeManager $videoLikeManager,
     ) {
     }
 

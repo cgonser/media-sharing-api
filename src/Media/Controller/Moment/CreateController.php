@@ -22,8 +22,8 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class CreateController extends AbstractController
 {
     public function __construct(
-        private MomentRequestManager $momentManager,
-        private MomentResponseMapper $momentResponseMapper,
+        private readonly MomentRequestManager $momentManager,
+        private readonly MomentResponseMapper $momentResponseMapper,
     ) {
     }
 

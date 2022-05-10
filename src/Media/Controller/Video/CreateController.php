@@ -23,8 +23,8 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class CreateController extends AbstractController
 {
     public function __construct(
-        private VideoRequestManager $videoManager,
-        private VideoResponseMapper $videoResponseMapper,
+        private readonly VideoRequestManager $videoManager,
+        private readonly VideoResponseMapper $videoResponseMapper,
     ) {
     }
 

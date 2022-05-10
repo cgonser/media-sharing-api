@@ -17,9 +17,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class DeleteController extends AbstractController
 {
     public function __construct(
-        private VideoProvider $videoProvider,
-        private VideoCommentProvider $videoCommentProvider,
-        private VideoCommentManager $videoCommentManager,
+        private readonly VideoProvider $videoProvider,
+        private readonly VideoCommentProvider $videoCommentProvider,
+        private readonly VideoCommentManager $videoCommentManager,
     ) {
     }
 

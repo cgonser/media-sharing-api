@@ -22,9 +22,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class ReadController extends AbstractController
 {
     public function __construct(
-        private VideoProvider $videoProvider,
-        private VideoLikeProvider $videoLikeProvider,
-        private VideoLikeResponseMapper $videoLikeResponseMapper,
+        private readonly VideoProvider $videoProvider,
+        private readonly VideoLikeProvider $videoLikeProvider,
+        private readonly VideoLikeResponseMapper $videoLikeResponseMapper,
     ) {
     }
 

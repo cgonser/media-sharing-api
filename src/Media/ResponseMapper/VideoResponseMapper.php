@@ -10,6 +10,7 @@ use App\Media\Entity\VideoMediaItem;
 use App\Media\Entity\VideoMoment;
 use App\User\ResponseMapper\UserResponseMapper;
 use DateTimeInterface;
+use Doctrine\ORM\EntityNotFoundException;
 
 class VideoResponseMapper
 {
@@ -88,8 +89,13 @@ class VideoResponseMapper
         foreach ($videoMoments as $videoMoment) {
             $videoMomentDto = new VideoMomentDto();
             $videoMomentDto->momentId = $videoMoment->getMoment()->getId();
-            $videoMomentDto->moment = $this->momentResponseMapper->map($videoMoment->getMoment());
             $videoMomentDto->position = $videoMoment->getPosition();
+            $videoMomentDto->duration = $videoMoment->getDuration();
+
+            try {
+                $videoMomentDto->moment = $this->momentResponseMapper->map($videoMoment->getMoment());
+            } catch (EntityNotFoundException) {
+            }
 
             $videoMomentDtos[] = $videoMomentDto;
         }

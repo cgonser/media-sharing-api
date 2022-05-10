@@ -79,9 +79,9 @@ class VideoRequestManager
             );
 
             if ($video->hasMoment($moment)) {
-                $video->updateMoment($moment, $videoMomentRequest->position);
+                $video->updateMoment($moment, $videoMomentRequest->position, $videoMomentRequest->duration);
             } else {
-                $video->addMoment($moment, $videoMomentRequest->position);
+                $video->addMoment($moment, $videoMomentRequest->position, $videoMomentRequest->duration);
             }
         }
     }

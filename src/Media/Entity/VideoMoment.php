@@ -11,6 +11,7 @@ use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VideoMomentRepository::class)]
 #[UniqueEntity(fields: ['video', 'moment'])]
@@ -35,8 +36,13 @@ class VideoMoment implements TimestampableInterface, SoftDeletableInterface
     #[ORM\ManyToOne(targetEntity: Moment::class)]
     private Moment $moment;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $position = null;
+    #[Assert\NotNull]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private int $position;
+
+    #[Assert\NotNull]
+    #[ORM\Column(type: 'decimal', nullable: false, options: ['precision' => 5, 'scale' => 2])]
+    private float $duration;
 
     public function getId(): ?UuidInterface
     {
@@ -92,14 +98,26 @@ class VideoMoment implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getPosition(): ?int
+    public function getPosition(): int
     {
         return $this->position;
     }
 
-    public function setPosition(?int $position): self
+    public function setPosition(int $position): self
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getDuration(): float
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(float $duration): self
+    {
+        $this->duration = $duration;
 
         return $this;
     }

@@ -23,6 +23,7 @@ class MomentResponseMapper
         $momentDto = new MomentDto();
         $momentDto->id = $moment->getId()->toString();
         $momentDto->userId = $moment->getUser()->getId()->toString();
+        $momentDto->status = $moment->getStatus();
         $momentDto->mood = $moment->getMood();
         $momentDto->duration = $moment->getDuration();
         $momentDto->recordedOn = $moment->getRecordedAt()?->format('Y-m-d');

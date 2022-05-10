@@ -17,8 +17,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class DeleteController extends AbstractController
 {
     public function __construct(
-        private MomentProvider $momentProvider,
-        private MomentManager $momentManager,
+        private readonly MomentProvider $momentProvider,
+        private readonly MomentManager $momentManager,
     ) {
     }
 

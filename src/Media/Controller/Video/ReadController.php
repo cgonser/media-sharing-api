@@ -57,9 +57,9 @@ class ReadController extends AbstractController
 
         return new ApiJsonResponse(
             Response::HTTP_OK,
-            $request->isMethod(Request::METHOD_GET)
-                ? $this->videoResponseMapper->mapMultiplePublic($this->videoProvider->search($searchRequest))
-                : null,
+            $this->getUser()->getId()->toString() === $searchRequest->userId
+                ? $this->videoResponseMapper->mapMultiple($this->videoProvider->search($searchRequest))
+                : $this->videoResponseMapper->mapMultiplePublic($this->videoProvider->search($searchRequest)),
             [
                 'X-Total-Count' => $count,
             ]
