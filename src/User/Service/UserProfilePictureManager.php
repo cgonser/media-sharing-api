@@ -33,19 +33,16 @@ class UserProfilePictureManager
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });
-            $filename = self::FILE_PATH.Uuid::uuid4().'.png';
+            $filename = self::FILE_PATH.Uuid::uuid4().'.jpg';
 
             $config = [
                 'ACL' => 'public-read',
+                'Content-Type' => 'image/jpg',
             ];
-
-            if (null !== $mimeType) {
-                $config['Content-Type'] = $mimeType;
-            }
 
             $this->userImageFilesystem->write(
                 $filename,
-                $image->encode('png')->getEncoded(),
+                $image->encode('jpg')->getEncoded(),
                 $config,
             );
 
