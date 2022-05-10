@@ -29,9 +29,6 @@ class UserRequest extends AbstractRequest
     public ?string $password;
 
     #[OA\Property]
-    public ?string $profilePicture;
-
-    #[OA\Property]
     public ?string $phoneNumber;
 
     #[OA\Property]

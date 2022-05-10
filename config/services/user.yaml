@@ -41,16 +41,6 @@ services:
             $userEmailVerificationUrl: '%user.email_verification_url%'
             $userPasswordResetUrl: '%user.password_reset_url%'
 
-    App\User\Service\UserRequestManager:
-        arguments:
-            $userImageUploader: '@user.image_uploader'
-
-    user.image_uploader:
-        class: App\Core\Service\ImageUploader
-        arguments:
-            $fileSystem: '@userImageFileSystem'
-            $s3BucketName: '%user.image.s3_bucket%'
-
     gesdinet.jwtrefreshtoken.refresh_token_manager:
         class:  App\Core\Doctrine\RefreshTokenManager
         public: true

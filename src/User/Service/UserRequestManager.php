@@ -2,7 +2,6 @@
 
 namespace App\User\Service;
 
-use App\Core\Service\ImageUploader;
 use App\User\Entity\User;
 use App\User\Exception\UserInvalidRoleException;
 use App\User\Exception\UserNotFoundException;
@@ -18,10 +17,9 @@ use Ramsey\Uuid\Uuid;
 class UserRequestManager
 {
     public function __construct(
-        private UserManager $userManager,
-        private UserProvider $userProvider,
-        private UserPasswordManager $userPasswordManager,
-        private ImageUploader $userImageUploader,
+        private readonly UserManager $userManager,
+        private readonly UserProvider $userProvider,
+        private readonly UserPasswordManager $userPasswordManager,
     ) {
     }
 
@@ -93,12 +91,6 @@ class UserRequestManager
 
         if ($userRequest->has('allowEmailMarketing')) {
             $user->setAllowEmailMarketing($userRequest->allowEmailMarketing);
-        }
-
-        if ($userRequest->has('profilePicture')) {
-            $user->setProfilePicture(
-                $this->userImageUploader->uploadImage($userRequest->profilePicture)
-            );
         }
 
         if ($userRequest->has('isProfilePrivate')) {
