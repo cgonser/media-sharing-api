@@ -22,8 +22,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class ReadController extends AbstractController
 {
     public function __construct(
-        private MomentProvider $momentProvider,
-        private MomentResponseMapper $momentResponseMapper,
+        private readonly MomentProvider $momentProvider,
+        private readonly MomentResponseMapper $momentResponseMapper,
     ) {
     }
 

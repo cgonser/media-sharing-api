@@ -10,8 +10,8 @@ use Aws\S3\S3Client;
 class UserResponseMapper
 {
     public function __construct(
-        private S3Client $s3Client,
-        private string $userImageS3Bucket
+        private readonly S3Client $s3Client,
+        private readonly string $userImageS3Bucket,
     ) {
     }
 

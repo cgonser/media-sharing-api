@@ -19,12 +19,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[OA\Tag(name: 'User')]
+#[Route(path: '/users')]
 class ReadController extends AbstractController
 {
     public function __construct(
-        private UserProvider $userProvider,
-        private UserResponseMapper $userResponseMapper,
-        private UserFollowProvider $userFollowProvider,
+        private readonly UserProvider $userProvider,
+        private readonly UserResponseMapper $userResponseMapper,
+        private readonly UserFollowProvider $userFollowProvider,
     ) {
     }
 
@@ -34,7 +35,7 @@ class ReadController extends AbstractController
         content: new OA\JsonContent(type: "array", items: new OA\Items(ref: new Model(type: PublicUserDto::class)))
     )]
     #[ParamConverter(data: 'searchRequest', converter: 'querystring')]
-    #[Route(path: '/users', name: 'users_get', methods: ['GET'])]
+    #[Route(name: 'users_get', methods: ['GET'])]
     public function findUsers(UserSearchRequest $searchRequest): Response
     {
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::FIND, User::class);
@@ -57,7 +58,7 @@ class ReadController extends AbstractController
         content: new OA\JsonContent(ref: new Model(type: UserDto::class))
     )]
     #[Route(
-        path: '/users/current',
+        path: '/current',
         name: 'users_get_current',
         methods: ['GET'],
         priority: 100,
@@ -76,7 +77,7 @@ class ReadController extends AbstractController
         content: new OA\JsonContent(ref: new Model(type: PublicUserDto::class))
     )]
     #[Route(
-        path: '/users/{userId}',
+        path: '/{userId}',
         name: 'users_get_one_by_id',
         requirements: [ 'userId' => '%routing.uuid_mask%' ],
         methods: ['GET'],
@@ -100,7 +101,7 @@ class ReadController extends AbstractController
         content: new OA\JsonContent(ref: new Model(type: PublicUserDto::class))
     )]
     #[Route(
-        path: '/users/{username}',
+        path: '/{username}',
         name: 'users_get_one_by_username',
         methods: ['GET'],
         priority: 50,
