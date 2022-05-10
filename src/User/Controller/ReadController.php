@@ -40,6 +40,10 @@ class ReadController extends AbstractController
     {
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::FIND, User::class);
 
+        if ($searchRequest->excludeCurrent) {
+            $searchRequest->exclusions[] = $this->getUser()->getId()->toString();
+        }
+
         $users = $this->userProvider->search($searchRequest);
         $followingIds = array_map(
             fn ($userFollowing) => $userFollowing->getFollowingId()->toString(),

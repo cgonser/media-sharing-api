@@ -6,6 +6,7 @@ use App\Core\Provider\AbstractProvider;
 use App\User\Entity\User;
 use App\User\Exception\UserNotFoundException;
 use App\User\Repository\UserRepository;
+use Doctrine\ORM\QueryBuilder;
 
 class UserProvider extends AbstractProvider
 {
@@ -34,11 +35,24 @@ class UserProvider extends AbstractProvider
         return $this->repository->findOneBy(['email' => strtolower($emailAddress)]);
     }
 
+    protected function addFilters(QueryBuilder $queryBuilder, array $filters): void
+    {
+        if (!empty($filters['root.exclusions'])) {
+            $queryBuilder->andWhere('root.id NOT IN (:exclusions)')
+                ->setParameter('exclusions', $filters['root.exclusions']);
+        }
+
+        unset($filters['root.exclusions']);
+
+        parent::addFilters($queryBuilder, $filters);
+    }
+
     protected function getFilterableFields(): array
     {
         return [
             'userId',
             'username',
+            'exclusions',
         ];
     }
 
