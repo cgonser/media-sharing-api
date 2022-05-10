@@ -8,7 +8,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class VideoSearchRequest extends SearchRequest
 {
-    #[Assert\Choice(Video::STATUSES)]
     public ?string $status = Video::STATUS_PUBLISHED;
 
     public ?string $mood = null;

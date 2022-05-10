@@ -9,6 +9,7 @@ use App\Media\Exception\MomentNotFoundException;
 use App\Media\Repository\MomentRepository;
 use App\Media\Request\MomentSearchRequest;
 use DateTimeInterface;
+use Doctrine\ORM\QueryBuilder;
 use Ramsey\Uuid\UuidInterface;
 
 class MomentProvider extends AbstractProvider
@@ -62,6 +63,18 @@ class MomentProvider extends AbstractProvider
             ->getQuery()
             ->useQueryCache(true)
             ->getSingleScalarResult();
+    }
+
+    protected function addFilters(QueryBuilder $queryBuilder, array $filters): void
+    {
+        if (isset($filters['root.status']) && str_contains($filters['root.status'], ',')) {
+            $queryBuilder->andWhere('root.status IN (:statuses)')
+                ->setParameter('statuses', explode(',', $filters['root.status']));
+
+            unset($filters['root.status']);
+        }
+
+        parent::addFilters($queryBuilder, $filters);
     }
 
     public function findByRecordedOn(UuidInterface $userId, DateTimeInterface $recordedOn): array

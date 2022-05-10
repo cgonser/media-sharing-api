@@ -67,8 +67,14 @@ class VideoProvider extends AbstractProvider
 
             unset($filters['root.followerId']);
         }
-
         unset($filters['root.followingOnly']);
+
+        if (isset($filters['root.status']) && str_contains($filters['root.status'], ',')) {
+            $queryBuilder->andWhere('root.status IN (:statuses)')
+                ->setParameter('statuses', explode(',', $filters['root.status']));
+
+            unset($filters['root.status']);
+        }
 
         parent::addFilters($queryBuilder, $filters);
     }

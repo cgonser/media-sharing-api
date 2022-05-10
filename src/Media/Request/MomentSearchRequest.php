@@ -10,7 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[OA\RequestBody]
 class MomentSearchRequest extends SearchRequest
 {
-    #[Assert\Choice(Moment::STATUSES)]
     public ?string $status = Moment::STATUS_PUBLISHED;
     
     #[OA\Property]
