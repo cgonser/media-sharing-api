@@ -2,6 +2,8 @@
 
 namespace App\Media\Entity;
 
+use App\Media\Enumeration\MomentStatus;
+use App\Media\Enumeration\Mood;
 use App\Media\Repository\MomentRepository;
 use App\User\Entity\User;
 use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
@@ -25,16 +27,6 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
     use TimestampableTrait;
     use SoftDeletableTrait;
 
-    public const STATUS_PENDING = 'pending';
-    public const STATUS_PUBLISHED = 'published';
-    public const STATUS_HIDDEN = 'hidden';
-
-    public const STATUSES = [
-        self::STATUS_PENDING,
-        self::STATUS_PUBLISHED,
-        self::STATUS_HIDDEN,
-    ];
-
     #[ORM\Id, ORM\GeneratedValue('CUSTOM'), ORM\CustomIdGenerator(UuidGenerator::class)]
     #[ORM\Column(type: 'uuid', unique: true)]
     private ?UuidInterface $id = null;
@@ -46,11 +38,11 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
     #[Assert\NotNull]
     private User $user;
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private string $status;
+    #[ORM\Column(type: 'string', nullable: false, enumType: MomentStatus::class)]
+    private MomentStatus $status;
 
-    #[ORM\Column(nullable: true)]
-    private ?string $mood = null;
+    #[ORM\Column(type: 'string', nullable: false, enumType: Mood::class)]
+    private Mood $mood;
 
     #[ORM\Column(type: 'point', nullable: true)]
     private ?Point $locationCoordinates = null;
@@ -82,7 +74,7 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
     public function __construct()
     {
         $this->momentMediaItems = new ArrayCollection();
-        $this->status = self::STATUS_PENDING;
+        $this->status = MomentStatus::PENDING;
     }
 
     public function getId(): UuidInterface
@@ -115,26 +107,26 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getStatus(): string
+    public function getStatus(): MomentStatus
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(MomentStatus|string $status): self
     {
-        $this->status = $status;
+        $this->status = $status instanceOf MomentStatus ? $status : MomentStatus::from($status);
 
         return $this;
     }
 
-    public function getMood(): ?string
+    public function getMood(): Mood
     {
         return $this->mood;
     }
 
-    public function setMood(?string $mood): self
+    public function setMood(Mood|string $mood): self
     {
-        $this->mood = $mood;
+        $this->mood = $mood instanceOf Mood ? $mood : Mood::from($mood);
 
         return $this;
     }

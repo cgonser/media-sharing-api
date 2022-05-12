@@ -3,6 +3,7 @@
 namespace App\Media\Request;
 
 use App\Core\Request\AbstractRequest;
+use App\Media\Enumeration\Mood;
 use DateTimeInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
@@ -11,12 +12,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[OA\RequestBody]
 class VideoRequest extends AbstractRequest
 {
-    #[OA\Property]
     public ?string $userId;
 
-    #[OA\Property]
     public ?string $description;
 
+    /** @var array<Mood>  */
+    #[Assert\All(new Assert\Type(Mood::class))]
     #[OA\Property(type: "array", items: new OA\Items(type: 'string'))]
     public ?array $moods;
 
@@ -29,11 +30,9 @@ class VideoRequest extends AbstractRequest
     #[Assert\Valid]
     public ?array $moments;
 
-    #[OA\Property]
     #[Assert\Type('int')]
     public ?int $duration;
 
-    #[OA\Property]
     #[Assert\DateTime(format: DateTimeInterface::ATOM)]
     public ?string $recordedAt;
 }

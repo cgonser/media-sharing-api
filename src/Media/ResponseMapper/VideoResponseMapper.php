@@ -24,7 +24,7 @@ class VideoResponseMapper
     {
         $videoDto = new VideoDto();
         $this->mapBaseData($videoDto, $video);
-        $videoDto->status = $video->getStatus();
+        $videoDto->status = $video->getStatus()->value;
 
         return $videoDto;
     }
@@ -59,7 +59,8 @@ class VideoResponseMapper
 
         /** @var VideoMediaItem $videoMediaItem */
         foreach ($videoMediaItems as $videoMediaItem) {
-            $return[$videoMediaItem->getMediaItem()->getType()] = $videoMediaItem->getMediaItem()->getPublicUrl();
+            $mediaItem = $videoMediaItem->getMediaItem();
+            $return[$mediaItem->getType()->value] = $mediaItem->getPublicUrl();
         }
 
         return $return;

@@ -3,6 +3,7 @@
 namespace App\Media\MessageHandler;
 
 use App\Media\Entity\Moment;
+use App\Media\Enumeration\MomentStatus;
 use App\Media\Message\MomentMediaItemUploadedEvent;
 use App\Media\Provider\MomentMediaItemProvider;
 use App\Media\Service\MomentManager;
@@ -29,9 +30,10 @@ class MomentMediaItemUploadedHandler implements MessageHandlerInterface
             ]
         );
 
+        /** @var Moment $moment */
         $moment = $momentMediaItem->getMoment();
 
-        if (Moment::STATUS_PUBLISHED !== $moment->getStatus()) {
+        if (MomentStatus::PUBLISHED !== $moment->getStatus()) {
             $this->momentManager->publish($moment);
         }
     }

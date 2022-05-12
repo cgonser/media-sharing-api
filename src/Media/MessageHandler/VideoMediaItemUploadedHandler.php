@@ -3,6 +3,7 @@
 namespace App\Media\MessageHandler;
 
 use App\Media\Entity\Video;
+use App\Media\Enumeration\VideoStatus;
 use App\Media\Message\VideoMediaItemUploadedEvent;
 use App\Media\Provider\VideoMediaItemProvider;
 use App\Media\Service\VideoManager;
@@ -29,9 +30,10 @@ class VideoMediaItemUploadedHandler implements MessageHandlerInterface
             ]
         );
 
+        /** @var Video $video */
         $video = $videoMediaItem->getVideo();
 
-        if (Video::STATUS_PUBLISHED !== $video->getStatus()) {
+        if (VideoStatus::PUBLISHED !== $video->getStatus()) {
             $this->videoManager->publish($video);
         }
     }

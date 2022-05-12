@@ -4,6 +4,7 @@ namespace App\Media\Service;
 
 use App\Core\Validation\EntityValidator;
 use App\Media\Entity\Video;
+use App\Media\Enumeration\VideoStatus;
 use App\Media\Message\VideoPublishedEvent;
 use App\Media\Repository\VideoRepository;
 use DateTime;
@@ -42,7 +43,7 @@ class VideoManager
 
     public function publish(Video $video): void
     {
-        $video->setStatus(Video::STATUS_PUBLISHED);
+        $video->setStatus(VideoStatus::PUBLISHED);
         $video->setPublishedAt(new DateTime());
 
         $this->update($video);

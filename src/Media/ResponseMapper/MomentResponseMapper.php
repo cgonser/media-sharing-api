@@ -23,8 +23,8 @@ class MomentResponseMapper
         $momentDto = new MomentDto();
         $momentDto->id = $moment->getId()->toString();
         $momentDto->userId = $moment->getUser()->getId()->toString();
-        $momentDto->status = $moment->getStatus();
-        $momentDto->mood = $moment->getMood();
+        $momentDto->status = $moment->getStatus()->value;
+        $momentDto->mood = $moment->getMood()->value;
         $momentDto->duration = $moment->getDuration();
         $momentDto->recordedOn = $moment->getRecordedAt()?->format('Y-m-d');
         $momentDto->recordedAt = $moment->getRecordedAt()?->format(DateTimeInterface::ATOM);
@@ -59,7 +59,8 @@ class MomentResponseMapper
 
         /** @var MomentMediaItem $momentMediaItems */
         foreach ($momentMediaItems as $momentMediaItem) {
-            $return[$momentMediaItem->getMediaItem()->getType()] = $momentMediaItem->getMediaItem()->getPublicUrl();
+            $mediaItem = $momentMediaItem->getMediaItem();
+            $return[$mediaItem->getType()->value] = $mediaItem->getPublicUrl();
         }
 
         return $return;

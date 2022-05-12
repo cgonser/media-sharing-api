@@ -4,6 +4,7 @@ namespace App\Media\Service;
 
 use App\Core\Validation\EntityValidator;
 use App\Media\Entity\Moment;
+use App\Media\Enumeration\MomentStatus;
 use App\Media\Message\MomentPublishedEvent;
 use App\Media\Repository\MomentRepository;
 use DateTime;
@@ -42,7 +43,7 @@ class MomentManager
 
     public function publish(Moment $moment): void
     {
-        $moment->setStatus(Moment::STATUS_PUBLISHED);
+        $moment->setStatus(MomentStatus::PUBLISHED);
         $moment->setPublishedAt(new DateTime());
 
         $this->update($moment);

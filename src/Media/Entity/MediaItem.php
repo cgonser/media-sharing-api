@@ -2,6 +2,9 @@
 
 namespace App\Media\Entity;
 
+use App\Media\Enumeration\MediaItemExtension;
+use App\Media\Enumeration\MediaItemStatus;
+use App\Media\Enumeration\MediaItemType;
 use App\Media\Repository\MediaItemRepository;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,35 +22,17 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
     use TimestampableTrait;
     use SoftDeletableTrait;
 
-    public const STATUS_UPLOAD_PENDING = 'upload_pending';
-    public const STATUS_AVAILABLE = 'available';
-
-    public const TYPE_VIDEO = 'video';
-    public const TYPE_THUMBNAIL = 'thumbnail';
-
-    public const TYPES = [
-        self::TYPE_VIDEO,
-        self::TYPE_THUMBNAIL,
-    ];
-
-    public const EXTENSIONS = [
-        'jpeg',
-        'jpg',
-        'mp4',
-        'mov',
-        'png',
-    ];
-
     #[ORM\Id, ORM\GeneratedValue('CUSTOM'), ORM\CustomIdGenerator(UuidGenerator::class)]
     #[ORM\Column(type: 'uuid', unique: true)]
     private UuidInterface $id;
 
-    #[ORM\Column(nullable: false)]
-    private string $status;
+    #[Assert\Choice(MediaItemStatus::class)]
+    #[ORM\Column(type: 'string', nullable: false, enumType: MediaItemStatus::class)]
+    private MediaItemStatus $status;
 
-    #[ORM\Column(nullable: false)]
-    #[Assert\Choice(MediaItem::TYPES)]
-    private string $type;
+    #[Assert\Choice(MediaItemType::class)]
+    #[ORM\Column(type: 'string', nullable: false, enumType: MediaItemType::class)]
+    private MediaItemType $type;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $publicUrl = null;
@@ -55,9 +40,9 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(nullable: true)]
     private ?string $filename = null;
 
-    #[ORM\Column(nullable: true)]
-    #[Assert\Choice(MediaItem::EXTENSIONS)]
-    private ?string $extension = null;
+    #[Assert\Choice(MediaItemExtension::class)]
+    #[ORM\Column(type: 'string', nullable: false, enumType: MediaItemExtension::class)]
+    private ?MediaItemExtension $extension = null;
 
     #[ORM\Column(nullable: true)]
     private ?string $mimeType = null;
@@ -76,26 +61,26 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
         return $this->id;
     }
 
-    public function getStatus(): string
+    public function getStatus(): MediaItemStatus
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(MediaItemStatus|string $status): self
     {
-        $this->status = $status;
+        $this->status = $status instanceOf MediaItemStatus ? $status : MediaItemStatus::from($status);
 
         return $this;
     }
 
-    public function getType(): string
+    public function getType(): MediaItemType
     {
         return $this->type;
     }
 
-    public function setType(string $type): self
+    public function setType(MediaItemType|string $type): self
     {
-        $this->type = $type;
+        $this->type = $type instanceOf MediaItemType ? $type : MediaItemType::from($type);
 
         return $this;
     }
@@ -124,14 +109,14 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getExtension(): ?string
+    public function getExtension(): ?MediaItemExtension
     {
         return $this->extension;
     }
 
-    public function setExtension(?string $extension): self
+    public function setExtension(MediaItemExtension|string $extension): self
     {
-        $this->extension = $extension;
+        $this->extension = $extension instanceOf MediaItemExtension ? $extension : MediaItemExtension::from($extension);
 
         return $this;
     }

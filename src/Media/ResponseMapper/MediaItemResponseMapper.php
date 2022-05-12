@@ -13,8 +13,8 @@ class MediaItemResponseMapper
     {
         $mediaItemDto = new MediaItemDto();
         $mediaItemDto->id = $mediaItem->getId()->toString();
-        $mediaItemDto->type = $mediaItem->getType();
-        $mediaItemDto->status = $mediaItem->getStatus();
+        $mediaItemDto->type = $mediaItem->getType()->value;
+        $mediaItemDto->status = $mediaItem->getStatus()->value;
         $mediaItemDto->publicUrl = $mediaItem->getPublicUrl();
         $mediaItemDto->uploadUrl = $mediaItem->getUploadUrl();
         $mediaItemDto->uploadUrlValidUntil = $mediaItem->getUploadUrlValidUntil()?->format(\DateTimeInterface::ATOM);
@@ -28,7 +28,7 @@ class MediaItemResponseMapper
     {
         $mediaItemDto = new PublicMediaItemDto();
         $mediaItemDto->id = $mediaItem->getId()->toString();
-        $mediaItemDto->type = $mediaItem->getType();
+        $mediaItemDto->type = $mediaItem->getType()->value;
         $mediaItemDto->publicUrl = $mediaItem->getPublicUrl();
 
         return $mediaItemDto;

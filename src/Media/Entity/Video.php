@@ -2,6 +2,7 @@
 
 namespace App\Media\Entity;
 
+use App\Media\Enumeration\VideoStatus;
 use App\Media\Repository\VideoRepository;
 use App\User\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,16 +22,6 @@ class Video implements TimestampableInterface, SoftDeletableInterface
     use TimestampableTrait;
     use SoftDeletableTrait;
 
-    public const STATUS_PENDING = 'pending';
-    public const STATUS_PUBLISHED = 'published';
-    public const STATUS_HIDDEN = 'hidden';
-
-    public const STATUSES = [
-        self::STATUS_PENDING,
-        self::STATUS_PUBLISHED,
-        self::STATUS_HIDDEN,
-    ];
-
     #[ORM\Id, ORM\GeneratedValue('CUSTOM'), ORM\CustomIdGenerator(UuidGenerator::class)]
     #[ORM\Column(type: 'uuid', unique: true)]
     private ?UuidInterface $id = null;
@@ -42,8 +33,8 @@ class Video implements TimestampableInterface, SoftDeletableInterface
     #[Assert\NotBlank]
     private User $user;
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private string $status;
+    #[ORM\Column(type: 'string', nullable: false, enumType: VideoStatus::class)]
+    private VideoStatus $status;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
@@ -87,7 +78,7 @@ class Video implements TimestampableInterface, SoftDeletableInterface
         $this->videoLikes = new ArrayCollection();
         $this->videoComments = new ArrayCollection();
         $this->videoMediaItems = new ArrayCollection();
-        $this->status = self::STATUS_PENDING;
+        $this->status = VideoStatus::PENDING;
     }
 
     public function getId(): UuidInterface
@@ -120,14 +111,14 @@ class Video implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): VideoStatus
     {
         return $this->status;
     }
 
-    public function setStatus(?string $status): self
+    public function setStatus(VideoStatus|string $status): self
     {
-        $this->status = $status;
+        $this->status = $status instanceOf VideoStatus ? $status : VideoStatus::from($status);
 
         return $this;
     }
