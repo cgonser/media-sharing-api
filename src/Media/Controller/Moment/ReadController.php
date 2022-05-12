@@ -135,9 +135,18 @@ class ReadController extends AbstractController
     public function searchByDate(#[OA\PathParameter] string $recordedOn, MomentSearchRequest $searchRequest): Response
     {
         $searchRequest->recordedOn = $recordedOn;
-        $searchRequest->orderProperty = 'recordedAt';
-        $searchRequest->orderDirection = 'ASC';
-        $searchRequest->resultsPerPage = 100;
+
+        if (null === $searchRequest->resultsPerPage) {
+            $searchRequest->resultsPerPage = 100;
+        }
+
+        if (null === $searchRequest->orderDirection) {
+            $searchRequest->orderDirection = 'ASC';
+        }
+
+        if (null === $searchRequest->orderProperty) {
+            $searchRequest->orderProperty = 'recordedAt';
+        }
 
         return $this->find($searchRequest);
     }
