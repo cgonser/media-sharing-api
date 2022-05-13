@@ -154,7 +154,7 @@ class ReadControllerTest extends AbstractMediaTest
         static::assertResponseStatusCodeSame('201');
 
         $this->authenticateClient($client, $followerData['email'], $followerData['password']);
-        $client->jsonRequest('GET', '/videos');
+        $client->jsonRequest('GET', '/videos?statuses[]=pending');
         static::assertResponseStatusCodeSame('200');
         $findResponseData = json_decode($client->getResponse()->getContent(), true);
         static::assertCount(1, $findResponseData);

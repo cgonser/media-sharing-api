@@ -27,7 +27,13 @@ class UpdateControllerTest extends AbstractMediaTest
             'moods' => [
                 'angry',
             ],
-            'locations' => ['London'],
+            'locations' => [
+                [
+                    'lat' => 42,
+                    'long' => 42,
+                    'googlePlaceId' => 'ASDXYUZ',
+                ]
+            ],
             'duration' => 12,
         ];
 

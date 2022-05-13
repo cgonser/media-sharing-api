@@ -19,7 +19,7 @@ class QueryStringConverter implements ParamConverterInterface
 
     public function apply(Request $request, ParamConverter $configuration): bool
     {
-        $object = $this->denormalizer->denormalize($request->query->all(), $configuration->getClass());
+        $object = $this->denormalizer->denormalize($request->query->all(), $configuration->getClass(), 'xml');
         $errors = $this->validator->validate($object);
 
         if ($errors->count() > 0) {

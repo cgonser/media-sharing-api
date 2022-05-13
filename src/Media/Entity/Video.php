@@ -229,6 +229,52 @@ class Video implements TimestampableInterface, SoftDeletableInterface
         }
     }
 
+    public function addLocation(Location $location): self
+    {
+        $videoLocation = new VideoLocation();
+        $videoLocation->setVideo($this);
+        $videoLocation->setLocation($location);
+
+        $this->videoLocations->add($videoLocation);
+
+        return $this;
+    }
+
+    /** Location[] */
+    public function setLocations(array $locations): self
+    {
+        foreach ($locations as $location) {
+            if (!$this->hasLocation($location)) {
+                $this->addLocation($location);
+            }
+        }
+
+        foreach ($this->getVideoLocations() as $videoLocation) {
+            if (!in_array($videoLocation->getLocation(), $locations)) {
+                $this->removeVideoLocation($videoLocation);
+            }
+        }
+
+        return $this;
+    }
+
+    public function hasLocation(Location $location): bool
+    {
+        return !$this->videoLocations->filter(
+            fn (VideoLocation $videoLocation) => $location->getId()->equals($videoLocation->getLocationId())
+        )->isEmpty();
+    }
+
+    public function removeLocation(Location $location): void
+    {
+        /** @var VideoLocation $videoLocation */
+        foreach ($this->videoLocations as $videoLocation) {
+            if ($videoLocation->getLocationId()->equals($location->getId())) {
+                $this->videoLocations->removeElement($videoLocation);
+            }
+        }
+    }
+
     public function getVideoMoments(): Collection
     {
         return $this->videoMoments;

@@ -33,6 +33,11 @@ class Location implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(nullable: true)]
     private ?string $address = null;
 
+    public function getId(): ?UuidInterface
+    {
+        return $this->id;
+    }
+
     public function getCoordinates(): ?Point
     {
         return $this->coordinates;

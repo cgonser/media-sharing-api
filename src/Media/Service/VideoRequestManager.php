@@ -11,9 +11,10 @@ use Ramsey\Uuid\Uuid;
 class VideoRequestManager
 {
     public function __construct(
-        private VideoManager $videoManager,
-        private MomentProvider $momentProvider,
-        private UserProvider $userProvider,
+        private readonly VideoManager $videoManager,
+        private readonly MomentProvider $momentProvider,
+        private readonly UserProvider $userProvider,
+        private readonly LocationRequestManager $locationRequestManager,
     ) {
     }
 
@@ -52,7 +53,7 @@ class VideoRequestManager
         }
 
         if ($videoRequest->has('locations')) {
-            $video->setLocations($videoRequest->locations);
+            $this->mapVideoLocations($video, $videoRequest->locations);
         }
 
         if ($videoRequest->has('moments')) {
@@ -68,6 +69,16 @@ class VideoRequestManager
                 \DateTime::createFromFormat(\DateTimeInterface::ATOM, $videoRequest->recordedAt)
             );
         }
+    }
+
+    private function mapVideoLocations(Video $video, ?array $locationRequests): void
+    {
+        $locations = [];
+        foreach ($locationRequests as $locationRequest) {
+            $locations[] = $this->locationRequestManager->createFromRequest($locationRequest);
+        }
+
+        $video->setLocations($locations);
     }
 
     private function mapVideoMoments(Video $video, ?array $videoMomentRequests): void

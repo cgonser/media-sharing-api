@@ -79,12 +79,16 @@ class VideoResponseMapper
         $videoDto->likes = $video->getLikes();
         $videoDto->comments = $video->getComments();
         $videoDto->recordedAt = $video->getRecordedAt()?->format(DateTimeInterface::ATOM);
-        $videoDto->locations = !$video->getVideoLocations()->isEmpty()
-            ? $this->locationResponseMapper->mapMultiple($video->getVideoLocations()->toArray())
-            : null;
         $videoDto->mediaItems = !$video->getVideoMediaItems()->isEmpty()
             ? $this->mapMediaItems($video->getVideoMediaItems()->toArray())
             : null;
+
+        if (!$video->getVideoLocations()->isEmpty()) {
+            $videoDto->locations = [];
+            foreach ($video->getVideoLocations() as $videoLocation) {
+                $videoDto->locations[] = $this->locationResponseMapper->map($videoLocation->getLocation());
+            }
+        }
     }
 
     private function mapVideoMoments(array $videoMoments): array
