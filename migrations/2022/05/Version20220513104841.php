@@ -16,8 +16,8 @@ final class Version20220513104841 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql('DROP INDEX idx_moment_location_coordinates');
-        $this->addSql('DROP INDEX idx_moment_location_google_place_id');
+        $this->addSql('DROP INDEX IF EXISTS idx_moment_location_coordinates');
+        $this->addSql('DROP INDEX IF EXISTS idx_moment_location_google_place_id');
         $this->addSql('ALTER TABLE moment ADD location_id UUID DEFAULT NULL');
 
         $this->addSql(
