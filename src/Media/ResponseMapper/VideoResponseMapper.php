@@ -76,6 +76,8 @@ class VideoResponseMapper
         $videoDto->moods = $video->getMoods();
         $videoDto->moments = $this->mapVideoMoments($video->getVideoMoments()->toArray());
         $videoDto->duration = $video->getDuration();
+        $videoDto->likes = $video->getLikes();
+        $videoDto->comments = $video->getComments();
         $videoDto->recordedAt = $video->getRecordedAt()?->format(DateTimeInterface::ATOM);
         $videoDto->locations = !$video->getVideoLocations()->isEmpty()
             ? $this->locationResponseMapper->mapMultiple($video->getVideoLocations()->toArray())
