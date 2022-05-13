@@ -47,6 +47,15 @@ class VideoProvider extends AbstractProvider
             unset ($filters['root.location']);
         }
 
+        if (isset($filters['root.moods'])) {
+            foreach ($filters['root.moods'] as $key => $mood) {
+                $queryBuilder->andWhere('JSONB_EXISTS(root.moods, :mood_'.$key.') = TRUE')
+                    ->setParameter('mood_',$key, $mood);
+            }
+
+            unset($filters['root.moods'], $filters['root.mood']);
+        }
+
         if (isset($filters['root.mood'])) {
             $queryBuilder->andWhere('JSONB_EXISTS(root.moods, :mood) = TRUE')
                 ->setParameter('mood', $filters['root.mood']);
@@ -69,11 +78,11 @@ class VideoProvider extends AbstractProvider
         }
         unset($filters['root.followingOnly']);
 
-        if (isset($filters['root.status']) && str_contains($filters['root.status'], ',')) {
+        if (isset($filters['root.statuses']) && !empty($filters['root.statuses'])) {
             $queryBuilder->andWhere('root.status IN (:statuses)')
-                ->setParameter('statuses', explode(',', $filters['root.status']));
+                ->setParameter('statuses', $filters['root.statuses']);
 
-            unset($filters['root.status']);
+            unset($filters['root.statuses'], $filters['root.status']);
         }
 
         parent::addFilters($queryBuilder, $filters);
@@ -91,10 +100,12 @@ class VideoProvider extends AbstractProvider
         return [
             'userId',
             'status',
+            'statuses',
             'followerId',
             'followingOnly',
             'location',
             'mood',
+            'moods',
         ];
     }
 }

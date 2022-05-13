@@ -9,10 +9,14 @@ abstract class AbstractMediaTest extends AbstractApiTest
     protected function getMomentDummyData(): array
     {
         return [
-            'location' => 'Luxembourg',
             'mood' => 'sad',
             'duration' => 3,
             'recordedAt' => (new \DateTime())->format(\DateTimeInterface::ATOM),
+            'location' => [
+                'long' => 42.34123,
+                'lat' => 42.25243,
+                'googlePlaceId' => 'XYZASD',
+            ]
         ];
     }
 
@@ -24,10 +28,6 @@ abstract class AbstractMediaTest extends AbstractApiTest
                 'happy',
                 'excited',
                 'funny',
-            ],
-            'locations' => [
-                'Luxembourg',
-                'Italy',
             ],
             'duration' => 9,
             'recordedAt' => (new \DateTime())->format(\DateTimeInterface::ATOM),

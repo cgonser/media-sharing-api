@@ -6,7 +6,6 @@ use App\Media\Enumeration\MomentStatus;
 use App\Media\Enumeration\Mood;
 use App\Media\Repository\MomentRepository;
 use App\User\Entity\User;
-use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,8 +18,6 @@ use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Index(columns: ['location_coordinates'], name: 'idx_moment_location_coordinates')]
-#[ORM\Index(columns: ['location_google_place_id'], name: 'idx_moment_location_google_place_id')]
 #[ORM\Entity(repositoryClass: MomentRepository::class)]
 class Moment implements TimestampableInterface, SoftDeletableInterface
 {
@@ -44,14 +41,11 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(type: 'string', nullable: false, enumType: Mood::class)]
     private Mood $mood;
 
-    #[ORM\Column(type: 'point', nullable: true)]
-    private ?Point $locationCoordinates = null;
+    #[ORM\ManyToOne(targetEntity: Location::class)]
+    private ?Location $location = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?string $locationGooglePlaceId = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?string $locationAddress = null;
+    #[ORM\Column(type: 'uuid')]
+    private ?UuidInterface $locationId = null;
 
     #[Assert\NotNull]
     #[ORM\Column(type: 'decimal', nullable: false, options: ['precision' => 5, 'scale' => 2])]
@@ -131,38 +125,24 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getLocationCoordinates(): ?Point
+    public function getLocation(): Location
     {
-        return $this->locationCoordinates;
+        return $this->location;
     }
 
-    public function setLocationCoordinates(?Point $locationCoordinates): self
+    public function setLocation(Location $location): void
     {
-        $this->locationCoordinates = $locationCoordinates;
-
-        return $this;
+        $this->location = $location;
     }
 
-    public function getLocationGooglePlaceId(): ?string
+    public function getLocationId(): UuidInterface
     {
-        return $this->locationGooglePlaceId;
+        return $this->locationId;
     }
 
-    public function setLocationGooglePlaceId(?string $locationGooglePlaceId): self
+    public function setLocationId(UuidInterface $locationId): self
     {
-        $this->locationGooglePlaceId = $locationGooglePlaceId;
-
-        return $this;
-    }
-
-    public function getLocationAddress(): ?string
-    {
-        return $this->locationAddress;
-    }
-
-    public function setLocationAddress(?string $locationAddress): self
-    {
-        $this->locationAddress = $locationAddress;
+        $this->locationId = $locationId;
 
         return $this;
     }

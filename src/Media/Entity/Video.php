@@ -42,9 +42,6 @@ class Video implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(type: 'jsonb', nullable: true)]
     private ?array $moods = null;
 
-    #[ORM\Column(type: 'jsonb', nullable: true)]
-    private ?array $locations = null;
-
     #[ORM\Column(nullable: true)]
     private ?int $duration = null;
 
@@ -60,6 +57,9 @@ class Video implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(type: "datetime", nullable: true)]
     private ?\DateTimeInterface $publishedAt = null;
 
+    #[ORM\OneToMany(mappedBy: 'video', targetEntity: VideoLocation::class, cascade: ["persist"])]
+    private Collection $videoLocations;
+
     #[ORM\OneToMany(mappedBy: 'video', targetEntity: VideoMoment::class, cascade: ["persist"])]
     private Collection $videoMoments;
 
@@ -74,6 +74,7 @@ class Video implements TimestampableInterface, SoftDeletableInterface
 
     public function __construct()
     {
+        $this->videoLocations = new ArrayCollection();
         $this->videoMoments = new ArrayCollection();
         $this->videoLikes = new ArrayCollection();
         $this->videoComments = new ArrayCollection();
@@ -147,18 +148,6 @@ class Video implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getLocations(): ?array
-    {
-        return $this->locations;
-    }
-
-    public function setLocations(?array $locations): self
-    {
-        $this->locations = $locations;
-
-        return $this;
-    }
-
     public function getDuration(): ?int
     {
         return $this->duration;
@@ -217,6 +206,27 @@ class Video implements TimestampableInterface, SoftDeletableInterface
         $this->publishedAt = $publishedAt;
 
         return $this;
+    }
+
+    public function getVideoLocations(): Collection
+    {
+        return $this->videoLocations;
+    }
+
+    public function addVideoLocation(VideoLocation $videoLocation): self
+    {
+        $videoLocation->setVideo($this);
+
+        $this->videoLocations->add($videoLocation);
+
+        return $this;
+    }
+
+    public function removeVideoLocation(VideoLocation $videoLocation): void
+    {
+        if ($this->videoLocations->contains($videoLocation)) {
+            $this->videoLocations->removeElement($videoLocation);
+        }
     }
 
     public function getVideoMoments(): Collection

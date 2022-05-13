@@ -16,6 +16,7 @@ class VideoResponseMapper
 {
     public function __construct(
         private readonly MomentResponseMapper $momentResponseMapper,
+        private readonly LocationResponseMapper $locationResponseMapper,
         private readonly UserResponseMapper $userResponseMapper,
     ) {
     }
@@ -73,10 +74,12 @@ class VideoResponseMapper
         $videoDto->userId = $video->getUser()->getId()->toString();
         $videoDto->description = $video->getDescription();
         $videoDto->moods = $video->getMoods();
-        $videoDto->locations = $video->getLocations();
         $videoDto->moments = $this->mapVideoMoments($video->getVideoMoments()->toArray());
         $videoDto->duration = $video->getDuration();
         $videoDto->recordedAt = $video->getRecordedAt()?->format(DateTimeInterface::ATOM);
+        $videoDto->locations = !$video->getVideoLocations()->isEmpty()
+            ? $this->locationResponseMapper->mapMultiple($video->getVideoLocations()->toArray())
+            : null;
         $videoDto->mediaItems = !$video->getVideoMediaItems()->isEmpty()
             ? $this->mapMediaItems($video->getVideoMediaItems()->toArray())
             : null;

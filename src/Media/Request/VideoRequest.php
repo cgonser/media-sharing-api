@@ -16,12 +16,15 @@ class VideoRequest extends AbstractRequest
 
     public ?string $description;
 
-    /** @var array<Mood>  */
+    /** @var Mood[]  */
     #[Assert\All(new Assert\Type(Mood::class))]
     #[OA\Property(type: "array", items: new OA\Items(type: 'string'))]
     public ?array $moods;
 
-    #[OA\Property(type: "array", items: new OA\Items(type: 'string'))]
+    /** @var LocationRequest[] */
+    #[OA\Property(type: "array", items: new OA\Items(ref: new Model(type: LocationRequest::class)))]
+    #[Assert\All([new Assert\Type(type: LocationRequest::class)])]
+    #[Assert\Valid]
     public ?array $locations;
 
     /** @var VideoMomentRequest[] */

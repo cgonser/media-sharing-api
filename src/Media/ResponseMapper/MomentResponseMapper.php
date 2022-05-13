@@ -2,7 +2,6 @@
 
 namespace App\Media\ResponseMapper;
 
-use App\Media\Dto\LocationDto;
 use App\Media\Dto\MomentDateDto;
 use App\Media\Dto\MomentDto;
 use App\Media\Entity\Moment;
@@ -15,6 +14,7 @@ class MomentResponseMapper
 {
     public function __construct(
         private readonly MomentProvider $momentProvider,
+        private readonly LocationResponseMapper $locationResponseMapper,
     ) {
     }
 
@@ -32,14 +32,8 @@ class MomentResponseMapper
             ? $this->mapMediaItems($moment->getMomentMediaItems()->toArray())
             : null;
 
-        if (null !== $moment->getLocationCoordinates()) {
-            $locationDto = new LocationDto();
-            $locationDto->lat = $moment->getLocationCoordinates()->getY();
-            $locationDto->long = $moment->getLocationCoordinates()->getX();
-            $locationDto->googlePlaceId = $moment->getLocationGooglePlaceId();
-            $locationDto->address = $moment->getLocationAddress();
-
-            $momentDto->location = $locationDto;
+        if (null !== $moment->getLocation()) {
+            $momentDto->location = $this->locationResponseMapper->map($moment->getLocation());
         }
 
         return $momentDto;

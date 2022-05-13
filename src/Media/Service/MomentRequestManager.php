@@ -5,14 +5,14 @@ namespace App\Media\Service;
 use App\Media\Entity\Moment;
 use App\Media\Request\MomentRequest;
 use App\User\Provider\UserProvider;
-use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
 use Ramsey\Uuid\Uuid;
 
 class MomentRequestManager
 {
     public function __construct(
-        private MomentManager $momentManager,
-        private UserProvider $userProvider,
+        private readonly MomentManager $momentManager,
+        private readonly UserProvider $userProvider,
+        private readonly LocationRequestManager $locationRequestManager,
     ) {
     }
 
@@ -46,23 +46,6 @@ class MomentRequestManager
             $moment->setMood($momentRequest->mood);
         }
 
-        if ($momentRequest->has('location')) {
-            $moment->setLocationCoordinates(
-                new Point(
-                    $momentRequest->location->long,
-                    $momentRequest->location->lat,
-                )
-            );
-
-            if ($momentRequest->location->has('googlePlaceId')) {
-                $moment->setLocationGooglePlaceId($momentRequest->location->googlePlaceId);
-            }
-
-            if ($momentRequest->location->has('address')) {
-                $moment->setLocationAddress($momentRequest->location->address);
-            }
-        }
-
         if ($momentRequest->has('duration')) {
             $moment->setDuration($momentRequest->duration);
         }
@@ -71,6 +54,10 @@ class MomentRequestManager
             $moment->setRecordedAt(
                 \DateTime::createFromFormat(\DateTimeInterface::ATOM, $momentRequest->recordedAt)
             );
+        }
+
+        if ($momentRequest->has('location')) {
+            $moment->setLocation($this->locationRequestManager->createFromRequest($momentRequest->location));
         }
     }
 }

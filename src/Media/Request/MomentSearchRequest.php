@@ -18,8 +18,6 @@ class MomentSearchRequest extends SearchRequest
     #[Assert\Type(Mood::class)]
     public ?Mood $mood = null;
 
-    public ?string $location = null;
-
     public ?string $userId = null;
 
     #[Assert\DateTime(format: 'Y-m-d')]

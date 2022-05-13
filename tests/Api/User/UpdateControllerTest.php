@@ -15,7 +15,7 @@ class UpdateControllerTest extends AbstractUserTest
 
         $requestData['name'] = 'John Doe';
 
-        $client->jsonRequest('PATCH', '/users/'.$user->getId()->toString(), $requestData);
+        $client->jsonRequest('PATCH', '/users/current', $requestData);
         $response = $client->getResponse();
         $responseData = json_decode($response->getContent(), true);
 

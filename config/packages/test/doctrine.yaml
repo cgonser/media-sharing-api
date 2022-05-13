@@ -3,3 +3,8 @@ doctrine:
         driver: pdo_sqlite
         path: "%kernel.cache_dir%/test.db"
         url: null
+        types:
+            text[]: MartinGeorgiev\Doctrine\DBAL\Types\TextArray
+            geography: MartinGeorgiev\Doctrine\DBAL\Types\Jsonb
+            geometry: MartinGeorgiev\Doctrine\DBAL\Types\Jsonb
+            point: MartinGeorgiev\Doctrine\DBAL\Types\Jsonb

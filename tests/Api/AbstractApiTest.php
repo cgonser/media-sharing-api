@@ -76,7 +76,11 @@ abstract class AbstractApiTest extends WebTestCase
     {
         foreach ($expected as $key => $value) {
             static::assertArrayHasKey($key, $actual);
-            static::assertSame($value, $actual[$key]);
+            if (is_array($value)) {
+                self::assertArraySubset($value, $actual[$key]);
+            } else {
+                static::assertSame($value, $actual[$key]);
+            }
         }
     }
 }

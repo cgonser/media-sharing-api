@@ -19,7 +19,7 @@ class PublicVideoDto
     #[OA\Property(type: "array", items: new OA\Items(type: "string"))]
     public ?array $moods;
 
-    #[OA\Property(type: "array", items: new OA\Items(type: "string"))]
+    #[OA\Property(type: "array", items: new OA\Items(ref: new Model(type: LocationDto::class)))]
     public ?array $locations;
 
     #[OA\Property(type: "array", items: new OA\Items(ref: new Model(type: MomentDto::class)))]

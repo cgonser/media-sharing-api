@@ -49,8 +49,9 @@ class CreateControllerTest extends AbstractMediaTest
         $videoRequestData = $this->getVideoDummyData();
         $videoRequestData['moments'] = [
             [
-                'position' => 1,
                 'momentId' => $momentResponseData['id'],
+                'position' => 1,
+                'duration' => 3,
             ]
         ];
 
