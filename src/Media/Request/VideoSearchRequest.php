@@ -8,6 +8,7 @@ use App\Media\Enumeration\VideoStatus;
 use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[OA\RequestBody]
 class VideoSearchRequest extends SearchRequest
 {
     public ?VideoStatus $status = VideoStatus::PUBLISHED;

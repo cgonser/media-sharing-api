@@ -67,11 +67,11 @@ class MomentProvider extends AbstractProvider
 
     protected function addFilters(QueryBuilder $queryBuilder, array $filters): void
     {
-        if (isset($filters['root.status']) && str_contains($filters['root.status'], ',')) {
+        if (isset($filters['root.statuses'])) {
             $queryBuilder->andWhere('root.status IN (:statuses)')
-                ->setParameter('statuses', explode(',', $filters['root.status']));
+                ->setParameter('statuses', $filters['root.statuses']);
 
-            unset($filters['root.status']);
+            unset($filters['root.status'], $filters['root.statuses']);
         }
 
         parent::addFilters($queryBuilder, $filters);
@@ -107,6 +107,7 @@ class MomentProvider extends AbstractProvider
         return [
             'userId',
             'status',
+            'statuses',
             'recordedOn',
             'location',
             'mood',

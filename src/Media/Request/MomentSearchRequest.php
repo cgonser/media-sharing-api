@@ -6,14 +6,19 @@ use App\Core\Request\SearchRequest;
 use App\Media\Entity\Moment;
 use App\Media\Enumeration\MomentStatus;
 use App\Media\Enumeration\Mood;
+use App\Media\Enumeration\VideoStatus;
 use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[OA\RequestBody]
 class MomentSearchRequest extends SearchRequest
 {
-    #[Assert\Type(MomentStatus::class)]
-    public MomentStatus $status = MomentStatus::PUBLISHED;
+    public ?VideoStatus $status = VideoStatus::PUBLISHED;
+
+    /** @var VideoStatus[]  */
+    #[Assert\All(new Assert\Type(VideoStatus::class))]
+    #[OA\Property(type: 'array', items: new OA\Items(type: 'string'))]
+    public ?array $statuses = null;
 
     #[Assert\Type(Mood::class)]
     public ?Mood $mood = null;
