@@ -21,8 +21,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class ReadController extends AbstractController
 {
     public function __construct(
-        private UserSettingResponseMapper $userSettingResponseMapper,
-        private UserSettingManager $userSettingManager,
+        private readonly UserSettingResponseMapper $userSettingResponseMapper,
+        private readonly UserSettingManager $userSettingManager,
     ) {
     }
 

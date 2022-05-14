@@ -1,7 +1,7 @@
 parameters:
     app.mailer.sender: contact@itinair.com
     app.mailer.from: 'Itinair <contact@itinair.com>'
-    app.mailer.bcc: carlos@itinair.com
+    app.mailer.bcc: carlos+itinair@gonser.eu
     app.mailer.unsubscribe_url: '%env(MAILER_UNSUBSCRIBE_URL)%'
 
 services:

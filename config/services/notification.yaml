@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Notification\:
+        resource: '../../src/Notification/*'
+        exclude: '../../src/Notification/{DependencyInjection,Entity,Tests,Kernel.php}'
+
+    App\Notification\Controller\:
+        resource: '../../src/Notification/Controller'
+        tags: ['controller.service_arguments']

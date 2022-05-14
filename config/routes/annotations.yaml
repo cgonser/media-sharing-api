@@ -6,6 +6,10 @@ media_controllers:
     resource: '../../src/Media/Controller/'
     type: annotation
 
+notification_controllers:
+    resource: '../../src/Notification/Controller/'
+    type: annotation
+
 localization_controllers:
     resource: '../../src/Localization/Controller/'
     type: annotation
