@@ -128,6 +128,11 @@ class UserFollowProvider extends AbstractProvider
                 false => $queryBuilder->andWhere('root.isApproved IS NOT NULL'),
             };
 
+
+            if (true === $filters['root.isPending']) {
+                unset($filters['root.isApproved']);
+            }
+
             unset($filters['root.isPending']);
         }
 

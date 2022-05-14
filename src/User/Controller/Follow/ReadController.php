@@ -7,12 +7,10 @@ use App\Core\Security\AuthorizationVoterInterface;
 use App\User\Dto\UserFollowDto;
 use App\User\Entity\User;
 use App\User\Provider\UserFollowProvider;
-use App\User\Provider\UserProvider;
 use App\User\Request\UserFollowSearchRequest;
 use App\User\ResponseMapper\UserFollowResponseMapper;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
-use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,9 +21,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class ReadController extends AbstractController
 {
     public function __construct(
-        private UserFollowProvider $userFollowProvider,
-        private UserFollowResponseMapper $followResponseMapper,
-        private UserProvider $userProvider,
+        private readonly UserFollowProvider $userFollowProvider,
+        private readonly UserFollowResponseMapper $followResponseMapper,
     ) {
     }
 
@@ -47,16 +44,14 @@ class ReadController extends AbstractController
     #[ParamConverter(data: 'user', converter: 'user.user_entity')]
     public function find(User $user, UserFollowSearchRequest $searchRequest): Response
     {
-        if ($user === $this->getUser()) {
-            $user = $this->getUser();
-        } else {
+        if ($user !== $this->getUser()) {
             $this->denyAccessUnlessGranted(AuthorizationVoterInterface::READ, $user);
 
             $searchRequest->isApproved = true;
             $searchRequest->isPending = false;
         }
 
-        $searchRequest->userId = $user->getId()->toString();
+        $searchRequest->followerId = $user->getId()->toString();
 
         $results = $this->userFollowProvider->search($searchRequest);
         $count = $this->userFollowProvider->count($searchRequest);

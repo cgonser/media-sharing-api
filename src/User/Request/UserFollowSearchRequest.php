@@ -9,14 +9,14 @@ use OpenApi\Attributes as OA;
 class UserFollowSearchRequest extends SearchRequest
 {
     #[OA\Property]
-    public ?string $userId = null;
+    public ?string $followerId = null;
 
     #[OA\Property]
-    public ?string $followeeId = null;
+    public ?string $followingId = null;
 
     #[OA\Property]
     public ?bool $isPending = null;
 
     #[OA\Property]
-    public ?bool $isApproved = null;
+    public ?bool $isApproved = true;
 }
