@@ -34,6 +34,11 @@ class MomentProvider extends AbstractProvider
         return $moment;
     }
 
+    public function findByAreaGroupedByMood(float $longMin, float $longMax, float $latMin, float $latMax): array
+    {
+        return $this->repository->findByAreaGroupedByMood($longMin, $longMax, $latMin, $latMax);
+    }
+
     public function searchRecordedOnDates(MomentSearchRequest $searchRequest): array
     {
         $orderExpression = $this->getOrderExpression($searchRequest);

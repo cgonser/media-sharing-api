@@ -5,8 +5,10 @@ namespace App\Media\Controller\Moment;
 use App\Core\Response\ApiJsonResponse;
 use App\Core\Security\AuthorizationVoterInterface;
 use App\Media\Dto\MomentDto;
+use App\Media\Dto\MomentMoodMapDto;
 use App\Media\Entity\Moment;
 use App\Media\Provider\MomentProvider;
+use App\Media\Request\MomentMoodSearchRequest;
 use App\Media\Request\MomentSearchRequest;
 use App\Media\ResponseMapper\MomentResponseMapper;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -149,5 +151,37 @@ class ReadController extends AbstractController
         }
 
         return $this->find($searchRequest);
+    }
+
+    #[OA\Parameter(
+        name: "filters",
+        in: "query",
+        schema: new OA\Schema(ref: new Model(type: MomentMoodSearchRequest::class)),
+    )]
+    #[OA\Response(
+        response: 200,
+        description: "Success",
+        content: new OA\JsonContent(ref: new Model(type: MomentMoodMapDto::class))
+    )]
+    #[ParamConverter(data: 'searchRequest', converter: 'querystring')]
+    #[Route(path: '/moods', name: 'moments_moods_find', methods: ['GET'])]
+    public function searchMoods(MomentMoodSearchRequest $searchRequest): Response
+    {
+        $this->denyAccessUnlessGranted(AuthorizationVoterInterface::FIND, Moment::class);
+
+        $results = $this->momentProvider->findByAreaGroupedByMood(
+            $searchRequest->longMin,
+            $searchRequest->longMax,
+            $searchRequest->latMin,
+            $searchRequest->latMax,
+        );
+
+        return new ApiJsonResponse(
+            Response::HTTP_OK,
+            $this->momentResponseMapper->mapMoodMap($results),
+            [
+                'X-Total-Count' => count($results),
+            ]
+        );
     }
 }

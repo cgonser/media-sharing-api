@@ -13,6 +13,8 @@ use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
 #[ORM\Index(columns: ['coordinates'], name: 'idx_location_coordinates')]
+#[ORM\Index(columns: ['long'], name: 'idx_location_long')]
+#[ORM\Index(columns: ['lat'], name: 'idx_location_lat')]
 #[ORM\Index(columns: ['google_place_id'], name: 'idx_location_google_place_id')]
 #[ORM\Entity(repositoryClass: LocationRepository::class)]
 class Location implements TimestampableInterface, SoftDeletableInterface
@@ -26,6 +28,12 @@ class Location implements TimestampableInterface, SoftDeletableInterface
 
     #[ORM\Column(type: 'point', nullable: true)]
     private ?Point $coordinates = null;
+
+    #[ORM\Column(type: 'decimal', nullable: true, options: ['scale' => 6, 'precision' => 8])]
+    private ?float $long = null;
+
+    #[ORM\Column(type: 'decimal', nullable: true, options: ['scale' => 6, 'precision' => 8])]
+    private ?float $lat = null;
 
     #[ORM\Column(nullable: true)]
     private ?string $googlePlaceId = null;
@@ -46,6 +54,32 @@ class Location implements TimestampableInterface, SoftDeletableInterface
     public function setCoordinates(?Point $coordinates): self
     {
         $this->coordinates = $coordinates;
+        $this->long = $coordinates->getX();
+        $this->lat = $coordinates->getY();
+
+        return $this;
+    }
+
+    public function getLong(): ?float
+    {
+        return $this->long;
+    }
+
+    public function setLong(?float $long): self
+    {
+        $this->long = $long;
+
+        return $this;
+    }
+
+    public function getLat(): ?float
+    {
+        return $this->lat;
+    }
+
+    public function setLat(?float $lat): self
+    {
+        $this->lat = $lat;
 
         return $this;
     }

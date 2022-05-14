@@ -4,6 +4,9 @@ namespace App\Media\ResponseMapper;
 
 use App\Media\Dto\MomentDateDto;
 use App\Media\Dto\MomentDto;
+use App\Media\Dto\MomentMoodClusterDto;
+use App\Media\Dto\MomentMoodDto;
+use App\Media\Dto\MomentMoodMapDto;
 use App\Media\Entity\Moment;
 use App\Media\Entity\MomentMediaItem;
 use App\Media\Provider\MomentProvider;
@@ -99,5 +102,61 @@ class MomentResponseMapper
         }
 
         return $return;
+    }
+
+    public function mapMoodMap(array $results): MomentMoodMapDto
+    {
+        $momentMoodMapDto = new MomentMoodMapDto();
+        $clusters = [];
+
+        foreach ($results as $result) {
+            if (null === $result['cluster_id']) {
+                $momentMoodMapDto->moments[] = $this->mapMomentMood($result);
+
+                continue;
+            }
+
+            $clusterId = $result['mood'] . '_' . $result['cluster_id'];
+
+            if (!isset($clusters[$clusterId])) {
+                $clusters[$clusterId] = [
+                    'mood' => $result['mood'],
+                    'results' => [],
+                ];
+            }
+
+            $clusters[$clusterId]['results'][] = $this->mapMomentMood($result);
+        }
+
+        ksort($clusters);
+
+        foreach ($clusters as $cluster) {
+            $momentMoodMapDto->clusters[] = $this->mapMomentMoodCluster($cluster['mood'], $results);
+        }
+
+        return $momentMoodMapDto;
+    }
+
+    private function mapMomentMoodCluster(string $mood, array $results): MomentMoodClusterDto
+    {
+        $momentMoodClusterDto = new MomentMoodClusterDto();
+        $momentMoodClusterDto->mood = $mood;
+
+        foreach ($results as $result) {
+            $momentMoodClusterDto->moments[] = $this->mapMomentMood($result);
+        }
+
+        return $momentMoodClusterDto;
+    }
+
+    private function mapMomentMood(array $result): MomentMoodDto
+    {
+        $momentMoodDto = new MomentMoodDto();
+        $momentMoodDto->mood = $result['mood'];
+        $momentMoodDto->long = $result['long'];
+        $momentMoodDto->lat = $result['lat'];
+        $momentMoodDto->moments = $result['moments'];
+
+        return $momentMoodDto;
     }
 }
