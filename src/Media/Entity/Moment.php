@@ -42,6 +42,7 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
     private Mood $mood;
 
     #[ORM\ManyToOne(targetEntity: Location::class)]
+    #[Assert\NotNull]
     private ?Location $location = null;
 
     #[ORM\Column(type: 'uuid')]

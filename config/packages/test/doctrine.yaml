@@ -7,4 +7,4 @@ doctrine:
             text[]: MartinGeorgiev\Doctrine\DBAL\Types\TextArray
             geography: MartinGeorgiev\Doctrine\DBAL\Types\Jsonb
             geometry: MartinGeorgiev\Doctrine\DBAL\Types\Jsonb
-            point: MartinGeorgiev\Doctrine\DBAL\Types\Jsonb
+            point: App\Tests\ORM\Doctrine\DBAL\Type\PointType
