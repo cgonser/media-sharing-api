@@ -35,9 +35,6 @@
     "composer/xdebug-handler": {
         "version": "2.0.5"
     },
-    "creof/doctrine2-spatial": {
-        "version": "1.2.0"
-    },
     "creof/geo-parser": {
         "version": "2.2.1"
     },
@@ -200,6 +197,9 @@
     "guzzlehttp/psr7": {
         "version": "2.2.1"
     },
+    "intervention/image": {
+        "version": "2.7.1"
+    },
     "jaybizzle/crawler-detect": {
         "version": "v1.2.111"
     },
@@ -248,6 +248,12 @@
         "files": [
             "config/packages/lexik_jwt_authentication.yaml"
         ]
+    },
+    "longitude-one/doctrine-spatial": {
+        "version": "3.0.2"
+    },
+    "lorenzo/pinky": {
+        "version": "1.0.6"
     },
     "martin-georgiev/postgresql-for-doctrine": {
         "version": "v1.7.0"
@@ -488,6 +494,9 @@
             "ref": "1019e5c08d4821cb9b77f4891f8e9c31ff20ac6f"
         }
     },
+    "stella-maris/clock": {
+        "version": "0.1.4"
+    },
     "stof/doctrine-extensions-bundle": {
         "version": "1.7",
         "recipe": {
@@ -675,6 +684,18 @@
             "config/packages/monolog.yaml"
         ]
     },
+    "symfony/notifier": {
+        "version": "6.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.0",
+            "ref": "c31585e252b32fe0e1f30b1f256af553f4a06eb9"
+        },
+        "files": [
+            "config/packages/notifier.yaml"
+        ]
+    },
     "symfony/options-resolver": {
         "version": "v5.3.14"
     },
@@ -839,6 +860,9 @@
     },
     "twig/extra-bundle": {
         "version": "v3.3.8"
+    },
+    "twig/inky-extra": {
+        "version": "v3.3.5"
     },
     "twig/markdown-extra": {
         "version": "v3.3.8"

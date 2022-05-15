@@ -14,8 +14,8 @@ class UserEmailCreatedCommand extends Command
     protected static $defaultName = 'user:email-created';
 
     public function __construct(
-        private UserEmailManager $userEmailManager,
-        private UserProvider $userProvider
+        private readonly UserEmailManager $userEmailManager,
+        private readonly UserProvider $userProvider
     ) {
         parent::__construct();
     }

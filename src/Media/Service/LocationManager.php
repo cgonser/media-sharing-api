@@ -9,8 +9,8 @@ use App\Media\Repository\LocationRepository;
 class LocationManager
 {
     public function __construct(
-        private LocationRepository $locationRepository,
-        private EntityValidator $validator,
+        private readonly LocationRepository $locationRepository,
+        private readonly EntityValidator $validator,
     ) {
     }
 

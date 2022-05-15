@@ -5,19 +5,27 @@
 {% set pre_header_text = 'user.created.pre_header' %}
 
 {% block hero %}
+{% endblock %}
 
+{% block greeting %}
+    <h1>{{ 'user.created.greeting'|trans }}</h1>
 {% endblock %}
 
 {% block content %}
-    {{ 'user.created.thank_you'|trans|markdown_to_html }}
+    {{ 'user.created.line_1'|trans|markdown_to_html }}
+    {{ 'user.created.line_2'|trans({'%username%': username})|markdown_to_html }}
 
-    <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0"
-           style="margin: auto; margin-top: 30px !important; margin-bottom: 40px!important;">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+           style="margin-top: 30px !important; margin-bottom: 40px!important;">
         <tr>
             <td class="button-td">
                 <a class="button-a"
-                   href="{{ email_verification_url }}">{{ 'user.created.verify_cta'|trans }}</a>
+                   href="{{ email_verification_url }}">{{ 'user.created.cta'|trans }}</a>
             </td>
         </tr>
     </table>
+
+    <p>{{ 'user.created.line_3'|trans({ '%email_verification_url%': email_verification_url })|markdown_to_html }}</p>
+    <p>{{ 'user.created.line_4'|trans|markdown_to_html }}</p>
+
 {% endblock %}

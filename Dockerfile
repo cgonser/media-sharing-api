@@ -34,7 +34,7 @@ RUN set -e; \
 
 ENV MEMCACHED_DEPS zlib-dev libmemcached-dev cyrus-sasl-dev
 
-RUN CFLAGS="$CFLAGS -D_GNU_SOURCE" docker-php-ext-install sockets \
+RUN CFLAGS="$CFLAGS -D_GNU_SOURCE" docker-php-ext-install sockets xsl \
     && apk add --no-cache --update rabbitmq-c-dev \
     && apk add --no-cache --update --virtual .phpize-deps $PHPIZE_DEPS \
     && for i in $(seq 1 3); do echo yes | pecl install -o "xdebug" && s=0 && break || s=$? && sleep 1; done; (exit $s) \
