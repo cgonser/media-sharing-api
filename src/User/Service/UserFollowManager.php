@@ -5,11 +5,15 @@ namespace App\User\Service;
 use App\Core\Exception\InvalidEntityException;
 use App\Core\Exception\InvalidInputException;
 use App\Core\Validation\EntityValidator;
+use App\Notification\Service\Notifier;
 use App\User\Entity\User;
 use App\User\Entity\UserFollow;
 use App\User\Exception\UserFollowAlreadyExistsException;
 use App\User\Message\UserFollowApprovedEvent;
 use App\User\Message\UserFollowUnfollowedEvent;
+use App\User\Notification\UserFollowApprovedNotification;
+use App\User\Notification\UserFollowCreatedNotification;
+use App\User\Notification\UserFollowRequestedNotification;
 use App\User\Provider\UserFollowProvider;
 use App\User\Repository\UserFollowRepository;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -17,10 +21,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class UserFollowManager
 {
     public function __construct(
-        private UserFollowRepository $userFollowRepository,
-        private UserFollowProvider $userFollowProvider,
-        private EntityValidator $validator,
-        private MessageBusInterface $messageBus,
+        private readonly UserFollowRepository $userFollowRepository,
+        private readonly UserFollowProvider $userFollowProvider,
+        private readonly EntityValidator $validator,
+        private readonly MessageBusInterface $messageBus,
+        private readonly Notifier $notifier,
     ) {
     }
 
@@ -42,6 +47,10 @@ class UserFollowManager
 
         if (!$following->isProfilePrivate()) {
             $this->approve($userFollow);
+
+            $this->notifier->send(new UserFollowCreatedNotification($userFollow), $userFollow->getFollowing());
+        } else {
+            $this->notifier->send(new UserFollowRequestedNotification($userFollow), $userFollow->getFollowing());
         }
 
         return $userFollow;
@@ -66,6 +75,10 @@ class UserFollowManager
         $userFollow->setIsApproved(true);
 
         $this->save($userFollow);
+
+        if ($userFollow->getFollowing()->isProfilePrivate()) {
+            $this->notifier->send(new UserFollowApprovedNotification($userFollow), $userFollow->getFollower());
+        }
 
         $this->messageBus->dispatch(
             new UserFollowApprovedEvent(

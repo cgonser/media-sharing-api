@@ -1,48 +1,100 @@
+base:
+    greeting: "Hi %greeting_name%,"
+    greeting_annonymous: "Hi,"
+    signature: "Make the moments last,\nMoments Team"
+    automatically_sent: "Please don’t reply to this email. You are receiving this because you created an account in our Moments by Itinair application with the %recipient_email% email address."
+    signature_address: "© 2022 Itinair Ltd.\nCorner Chambers 590A Kingsbury Road\nB249ND Birmingham, United Kingdom"
+
+moment:
+    published:
+        subject: "Your moment was published"
+        greeting: "Moment published"
+        line_1: "Your %mood% moment at %location% was published"
+        cta: "Review this Moment in the app"
+
+    tagged:
+        subject: "%username% tagged you in a %mood% moment"
+        pre_header: "%username% tagged you in a %mood% moment at %location%"
+        greeting: "You have been tagged"
+        line_1: "%username% tagged you in a %mood% moment at %location% and it has been added to your moments"
+        cta: "Review this Moment in the app"
+
+video:
+    published:
+        subject: "Your video was published"
+        greeting: "Video published"
+        line_1: "Your video published"
+        cta: "Review this Video in the app"
+
+    commented:
+        subject: "%videoCommentUsername% commented on your video"
+        pre_header: "%videoCommentUsername% commented on your video"
+        greeting: "You have a new comment"
+        line_1: "%videoCommentUsername% commented on your video"
+        cta: "Reply to this comment in the app"
+
+    liked:
+        subject: "%videoLikeUsername% liked your video"
+        pre_header: "%videoLikeUsername% liked your video"
+        greeting: "You have a new comment"
+        line_1: "%videoLikeUsername% liked your video"
+        cta: "View this Video in the app"
+
 user:
     created:
-        subject: "Welcome to Itinair"
-        pre_header: "Welcome to Itinair 🚀 Please verify your email address to complete your registration."
-        hero: Nice to see you
-        thank_you: "Thanks for creating an Itinair account! To complete your registration please verify your email address."
-        verify_cta: "Verify email address"
+        subject: "Verify your email address"
+        pre_header: "To complete your registration please verify your email address."
+        greeting: "Thanks for signing up"
+        line_1: "To complete your registration please verify your email address."
+        line_2: "You are just one step away to use the **Moments by Itinair** application with the **%username%** username."
+        line_3: "If it doesn’t work, you can copy and paste the following link in your browser: %email_verification_url%"
+        line_4: "This link is valid for 24 hours or until it is used."
+        cta: "Verify your email address"
 
     email_validation:
         subject: "Verify your email address"
-        pre_header: "Welcome to Itinair 🚀 Please verify your email address to complete your registration."
-        hero: Nice to see you
+        pre_header: "Please verify your email address to complete your registration."
         content: "Thanks for creating an Itinair account! To complete your registration please verify your email address."
         cta: "Verify email address"
 
     password_reset:
-        subject: "Forgot your password?"
-        pre_header: "Looks like you'd like to reset your password for your Itinair account"
-        hero: "Forgot your password?"
-        content: "Looks like you'd like to reset your password for your Itinair account. Don't worry, you can make a new one by clicking the button below 😌"
-        cta: "Reset password"
-        footer: "If you didn't ask us to reset your password, just ignore this email. Your account is safe with us."
+        subject: "Forgotten password recovery"
+        pre_header: "Reset your password for %username%"
+        greeting: "Password recovery"
+        line_1: "We have received your request to reset your password for the %username% username. Click the button below to get started."
+        line_2: "If it doesn’t work, you can copy and paste the following link in your browser: %email_verification_url%"
+        line_3: "This link is valid for 24 hours or until it is used."
+        cta: "Reset your password"
 
-base:
-    greeting: "Hey %greeting_name% 👋"
-    greeting_annonymous: "Hey 👋"
-    signature: "Cheers,\nItinair Team"
-    get_in_touch: To get in touch with us, please send an email to support@itinair.com
-    unsubscribe: This email was sent to %recipient_email%. If you’d rather not receive this kind of email, you can unsubscribe [here](%unsubscribe_url%).
-    automatically_sent: This message was sent automatically to your e-mail adress registered with Itinair.
-    contact_us: Should you have any questions don't hesitate to [contact us](mailto:support@itinair.com) at any time.
+user_follow:
+    requested:
+        subject: "%followerUsername% wants to follow you"
+        pre_header: "Please approve or disregard this request"
+        greeting: "You have a new follow request"
+        line_1: "**%followerUsername%** wants to follow your memories."
+        line_2: "Followers are able to tag you in their moments and view your videos in their feed."
+        cta_1: "Approve and follow back"
+        cta_2: "Approve only"
+        cta_3: "Disregard"
 
-payment:
-    invoice_paid:
-        subject: "Thanks for your payment"
-        pre_header: "Your payment plan has been updated ✅"
-        hero: 'Thank you!'
-        title: 'Thanks for your payment'
-        text: 'Your payment plan has been updated ✅'
-        cta: 'See your invoices'
+    approved:
+        subject: "%followingUsername% accepted your follow request"
+        pre_header: "From now on, the videos of %followingUsername% will appear on your feed"
+        greeting: "You have been accepted"
+        line_1: "**%followingUsername%** accepted your follow request."
+        line_2: "From now on, the videos of %followingUsername% will appear in your feed and you can tag her/him in your moments."
+        cta: "Check this profile in the app"
 
-    failed:
-        subject: "Your payment didn't go through"
-        pre_header: "Please verify your payment details 🔎"
-        hero: 'There was a problem!'
-        title: "Your payment didn't go through"
-        text: 'There seems to be a problem with your payment. Please verify your payment details 🔎'
-        cta: 'Open payment settings'
+    created:
+        subject: "%followerUsername% started following you"
+        pre_header: "From now on you can tag her/him in your moments"
+        greeting: "You have a new follower"
+        line_1: "**%followerUsername%** started following your memories."
+        line_2: "**%followerUsername%** is now able to tag you in moments and view your videos on the feed."
+        cta_1: "Follow back"
+        cta_2: "Check this profile in the app"
+
+    video_published:
+        greeting: "Hey %name%!"
+        line_1: "%followingUsername% has just uploaded a new memory video which might be interesting for you."
+        cta: "View video"

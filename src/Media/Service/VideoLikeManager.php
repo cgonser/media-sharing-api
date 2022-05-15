@@ -5,16 +5,19 @@ namespace App\Media\Service;
 use App\Core\Validation\EntityValidator;
 use App\Media\Entity\Video;
 use App\Media\Entity\VideoLike;
+use App\Media\Notification\VideoLikedNotification;
 use App\Media\Provider\VideoLikeProvider;
 use App\Media\Repository\VideoLikeRepository;
+use App\Notification\Service\Notifier;
 use App\User\Entity\User;
 
 class VideoLikeManager
 {
     public function __construct(
-        private VideoLikeRepository $videoLikeRepository,
-        private VideoLikeProvider $videoLikeProvider,
-        private EntityValidator $validator,
+        private readonly VideoLikeRepository $videoLikeRepository,
+        private readonly VideoLikeProvider $videoLikeProvider,
+        private readonly EntityValidator $validator,
+        private readonly Notifier $notifier,
     ) {
     }
 
@@ -25,6 +28,8 @@ class VideoLikeManager
             ->setUser($user);
 
         $this->save($videoLike);
+
+        $this->notifier->send(new VideoLikedNotification($videoLike), $videoLike->getUser());
     }
 
     public function unlike(Video $video, User $user): void

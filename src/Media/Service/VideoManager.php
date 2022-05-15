@@ -6,7 +6,9 @@ use App\Core\Validation\EntityValidator;
 use App\Media\Entity\Video;
 use App\Media\Enumeration\VideoStatus;
 use App\Media\Message\VideoPublishedEvent;
+use App\Media\Notification\VideoPublishedNotification;
 use App\Media\Repository\VideoRepository;
+use App\Notification\Service\Notifier;
 use DateTime;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -16,6 +18,7 @@ class VideoManager
         private readonly VideoRepository $videoRepository,
         private readonly EntityValidator $validator,
         private readonly MessageBusInterface $messageBus,
+        private readonly Notifier $notifier,
     ) {
     }
 
@@ -47,6 +50,8 @@ class VideoManager
         $video->setPublishedAt(new DateTime());
 
         $this->update($video);
+
+        $this->notifier->send(new VideoPublishedNotification($video), $video->getUser());
 
         $this->messageBus->dispatch(
             new VideoPublishedEvent(

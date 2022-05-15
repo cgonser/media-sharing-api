@@ -10,8 +10,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class EmailComposer
 {
     public function __construct(
-        private TranslatorInterface $translator,
-        private string $unsubscribeUrl,
+        private readonly TranslatorInterface $translator,
+        private readonly string $unsubscribeUrl,
     ) {
     }
 

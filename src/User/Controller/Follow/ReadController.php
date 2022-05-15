@@ -22,7 +22,7 @@ class ReadController extends AbstractController
 {
     public function __construct(
         private readonly UserFollowProvider $userFollowProvider,
-        private readonly UserFollowResponseMapper $followResponseMapper,
+        private readonly UserFollowResponseMapper $userFollowResponseMapper,
     ) {
     }
 
@@ -58,7 +58,7 @@ class ReadController extends AbstractController
 
         return new ApiJsonResponse(
             Response::HTTP_OK,
-            $this->followResponseMapper->mapMultiple($results),
+            $this->userFollowResponseMapper->mapMultiple($results),
             [
                 'X-Total-Count' => $count,
             ]

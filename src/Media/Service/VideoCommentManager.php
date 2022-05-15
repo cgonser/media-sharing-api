@@ -5,14 +5,17 @@ namespace App\Media\Service;
 use App\Core\Validation\EntityValidator;
 use App\Media\Entity\Video;
 use App\Media\Entity\VideoComment;
+use App\Media\Notification\VideoCommentedNotification;
 use App\Media\Repository\VideoCommentRepository;
+use App\Notification\Service\Notifier;
 use App\User\Entity\User;
 
 class VideoCommentManager
 {
     public function __construct(
-        private VideoCommentRepository $videoCommentRepository,
-        private EntityValidator $validator,
+        private readonly VideoCommentRepository $videoCommentRepository,
+        private readonly EntityValidator $validator,
+        private readonly Notifier $notifier,
     ) {
     }
 
@@ -25,6 +28,8 @@ class VideoCommentManager
         ;
 
         $this->save($videoComment);
+
+        $this->notifier->send(new VideoCommentedNotification($videoComment), $videoComment->getUser());
 
         return $videoComment;
     }

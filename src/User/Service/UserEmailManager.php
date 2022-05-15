@@ -11,10 +11,10 @@ use Symfony\Component\Mailer\MailerInterface;
 class UserEmailManager
 {
     public function __construct(
-        private EmailComposer $emailComposer,
-        private MailerInterface $mailer,
-        private string $userEmailVerificationUrl,
-        private string $userPasswordResetUrl,
+        private readonly EmailComposer $emailComposer,
+        private readonly MailerInterface $mailer,
+        private readonly string $userEmailVerificationUrl,
+        private readonly string $userPasswordResetUrl,
     ) {
     }
 
@@ -34,6 +34,7 @@ class UserEmailManager
                     $user->getName() => $user->getEmail(),
                 ],
                 [
+                    'username' => $user->getUsername(),
                     'greeting_name' => $user->getName(),
                     'email_verification_url' => $emailVerificationUrl,
                 ],

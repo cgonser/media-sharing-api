@@ -18,8 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class UpdateController extends AbstractController
 {
     public function __construct(
-        private UserFollowManager $userFollowManager,
-        private UserFollowProvider $userFollowProvider,
+        private readonly UserFollowManager $userFollowManager,
+        private readonly UserFollowProvider $userFollowProvider,
     ) {
     }
 

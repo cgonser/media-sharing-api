@@ -6,7 +6,9 @@ use App\Core\Validation\EntityValidator;
 use App\Media\Entity\Moment;
 use App\Media\Enumeration\MomentStatus;
 use App\Media\Message\MomentPublishedEvent;
+use App\Media\Notification\MomentPublishedNotification;
 use App\Media\Repository\MomentRepository;
+use App\Notification\Service\Notifier;
 use DateTime;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -16,6 +18,7 @@ class MomentManager
         private readonly MomentRepository $momentRepository,
         private readonly EntityValidator $validator,
         private readonly MessageBusInterface $messageBus,
+        private readonly Notifier $notifier,
     ) {
     }
 
@@ -47,6 +50,8 @@ class MomentManager
         $moment->setPublishedAt(new DateTime());
 
         $this->update($moment);
+
+        $this->notifier->send(new MomentPublishedNotification($moment), $moment->getUser());
 
         $this->messageBus->dispatch(
             new MomentPublishedEvent(

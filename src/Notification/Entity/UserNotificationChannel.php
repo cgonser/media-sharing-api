@@ -2,6 +2,7 @@
 
 namespace App\Notification\Entity;
 
+use App\Notification\Enumeration\NotificationChannel;
 use App\Notification\Repository\UserNotificationChannelRepository;
 use App\User\Entity\User;
 use DateTimeInterface;
@@ -75,14 +76,14 @@ class UserNotificationChannel implements SoftDeletableInterface, TimestampableIn
         return $this;
     }
 
-    public function getPlatform(): string
+    public function getChannel(): NotificationChannel
     {
-        return $this->platform;
+        return $this->channel;
     }
 
-    public function setPlatform(string $platform): self
+    public function setChannel(NotificationChannel|string $channel): self
     {
-        $this->platform = $platform;
+        $this->channel = $channel instanceOf NotificationChannel ? $channel : NotificationChannel::from($channel);
 
         return $this;
     }
@@ -99,26 +100,28 @@ class UserNotificationChannel implements SoftDeletableInterface, TimestampableIn
         return $this;
     }
 
-    public function getAccessToken(): ?string
+    public function getToken(): ?string
     {
-        return $this->accessToken;
+        return $this->token;
     }
 
-    public function setAccessToken(string $accessToken): self
+    public function setToken(?string $token): self
     {
-        $this->accessToken = $accessToken;
+        $this->token = $token;
 
         return $this;
     }
 
-    public function getAccessTokenExpiresAt(): ?\DateTimeInterface
+    public function getExpiresAt(): ?DateTimeInterface
     {
-        return $this->accessTokenExpiresAt;
+        return $this->expiresAt;
     }
 
-    public function setAccessTokenExpiresAt(?\DateTimeInterface $accessTokenExpiresAt): void
+    public function setExpiresAt(?DateTimeInterface $expiresAt): self
     {
-        $this->accessTokenExpiresAt = $accessTokenExpiresAt;
+        $this->expiresAt = $expiresAt;
+
+        return $this;
     }
 
     public function getDetails(): ?array

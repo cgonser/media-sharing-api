@@ -1,0 +1,44 @@
+{% trans_default_domain 'email' %}
+
+{% extends "email/base.html.twig" %}
+
+{% set pre_header_text = 'user_follow.requested.pre_header' %}
+
+{% block hero %}
+{% endblock %}
+
+{% block greeting %}
+    <h1>{{ 'user_follow.requested.greeting'|trans }}</h1>
+{% endblock %}
+
+{% block content %}
+    {{ 'user_follow.requested.line_1'|trans({'%followerUsername%': followerUsername})|markdown_to_html }}
+    {{ 'user_follow.requested.line_2'|trans|markdown_to_html }}
+
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+           style="margin-top: 30px !important; margin-bottom: 10px!important;">
+        <tr>
+            <td class="button-a">
+                <a href="{{ approve_follow_back_url }}">{{ 'user_follow.requested.cta_1'|trans }}</a>
+            </td>
+        </tr>
+    </table>
+
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+           style="margin-top: 10px !important; margin-bottom: 10px!important;">
+        <tr>
+            <td class="button-b">
+                <a href="{{ approve_only_url }}">{{ 'user_follow.requested.cta_2'|trans }}</a>
+            </td>
+        </tr>
+    </table>
+
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+           style="margin-top: 10px !important; margin-bottom: 10px!important;">
+        <tr>
+            <td class="button-c">
+                <a href="{{ disregard_url }}">{{ 'user_follow.requested.cta_3'|trans }}</a>
+            </td>
+        </tr>
+    </table>
+{% endblock %}

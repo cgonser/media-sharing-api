@@ -3,24 +3,24 @@
 namespace App\Media\Notification;
 
 use App\Media\Entity\Moment;
-use App\Notification\Enumeration\NotificationChannel;
-use Symfony\Component\Notifier\Notification\Notification;
+use App\Notification\Notification\AbstractNotification;
 
-class MomentPublishedNotification extends Notification
+class MomentPublishedNotification extends AbstractNotification
 {
-    public function __construct(
-        private readonly Moment $moment,
-    ) {
-        parent::__construct(
-            Moment::class,
-            [
-                NotificationChannel::EMAIL->value,
-            ]
-        );
+    public const TYPE = 'moment.published';
+
+    public function __construct(Moment $moment)
+    {
+        parent::__construct([
+            'id' => $moment->getId(),
+            'userId' => $moment->getUserId(),
+        ]);
     }
 
-    public function getContent(): string
+    public function getAvailableChannels(): array
     {
-        return 'Moment published';
+        return [
+//            NotificationChannel::PUSH,
+        ];
     }
 }

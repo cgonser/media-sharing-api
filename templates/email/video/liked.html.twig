@@ -1,0 +1,30 @@
+{% trans_default_domain 'email' %}
+
+{% extends "email/base.html.twig" %}
+
+{% set pre_header_text = 'video.liked.pre_header' %}
+
+{% block hero %}
+{% endblock %}
+
+{% block greeting %}
+    <h1>{{ 'video.liked.greeting'|trans }}</h1>
+{% endblock %}
+
+{% block content %}
+    {{ 'video.liked.line_1'|trans({'%videoLikeUsername%': videoLikeUsername})|markdown_to_html }}
+
+    <p style="text-align: center">
+        <img src="{{ image_url }}">
+    </p>
+
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+           style="margin-top: 30px !important; margin-bottom: 40px!important;">
+        <tr>
+            <td class="button-td">
+                <a class="button-a"
+                   href="{{ cta_url }}">{{ 'video.liked.cta'|trans }}</a>
+            </td>
+        </tr>
+    </table>
+{% endblock %}
