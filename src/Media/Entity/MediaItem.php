@@ -26,11 +26,11 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(type: 'uuid', unique: true)]
     private UuidInterface $id;
 
-    #[Assert\Choice(MediaItemStatus::class)]
+    #[Assert\Type(MediaItemStatus::class)]
     #[ORM\Column(type: 'string', nullable: false, enumType: MediaItemStatus::class)]
     private MediaItemStatus $status;
 
-    #[Assert\Choice(MediaItemType::class)]
+    #[Assert\Type(MediaItemType::class)]
     #[ORM\Column(type: 'string', nullable: false, enumType: MediaItemType::class)]
     private MediaItemType $type;
 
@@ -40,7 +40,7 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(nullable: true)]
     private ?string $filename = null;
 
-    #[Assert\Choice(MediaItemExtension::class)]
+    #[Assert\Type(MediaItemExtension::class)]
     #[ORM\Column(type: 'string', nullable: false, enumType: MediaItemExtension::class)]
     private ?MediaItemExtension $extension = null;
 
