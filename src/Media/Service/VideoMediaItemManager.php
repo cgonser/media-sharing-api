@@ -6,6 +6,8 @@ use App\Core\Validation\EntityValidator;
 use App\Media\Entity\MediaItem;
 use App\Media\Entity\Video;
 use App\Media\Entity\VideoMediaItem;
+use App\Media\Enumeration\MediaItemExtension;
+use App\Media\Enumeration\MediaItemType;
 use App\Media\Message\VideoMediaItemUploadedEvent;
 use App\Media\Repository\VideoMediaItemRepository;
 use Doctrine\Common\Collections\Collection;
@@ -15,14 +17,13 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class VideoMediaItemManager
 {
     public function __construct(
-        private VideoMediaItemRepository $videoMediaItemRepository,
-        private MediaItemManager $mediaItemManager,
-        private EntityValidator $validator,
-        private MessageBusInterface $messageBus,
+        private readonly VideoMediaItemRepository $videoMediaItemRepository,
+        private readonly MediaItemManager $mediaItemManager,
+        private readonly EntityValidator $validator,
     ) {
     }
 
-    public function createForVideo(Video $video, string $type, string $extension): VideoMediaItem
+    public function createForVideo(Video $video, MediaItemType $type, MediaItemExtension $extension): VideoMediaItem
     {
         $mediaItem = $this->mediaItemManager->createUploadableItem($type, $extension);
 

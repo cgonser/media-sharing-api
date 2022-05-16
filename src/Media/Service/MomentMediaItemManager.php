@@ -6,6 +6,8 @@ use App\Core\Validation\EntityValidator;
 use App\Media\Entity\MediaItem;
 use App\Media\Entity\Moment;
 use App\Media\Entity\MomentMediaItem;
+use App\Media\Enumeration\MediaItemExtension;
+use App\Media\Enumeration\MediaItemType;
 use App\Media\Repository\MomentMediaItemRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityNotFoundException;
@@ -19,7 +21,7 @@ class MomentMediaItemManager
     ) {
     }
 
-    public function createForMoment(Moment $moment, string $type, string $extension): MomentMediaItem
+    public function createForMoment(Moment $moment, MediaItemType $type, MediaItemExtension $extension): MomentMediaItem
     {
         $mediaItem = $this->mediaItemManager->createUploadableItem($type, $extension);
 

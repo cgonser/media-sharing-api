@@ -4,6 +4,9 @@ namespace App\Media\Service;
 
 use App\Core\Validation\EntityValidator;
 use App\Media\Entity\MediaItem;
+use App\Media\Enumeration\MediaItemExtension;
+use App\Media\Enumeration\MediaItemStatus;
+use App\Media\Enumeration\MediaItemType;
 use App\Media\Repository\MediaItemRepository;
 use Aws\S3\S3Client;
 
@@ -19,15 +22,15 @@ class MediaItemManager
     ) {
     }
 
-    public function createUploadableItem(string $type, string $extension): MediaItem
+    public function createUploadableItem(MediaItemType $type, MediaItemExtension $extension): MediaItem
     {
         $mediaItem = new MediaItem();
-        $mediaItem->setStatus(MediaItem::STATUS_UPLOAD_PENDING);
+        $mediaItem->setStatus(MediaItemStatus::UPLOAD_PENDING);
         $mediaItem->setType($type);
         $mediaItem->setExtension($extension);
         $this->save($mediaItem);
 
-        $mediaItem->setFilename($mediaItem->getId()->toString().'.'.$extension);
+        $mediaItem->setFilename($mediaItem->getId()->toString().'.'.$extension->value);
         $mediaItem->setUploadUrlValidUntil(new \DateTime(self::S3_UPLOAD_EXPIRES_AFTER));
 
         $uploadRequest = $this->s3Client->createPresignedRequest(
@@ -54,10 +57,10 @@ class MediaItemManager
             ]);
 
             $mediaItem->setPublicUrl($this->s3Client->getObjectUrl($this->s3BucketName, $mediaItem->getFilename()));
-            $mediaItem->setStatus(MediaItem::STATUS_AVAILABLE);
+            $mediaItem->setStatus(MediaItemStatus::AVAILABLE);
 
             $this->save($mediaItem);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             if (new \DateTime() > $mediaItem->getUploadUrlValidUntil()) {
                 $this->delete($mediaItem);
             }

@@ -58,7 +58,7 @@ class CreateController extends AbstractController
         $momentMediaItem = $this->momentMediaItemManager->createForMoment(
             $moment,
             $momentMediaItemRequest->type,
-            strtolower($momentMediaItemRequest->extension),
+            $momentMediaItemRequest->extension,
         );
 
         return new ApiJsonResponse(
