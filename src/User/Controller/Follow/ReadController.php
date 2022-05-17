@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[OA\Tag(name: 'User / Follow')]
-#[Route(path: '/users/{userId}/follows')]
 class ReadController extends AbstractController
 {
     public function __construct(
@@ -39,7 +38,7 @@ class ReadController extends AbstractController
         ],
         content: new OA\JsonContent(type: "array", items: new OA\Items(ref: new Model(type: UserFollowDto::class)))
     )]
-    #[Route(name: 'user_follow_find', methods: 'GET')]
+    #[Route(path: '/users/{userId}/follows', name: 'user_follow_find', methods: 'GET')]
     #[ParamConverter(data: 'searchRequest', converter: 'querystring')]
     #[ParamConverter(data: 'user', converter: 'user.user_entity')]
     public function find(User $user, UserFollowSearchRequest $searchRequest): Response
@@ -52,6 +51,45 @@ class ReadController extends AbstractController
         }
 
         $searchRequest->followerId = $user->getId()->toString();
+
+        $results = $this->userFollowProvider->search($searchRequest);
+        $count = $this->userFollowProvider->count($searchRequest);
+
+        return new ApiJsonResponse(
+            Response::HTTP_OK,
+            $this->userFollowResponseMapper->mapMultiple($results),
+            [
+                'X-Total-Count' => $count,
+            ]
+        );
+    }
+
+    #[OA\Parameter(
+        name: "filters",
+        in: "query",
+        schema: new OA\Schema(ref: new Model(type: UserFollowSearchRequest::class))
+    )]
+    #[OA\Response(
+        response: 200,
+        description: "Success",
+        headers: [
+            new OA\Header(header: "X-Total-Count", schema: new OA\Schema(type: "int")),
+        ],
+        content: new OA\JsonContent(type: "array", items: new OA\Items(ref: new Model(type: UserFollowDto::class)))
+    )]
+    #[Route(path: '/users/{userId}/followers', name: 'user_followers_find', methods: 'GET')]
+    #[ParamConverter(data: 'searchRequest', converter: 'querystring')]
+    #[ParamConverter(data: 'user', converter: 'user.user_entity')]
+    public function findFollowers(User $user, UserFollowSearchRequest $searchRequest): Response
+    {
+        if ($user !== $this->getUser()) {
+            $this->denyAccessUnlessGranted(AuthorizationVoterInterface::READ, $user);
+
+            $searchRequest->isApproved = true;
+            $searchRequest->isPending = false;
+        }
+
+        $searchRequest->followingId = $user->getId()->toString();
 
         $results = $this->userFollowProvider->search($searchRequest);
         $count = $this->userFollowProvider->count($searchRequest);
