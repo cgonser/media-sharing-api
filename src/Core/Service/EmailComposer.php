@@ -11,12 +11,14 @@ class EmailComposer
 {
     public function __construct(
         private readonly TranslatorInterface $translator,
-        private readonly string $unsubscribeUrl,
+        private readonly UrlGenerator $urlGenerator,
     ) {
     }
 
     public function applyTemplate(TemplatedEmail $email, string $identifier, array $context, ?string $locale = null)
     {
+        $unsubscribeUrl = $this->urlGenerator->generate('mailer_unsubscribe');
+
         $currentLocale = $this->translator->getLocale();
 
         if (null === $locale) {
@@ -37,7 +39,7 @@ class EmailComposer
                         'recipient_email' => $email->getTo()[0]->getAddress(),
                         'identifier' => $identifier,
                         'subject' => $subject,
-                        'unsubscribe_url' => $this->unsubscribeUrl,
+                        'unsubscribe_url' => $unsubscribeUrl,
                     ],
                     $context
                 )
