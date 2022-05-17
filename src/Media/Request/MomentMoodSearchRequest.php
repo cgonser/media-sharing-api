@@ -26,5 +26,5 @@ class MomentMoodSearchRequest extends SearchRequest
     public ?string $userId = null;
 
     #[Assert\Type(Mood::class)]
-    public Mood $mood;
+    public ?Mood $mood = null;
 }
