@@ -50,7 +50,7 @@ class VideoProvider extends AbstractProvider
         if (isset($filters['root.moods'])) {
             foreach ($filters['root.moods'] as $key => $mood) {
                 $queryBuilder->andWhere('JSONB_EXISTS(root.moods, :mood_'.$key.') = TRUE')
-                    ->setParameter('mood_',$key, $mood);
+                    ->setParameter('mood_'.$key, $mood);
             }
 
             unset($filters['root.moods'], $filters['root.mood']);
