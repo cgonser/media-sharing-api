@@ -19,7 +19,7 @@ class VideoLikedNotification extends AbstractNotification
             'videoLikeUserId' => $videoLike->getUserId(),
             'videoLikeUsername' => $videoLike->getUser()->getUsername(),
             'image_url' => 'https://moments.itinair.com',
-            'cta_url' => 'https://moments.itinair.com',
+            'cta_url' => 'itinair://moments.itinair.com/video/'.$videoLike->getVideoId()->toString(),
         ]);
     }
 

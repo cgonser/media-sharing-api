@@ -7,6 +7,7 @@ use App\User\Message\UserCreatedEvent;
 use App\User\Provider\UserProvider;
 use App\User\Service\UserEmailManager;
 use App\User\Service\UserFollowManager;
+use DateTimeInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -33,7 +34,7 @@ class UserCreatedHandler implements MessageHandlerInterface
             'user.created',
             [
                 'userId' => $event->getUserId(),
-                'createdAt' => $user->getCreatedAt()->format(\DateTimeInterface::ATOM),
+                'createdAt' => $user->getCreatedAt()->format(DateTimeInterface::ATOM),
             ]
         );
 

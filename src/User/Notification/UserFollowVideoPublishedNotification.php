@@ -18,7 +18,7 @@ class UserFollowVideoPublishedNotification extends AbstractNotification
             'videoId' => $video->getId(),
             'name' => $user->getName(),
             'followingUsername' => $video->getUser()->getUsername(),
-            'cta_url' => 'https://momemnts.itinair.com',
+            'cta_url' => 'itinair://moments.itinair.com/video/'.$video->getId()->toString(),
         ]);
     }
 

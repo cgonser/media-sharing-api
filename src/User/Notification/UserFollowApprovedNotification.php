@@ -17,7 +17,7 @@ class UserFollowApprovedNotification extends AbstractNotification
             'followerId' => $userFollow->getFollowerId(),
             'followingId' => $userFollow->getFollowingId(),
             'followingUsername' => $userFollow->getFollowing()->getUsername(),
-            'following_profile_url' => 'https://moments.itinair.com',
+            'following_profile_url' => 'itinair://moments.itinair.com/user/'.$userFollow->getFollowingId(),
         ]);
     }
 

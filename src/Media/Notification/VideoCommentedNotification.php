@@ -19,7 +19,7 @@ class VideoCommentedNotification extends AbstractNotification
             'videoCommentUserId' => $videoComment->getUserId(),
             'videoCommentUsername' => $videoComment->getUser()->getUsername(),
             'image_url' => 'https://moments.itinair.com',
-            'cta_url' => 'https://moments.itinair.com',
+            'cta_url' => 'itinair://moments.itinair.com/video/'.$videoComment->getVideoId()->toString(),
         ]);
     }
 

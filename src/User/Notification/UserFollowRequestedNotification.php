@@ -17,9 +17,9 @@ class UserFollowRequestedNotification extends AbstractNotification
             'followerId' => $userFollow->getFollowerId(),
             'followingId' => $userFollow->getFollowingId(),
             'followerUsername' => $userFollow->getFollower()->getUsername(),
-            'approve_follow_back_url' => 'https://momemnts.itinair.com',
-            'approve_only_url' => 'https://momemnts.itinair.com',
-            'disregard_url' => 'https://momemnts.itinair.com',
+            'approve_follow_back_url' => 'itinair://moments.itinair.com/users/follow/'.$userFollow->getFollowerId(),
+            'approve_only_url' => 'itinair://moments.itinair.com/users/follow-approve/'.$userFollow->getId(),
+            'disregard_url' => 'itinair://moments.itinair.com/users/follow-reject/'.$userFollow->getId(),
         ]);
     }
 

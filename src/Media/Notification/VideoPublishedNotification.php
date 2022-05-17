@@ -16,7 +16,7 @@ class VideoPublishedNotification extends AbstractNotification
             'id' => $video->getId(),
             'userId' => $video->getUserId(),
             'image_url' => 'https://moments.itinair.com/',
-            'cta_url' => 'https://moments.itinair.com/',
+            'cta_url' => 'itinair://moments.itinair.com/video/'.$video->getId()->toString(),
         ]);
     }
 
