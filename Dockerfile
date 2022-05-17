@@ -101,6 +101,7 @@ COPY public public/
 COPY migrations migrations/
 COPY src src/
 COPY templates templates/
+COPY translations translations/
 
 RUN set -eux; \
 	mkdir -p var/cache var/log; \
