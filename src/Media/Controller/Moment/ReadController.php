@@ -174,6 +174,8 @@ class ReadController extends AbstractController
             $searchRequest->longMax,
             $searchRequest->latMin,
             $searchRequest->latMax,
+            $searchRequest->mood,
+            null !== $searchRequest->userId ? Uuid::fromString($searchRequest->userId) : null,
         );
 
         return new ApiJsonResponse(

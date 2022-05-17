@@ -28,6 +28,18 @@ class MomentSearchRequest extends SearchRequest
     #[Assert\DateTime(format: 'Y-m-d')]
     public ?string $recordedOn = null;
 
+    #[Assert\Type('float')]
+    public ?float $longMin = null;
+
+    #[Assert\Type('float')]
+    public ?float $longMax = null;
+
+    #[Assert\Type('float')]
+    public ?float $latMin = null;
+
+    #[Assert\Type('float')]
+    public ?float $latMax = null;
+
     public ?string $groupBy = null;
 
     public ?bool $expandMoments = false;

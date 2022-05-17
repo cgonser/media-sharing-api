@@ -5,6 +5,7 @@ namespace App\Media\Provider;
 use App\Core\Provider\AbstractProvider;
 use App\Core\Request\SearchRequest;
 use App\Media\Entity\Moment;
+use App\Media\Enumeration\Mood;
 use App\Media\Exception\MomentNotFoundException;
 use App\Media\Repository\MomentRepository;
 use App\Media\Request\MomentSearchRequest;
@@ -34,9 +35,15 @@ class MomentProvider extends AbstractProvider
         return $moment;
     }
 
-    public function findByAreaGroupedByMood(float $longMin, float $longMax, float $latMin, float $latMax): array
-    {
-        return $this->repository->findByAreaGroupedByMood($longMin, $longMax, $latMin, $latMax);
+    public function findByAreaGroupedByMood(
+        float $longMin,
+        float $longMax,
+        float $latMin,
+        float $latMax,
+        ?Mood $mood = null,
+        ?UuidInterface $userId = null
+    ): array {
+        return $this->repository->findByAreaGroupedByMood($longMin, $longMax, $latMin, $latMax, $mood?->value, $userId);
     }
 
     public function searchRecordedOnDates(MomentSearchRequest $searchRequest): array
@@ -72,6 +79,32 @@ class MomentProvider extends AbstractProvider
 
     protected function addFilters(QueryBuilder $queryBuilder, array $filters): void
     {
+        $queryBuilder->innerJoin('root.location', 'location');
+
+        if (isset($filters['location.longMin'])) {
+            $queryBuilder->andWhere('location.long >= :longMin');
+
+            unset($filters['location.longMin']);
+        }
+
+        if (isset($filters['location.longMax'])) {
+            $queryBuilder->andWhere('location.long <= :longMax');
+
+            unset($filters['location.longMax']);
+        }
+
+        if (isset($filters['location.latMin'])) {
+            $queryBuilder->andWhere('location.lat >= :latMin');
+
+            unset($filters['location.latMin']);
+        }
+
+        if (isset($filters['location.latMax'])) {
+            $queryBuilder->andWhere('location.lat <= :latMax');
+
+            unset($filters['location.latMax']);
+        }
+
         if (isset($filters['root.statuses'])) {
             $queryBuilder->andWhere('root.status IN (:statuses)')
                 ->setParameter('statuses', $filters['root.statuses']);
@@ -114,7 +147,10 @@ class MomentProvider extends AbstractProvider
             'status',
             'statuses',
             'recordedOn',
-            'location',
+            'longMin' => 'location',
+            'longMax' => 'location',
+            'latMin' => 'location',
+            'latMax' => 'location',
             'mood',
         ];
     }
