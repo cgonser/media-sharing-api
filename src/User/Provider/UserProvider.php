@@ -59,6 +59,7 @@ class UserProvider extends AbstractProvider
     protected function getSearchableFields(): array
     {
         return [
+            'displayName' => 'text',
             'username' => 'text',
             'bio' => 'text',
         ];
