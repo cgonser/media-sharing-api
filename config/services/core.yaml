@@ -3,6 +3,10 @@ parameters:
     timezone: 'Europe/Luxembourg'
     app.env:  '%env(APP_ENV)%'
     routing.uuid_mask: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+    url_generator.base_host: "%env(FRONTEND_HOST)%"
+    url_generator.templates:
+        email_verification: 'users/email-verification/<token>'
+        password_reset: 'users/email-verification/<token>'
 
 services:
     _defaults:
@@ -28,6 +32,11 @@ services:
     _instanceof:
         App\Core\Messenger\ExternalJsonMessageSerializerInterface:
             tags: [ 'app.core.messenger.serializer' ]
+
+    App\Core\Service\UrlGenerator:
+        arguments:
+            $frontendHost: '%url_generator.base_host%'
+            $urls: '%url_generator.templates%'
 
     App\Core\Messenger\ExternalJsonMessageSerializer:
         arguments:

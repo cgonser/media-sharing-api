@@ -3,6 +3,7 @@
 namespace App\User\Service;
 
 use App\Core\Service\EmailComposer;
+use App\Core\Service\UrlGenerator;
 use App\User\Entity\User;
 use App\User\Entity\UserPasswordResetToken;
 use App\User\Provider\UserProvider;
@@ -10,20 +11,22 @@ use Symfony\Component\Mailer\MailerInterface;
 
 class UserEmailManager
 {
+    private const EMAIL_VERIFICATION_URL_IDENTIFIER = 'email_verification';
+    private const PASSWORD_RESET_URL_IDENTIFIER = 'password_reset';
+
     public function __construct(
         private readonly EmailComposer $emailComposer,
         private readonly MailerInterface $mailer,
-        private readonly string $userEmailVerificationUrl,
-        private readonly string $userPasswordResetUrl,
+        private readonly UrlGenerator $urlGenerator,
     ) {
     }
 
     public function sendCreatedEmail(User $user): void
     {
-        $emailVerificationUrl = strtr(
-            $this->userEmailVerificationUrl,
+        $url = $this->urlGenerator->generate(
+            self::EMAIL_VERIFICATION_URL_IDENTIFIER,
             [
-                '%token%' => base64_encode($user->getId()->toString().'|'.$user->getEmail()),
+                'token' => base64_encode($user->getId()->toString().'|'.$user->getEmail()),
             ]
         );
 
@@ -36,7 +39,7 @@ class UserEmailManager
                 [
                     'username' => $user->getUsername(),
                     'greeting_name' => $user->getName(),
-                    'email_verification_url' => $emailVerificationUrl,
+                    'email_verification_url' => $url,
                 ],
                 $user->getLocale()
             )
@@ -45,10 +48,10 @@ class UserEmailManager
 
     public function sendAccountValidationEmail(User $user): void
     {
-        $emailVerificationUrl = strtr(
-            $this->userEmailVerificationUrl,
+        $url = $this->urlGenerator->generate(
+            self::EMAIL_VERIFICATION_URL_IDENTIFIER,
             [
-                '%token%' => base64_encode($user->getId()->toString().'|'.$user->getEmail()),
+                'token' => base64_encode($user->getId()->toString().'|'.$user->getEmail()),
             ]
         );
 
@@ -60,7 +63,7 @@ class UserEmailManager
                 ],
                 [
                     'greeting_name' => $user->getName(),
-                    'email_verification_url' => $emailVerificationUrl,
+                    'email_verification_url' => $url,
                 ],
                 $user->getLocale()
             )
@@ -71,10 +74,10 @@ class UserEmailManager
     {
         $user = $userPasswordResetToken->getUser();
 
-        $resetUrl = strtr(
-            $this->userPasswordResetUrl,
+        $url = $this->urlGenerator->generate(
+            self::PASSWORD_RESET_URL_IDENTIFIER,
             [
-                '%token%' => base64_encode($user->getUsername().'|'.$userPasswordResetToken->getToken()),
+                'token' => base64_encode($user->getUsername().'|'.$userPasswordResetToken->getToken()),
             ]
         );
 
@@ -85,8 +88,9 @@ class UserEmailManager
                     $user->getName() => $user->getEmail(),
                 ],
                 [
+                    'username' => $user->getUsername(),
                     'greeting_name' => $user->getName(),
-                    'reset_url' => $resetUrl,
+                    'reset_url' => $url,
                 ],
                 $user->getLocale()
             )

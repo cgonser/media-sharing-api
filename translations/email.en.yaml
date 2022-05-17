@@ -62,7 +62,7 @@ user:
         pre_header: "Reset your password for %username%"
         greeting: "Password recovery"
         line_1: "We have received your request to reset your password for the %username% username. Click the button below to get started."
-        line_2: "If it doesn’t work, you can copy and paste the following link in your browser: %email_verification_url%"
+        line_2: "If it doesn’t work, you can copy and paste the following link in your browser: %reset_url%"
         line_3: "This link is valid for 24 hours or until it is used."
         cta: "Reset your password"
 

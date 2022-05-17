@@ -1,7 +1,5 @@
 parameters:
     user.image.s3_bucket: '%env(USER_IMAGE_S3_BUCKET)%'
-    user.password_reset_url: '%env(USER_PASSWORD_RESET_URL)%'
-    user.email_verification_url: '%env(USER_EMAIL_VERIFICATION_URL)%'
     user.test_email_mask: '/\-test\@itinair.com/'
 
 services:
@@ -35,11 +33,6 @@ services:
         arguments:
             $facebookAppId: '%facebook.app_id%'
             $facebookAppSecret: '%facebook.app_secret%'
-
-    App\User\Service\UserEmailManager:
-        arguments:
-            $userEmailVerificationUrl: '%user.email_verification_url%'
-            $userPasswordResetUrl: '%user.password_reset_url%'
 
     gesdinet.jwtrefreshtoken.refresh_token_manager:
         class:  App\Core\Doctrine\RefreshTokenManager
