@@ -38,7 +38,7 @@ class UserCreatedHandler implements MessageHandlerInterface
             ]
         );
 
-        $this->userEmailManager->sendCreatedEmail($user);
+//        $this->userEmailManager->sendCreatedEmail($user);
 
         $this->performAutoFollow($user);
     }
