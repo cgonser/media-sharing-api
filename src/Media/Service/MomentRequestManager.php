@@ -5,6 +5,8 @@ namespace App\Media\Service;
 use App\Media\Entity\Moment;
 use App\Media\Request\MomentRequest;
 use App\User\Provider\UserProvider;
+use DateTime;
+use DateTimeInterface;
 use Ramsey\Uuid\Uuid;
 
 class MomentRequestManager
@@ -52,7 +54,7 @@ class MomentRequestManager
 
         if ($momentRequest->has('recordedAt')) {
             $moment->setRecordedAt(
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, $momentRequest->recordedAt)
+                DateTime::createFromFormat(DateTimeInterface::ATOM, $momentRequest->recordedAt)
             );
         }
 
