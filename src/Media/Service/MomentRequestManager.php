@@ -57,7 +57,11 @@ class MomentRequestManager
         }
 
         if ($momentRequest->has('location')) {
-            $moment->setLocation($this->locationRequestManager->createFromRequest($momentRequest->location));
+            $moment->setLocation(
+                $momentRequest->location !== null
+                    ? $this->locationRequestManager->createFromRequest($momentRequest->location)
+                    : null
+            );
         }
     }
 }
