@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-    {{ 'video.commented.line_1'|trans({'%videoCommentUsername%': username,})|markdown_to_html }}
+    {{ 'video.commented.line_1'|trans({'%videoCommentUsername%': videoCommentUsername})|markdown_to_html }}
 
     <p>{{ comment }}</p>
 
