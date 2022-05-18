@@ -121,30 +121,27 @@ class MomentResponseMapper
             if (!isset($clusters[$clusterId])) {
                 $clusters[$clusterId] = [
                     'mood' => $result['mood'],
-                    'results' => [],
+                    'moments' => [],
                 ];
             }
 
-            $clusters[$clusterId]['results'][] = $this->mapMomentMood($result);
+            $clusters[$clusterId]['moments'][] = $this->mapMomentMood($result);
         }
 
         ksort($clusters);
 
         foreach ($clusters as $cluster) {
-            $momentMoodMapDto->clusters[] = $this->mapMomentMoodCluster($cluster['mood'], $results);
+            $momentMoodMapDto->clusters[] = $this->mapMomentMoodCluster($cluster['mood'], $cluster['moments']);
         }
 
         return $momentMoodMapDto;
     }
 
-    private function mapMomentMoodCluster(string $mood, array $results): MomentMoodClusterDto
+    private function mapMomentMoodCluster(string $mood, array $moments): MomentMoodClusterDto
     {
         $momentMoodClusterDto = new MomentMoodClusterDto();
         $momentMoodClusterDto->mood = $mood;
-
-        foreach ($results as $result) {
-            $momentMoodClusterDto->moments[] = $this->mapMomentMood($result);
-        }
+        $momentMoodClusterDto->moments = $moments;
 
         return $momentMoodClusterDto;
     }
