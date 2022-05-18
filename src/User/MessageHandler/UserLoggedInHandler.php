@@ -35,9 +35,9 @@ class UserLoggedInHandler implements EventSubscriberInterface
             ]
         );
 
-        if (!$user->isEmailValidated()) {
-            $this->userEmailManager->sendAccountValidationEmail($user);
-        }
+//        if (!$user->isEmailValidated()) {
+//            $this->userEmailManager->sendAccountValidationEmail($user);
+//        }
     }
 
     public static function getSubscribedEvents(): array
