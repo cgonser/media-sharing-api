@@ -96,7 +96,7 @@ class ReadController extends AbstractController
 
         return new ApiJsonResponse(
             Response::HTTP_OK,
-            $this->userFollowResponseMapper->mapMultiple($results),
+            $this->userFollowResponseMapper->mapMultiple($results, false, true),
             [
                 'X-Total-Count' => $count,
             ]

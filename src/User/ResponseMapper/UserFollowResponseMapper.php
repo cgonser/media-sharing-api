@@ -33,12 +33,12 @@ class UserFollowResponseMapper
         return $userFollowDto;
     }
 
-    public function mapMultiple(array $userFollows): array
+    public function mapMultiple(array $userFollows, bool $mapFollowing = true, bool $mapFollower = false): array
     {
         $userFollowDtos = [];
 
         foreach ($userFollows as $userFollow) {
-            $userFollowDtos[] = $this->map($userFollow);
+            $userFollowDtos[] = $this->map($userFollow, $mapFollowing, $mapFollower);
         }
 
         return $userFollowDtos;
