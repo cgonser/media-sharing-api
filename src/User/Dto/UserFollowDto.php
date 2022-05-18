@@ -8,9 +8,11 @@ class UserFollowDto
 
     public string $followerId;
 
+    public ?PublicUserDto $follower;
+
     public string $followingId;
 
-    public PublicUserDto $following;
+    public ?PublicUserDto $following;
 
     public ?bool $isApproved = null;
 
