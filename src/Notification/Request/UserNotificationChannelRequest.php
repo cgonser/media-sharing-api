@@ -11,7 +11,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[OA\RequestBody]
 class UserNotificationChannelRequest extends AbstractRequest
 {
-    #[Assert\Type('uuid')]
     public ?string $userId;
 
     #[Assert\NotBlank]
@@ -23,5 +22,6 @@ class UserNotificationChannelRequest extends AbstractRequest
     #[Assert\DateTime(format: DateTimeInterface::ATOM)]
     public ?string $expiresAt;
 
+    #[OA\Property(type: 'array', items: new OA\Items(type: 'object'))]
     public ?array $details;
 }
