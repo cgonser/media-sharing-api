@@ -13,7 +13,7 @@ class VideoPublishedNotification extends AbstractNotification
     public function __construct(Video $video)
     {
         parent::__construct([
-            'id' => $video->getId(),
+            'videoId' => $video->getId(),
             'userId' => $video->getUserId(),
             'image_url' => 'https://moments.itinair.com/',
             'cta_url' => 'itinair://moments.itinair.com/video/'.$video->getId()->toString(),

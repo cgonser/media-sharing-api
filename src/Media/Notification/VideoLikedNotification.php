@@ -13,9 +13,10 @@ class VideoLikedNotification extends AbstractNotification
     public function __construct(VideoLike $videoLike)
     {
         parent::__construct([
-            'id' => $videoLike->getId(),
             'videoId' => $videoLike->getVideoId(),
             'videoUserId' => $videoLike->getVideo()->getUserId(),
+            'videoUsername' => $videoLike->getVideo()->getUser()->getUsername(),
+            'videoLikeId' => $videoLike->getId(),
             'videoLikeUserId' => $videoLike->getUserId(),
             'videoLikeUsername' => $videoLike->getUser()->getUsername(),
             'image_url' => 'https://moments.itinair.com',

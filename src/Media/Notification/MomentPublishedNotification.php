@@ -12,7 +12,7 @@ class MomentPublishedNotification extends AbstractNotification
     public function __construct(Moment $moment)
     {
         parent::__construct([
-            'id' => $moment->getId(),
+            'momentId' => $moment->getId(),
             'userId' => $moment->getUserId(),
         ]);
     }

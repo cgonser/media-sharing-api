@@ -13,9 +13,10 @@ class VideoCommentedNotification extends AbstractNotification
     public function __construct(VideoComment $videoComment)
     {
         parent::__construct([
-            'id' => $videoComment->getId(),
             'videoId' => $videoComment->getVideoId(),
             'videoUserId' => $videoComment->getVideo()->getUserId(),
+            'videoUsername' => $videoComment->getVideo()->getUser()->getUsername(),
+            'videoCommentId' => $videoComment->getId(),
             'videoCommentUserId' => $videoComment->getUserId(),
             'videoCommentUsername' => $videoComment->getUser()->getUsername(),
             'image_url' => 'https://moments.itinair.com',

@@ -13,7 +13,7 @@ class UserFollowApprovedNotification extends AbstractNotification
     public function __construct(UserFollow $userFollow)
     {
         parent::__construct([
-            'id' => $userFollow->getId(),
+            'userFollowId' => $userFollow->getId(),
             'followerId' => $userFollow->getFollowerId(),
             'followingId' => $userFollow->getFollowingId(),
             'followingUsername' => $userFollow->getFollowing()->getUsername(),
