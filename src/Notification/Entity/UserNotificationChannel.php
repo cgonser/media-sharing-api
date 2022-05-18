@@ -30,7 +30,7 @@ class UserNotificationChannel implements SoftDeletableInterface, TimestampableIn
     #[ORM\ManyToOne(targetEntity: User::class)]
     private User $user;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: 'string', nullable: false, enumType: NotificationChannel::class)]
     private NotificationChannel $channel;
 
     #[ORM\Column(type: 'string', nullable: true)]

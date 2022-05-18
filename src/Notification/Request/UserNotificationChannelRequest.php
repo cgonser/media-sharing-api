@@ -22,6 +22,6 @@ class UserNotificationChannelRequest extends AbstractRequest
     #[Assert\DateTime(format: DateTimeInterface::ATOM)]
     public ?string $expiresAt;
 
-    #[OA\Property(type: 'array', items: new OA\Items(type: 'object'))]
+    #[OA\Property(type: 'object')]
     public ?array $details;
 }
