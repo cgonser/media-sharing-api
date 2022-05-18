@@ -29,10 +29,10 @@ class Location implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(type: 'point', nullable: true)]
     private ?Point $coordinates = null;
 
-    #[ORM\Column(type: 'decimal', nullable: true, options: ['scale' => 6, 'precision' => 8])]
+    #[ORM\Column(type: 'decimal', nullable: true, options: ['scale' => 6, 'precision' => 9])]
     private ?float $long = null;
 
-    #[ORM\Column(type: 'decimal', nullable: true, options: ['scale' => 6, 'precision' => 8])]
+    #[ORM\Column(type: 'decimal', nullable: true, options: ['scale' => 6, 'precision' => 9])]
     private ?float $lat = null;
 
     #[ORM\Column(nullable: true)]
