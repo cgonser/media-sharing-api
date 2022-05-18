@@ -17,6 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 #[OA\Tag(name: 'Video / Comments')]
 #[Route(path: '/videos/{videoId}/comments')]
@@ -48,7 +49,8 @@ class UpdateController extends AbstractController
     public function update(
         #[OA\PathParameter] string $videoId,
         #[OA\PathParameter] string $videoCommentId,
-        VideoCommentRequest $videoCommentRequest
+        VideoCommentRequest $videoCommentRequest,
+        ConstraintViolationListInterface $validationErrors,
     ): Response {
         $video = $this->videoProvider->get(Uuid::fromString($videoId));
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::READ, $video);

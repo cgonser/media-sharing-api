@@ -16,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 #[OA\Tag(name: 'Video / Comments')]
 #[Route(path: '/videos/{videoId}/comments')]
@@ -42,8 +43,11 @@ class CreateController extends AbstractController
         options: ['deserializationContext' => ['allow_extra_attributes' => false]],
         converter: 'fos_rest.request_body')
     ]
-    public function create(#[OA\PathParameter] string $videoId, VideoCommentRequest $videoCommentRequest): Response
-    {
+    public function create(
+        #[OA\PathParameter] string $videoId,
+        VideoCommentRequest $videoCommentRequest,
+        ConstraintViolationListInterface $validationErrors,
+    ): Response {
         $video = $this->videoProvider->get(Uuid::fromString($videoId));
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::READ, $video);
 

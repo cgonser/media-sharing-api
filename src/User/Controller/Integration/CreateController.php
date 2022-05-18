@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 #[OA\Tag(name: 'User / Integrations')]
 #[Route(path: '/users/{userId}/integrations')]
@@ -34,7 +35,8 @@ class CreateController extends AbstractController
     )]
     public function create(
         User $user,
-        UserIntegrationRequest $userIntegrationRequest
+        UserIntegrationRequest $userIntegrationRequest,
+        ConstraintViolationListInterface $validationErrors,
     ): Response {
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::UPDATE, $user);
 

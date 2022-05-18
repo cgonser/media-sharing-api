@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 #[OA\Tag(name: 'User / Billing Address')]
 #[Route(path: '/users/{userId}/billing_addresses')]
@@ -40,8 +41,11 @@ class CreateController extends AbstractController
         options: ['deserializationContext' => ['allow_extra_attributes' => false]],
         converter: 'fos_rest.request_body'
     )]
-    public function create(User $user, BillingAddressRequest $billingAddressRequest): Response
-    {
+    public function create(
+        User $user,
+        BillingAddressRequest $billingAddressRequest,
+        ConstraintViolationListInterface $validationErrors,
+    ): Response {
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::UPDATE, $user);
 
         $billingAddressRequest->userId = $user->getId();
