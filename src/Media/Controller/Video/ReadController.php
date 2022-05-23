@@ -6,6 +6,7 @@ use App\Core\Response\ApiJsonResponse;
 use App\Core\Security\AuthorizationVoterInterface;
 use App\Media\Dto\VideoDto;
 use App\Media\Entity\Video;
+use App\Media\Enumeration\VideoStatus;
 use App\Media\Provider\VideoProvider;
 use App\Media\Request\VideoSearchRequest;
 use App\Media\ResponseMapper\VideoResponseMapper;
@@ -51,6 +52,7 @@ class ReadController extends AbstractController
 
         if ($this->getUser()->getId()->toString() !== $searchRequest->userId) {
             $searchRequest->followerId = $this->getUser()->getId()->toString();
+            $searchRequest->status = VideoStatus::PUBLISHED;
         }
 
         $count = $this->videoProvider->count($searchRequest);

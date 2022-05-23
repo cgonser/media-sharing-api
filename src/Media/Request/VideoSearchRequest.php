@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[OA\RequestBody]
 class VideoSearchRequest extends SearchRequest
 {
-    public ?VideoStatus $status = VideoStatus::PUBLISHED;
+    public ?VideoStatus $status;
 
     /** @var VideoStatus[]  */
     #[Assert\All(new Assert\Type(VideoStatus::class))]
