@@ -36,7 +36,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
     private UuidInterface $id;
 
     #[ORM\Column]
-    #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
@@ -45,13 +44,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $bio = null;
 
-    #[ORM\Column(unique: true)]
     #[Assert\NotBlank]
     #[Assert\Email]
+    #[ORM\Column(unique: true)]
     private string $email;
 
-    #[ORM\Column(unique: true)]
     #[Assert\NotBlank]
+    #[ORM\Column(unique: true)]
     private ?string $username = null;
 
     #[ORM\Column(nullable: true)]
