@@ -70,6 +70,15 @@ user:
         line_3: "This link is valid for 24 hours or until it is used."
         cta: "Reset your password"
 
+    feedback:
+        subject: "New user feedback received"
+        greeting: "New user feedback received"
+        line_1: "Sent by **%username%**"
+        line_2: "At **%sentAt%**"
+        line_3: "Type: **%type%**"
+        line_4: "Screen: **%screen%**"
+        line_5: "Description: **%description%**"
+
 user_follow:
     requested:
         subject: "%followerUsername% wants to follow you"

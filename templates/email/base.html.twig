@@ -318,12 +318,14 @@
                             </tr>
                             <tr>
                                 <td class="footer">
+                                    {% block footer %}
                                     <hr>
                                     {{ 'base.automatically_sent'|trans({ '%recipient_email%': recipient_email })|markdown_to_html }}
 
                                     <hr>
                                     <span style="color: #000; font-size: 20px">Moments Logo</span>
                                     {{ 'base.signature_address'|trans|markdown_to_html|nl2br }}
+                                    {% endblock %}
                                 </td>
                             </tr>
 

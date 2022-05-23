@@ -9,7 +9,9 @@ use App\User\Entity\UserPasswordResetToken;
 use App\User\Exception\UserInvalidVerificationCodeException;
 use App\User\Exception\UserNotFoundException;
 use App\User\Provider\UserProvider;
+use App\User\Request\UserFeedbackRequest;
 use DateTime;
+use DateTimeInterface;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -25,6 +27,7 @@ class UserEmailManager
         private readonly UrlGenerator $urlGenerator,
         private readonly UserProvider $userProvider,
         private readonly UserManager $userManager,
+        private readonly string $contactRecipient,
     ) {
     }
 
@@ -35,7 +38,11 @@ class UserEmailManager
 
     public function generateEmailVerificationCode(User $user): string
     {
-        return substr(base_convert($user->getId()->toString(), 36, 10), 0, 5);
+        return substr(
+            base_convert(str_replace('-', '', $user->getId()->toString()), 16, 10),
+            0,
+            5
+        );
     }
 
     public function generateEmailVerificationUrl(string $verificationToken): string
@@ -152,5 +159,32 @@ class UserEmailManager
                 $user->getLocale()
             )
         );
+    }
+
+    public function sendFeedbackEmail(User $user, UserFeedbackRequest $userFeedbackRequest): void
+    {
+        $email = $this->emailComposer->compose(
+            'user.feedback',
+            [
+                $this->contactRecipient => $this->contactRecipient,
+            ],
+            [
+                'username' => $user->getUsername(),
+                'sentAt' => (new DateTime())->format(DateTimeInterface::ATOM),
+                'type' => $userFeedbackRequest->type,
+                'screen' => $userFeedbackRequest->screen,
+                'description' => $userFeedbackRequest->description,
+            ],
+            $user->getLocale()
+        );
+
+        if (null !== $userFeedbackRequest->attachmentContents) {
+            $email->attach(
+                base64_decode($userFeedbackRequest->attachmentContents),
+                $userFeedbackRequest->attachmentFilename,
+            );
+        }
+
+        $this->mailer->send($email);
     }
 }

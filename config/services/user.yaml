@@ -29,6 +29,9 @@ services:
             $defaultTimezone: '%timezone%'
             $userTestEmailMask: '%user.test_email_mask%'
 
+    App\User\Service\UserEmailManager:
+        $contactRecipient: '%app.mailer.contact_recipient%'
+
     App\User\Service\UserFacebookIntegrationManager:
         arguments:
             $facebookAppId: '%facebook.app_id%'

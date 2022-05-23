@@ -1,0 +1,24 @@
+{% trans_default_domain 'email' %}
+
+{% extends "email/base.html.twig" %}
+
+{% block hero %}
+{% endblock %}
+
+{% block greeting %}
+    <h1>{{ 'user.feedback.greeting'|trans }}</h1>
+{% endblock %}
+
+{% block content %}
+    <p>{{ 'user.feedback.line_1'|trans({'%username%': username})|markdown_to_html }}</p>
+    <p>{{ 'user.feedback.line_2'|trans({'%sentAt%': sentAt})|markdown_to_html }}</p>
+    {% if type is not null %}
+        <p>{{ 'user.feedback.line_3'|trans({'%type%': type})|markdown_to_html }}</p>
+    {% endif %}
+    {% if screen is not null %}
+        <p>{{ 'user.feedback.line_4'|trans({'%screen%': screen})|markdown_to_html }}</p>
+    {% endif %}
+    {% if description is not null %}
+        <p>{{ 'user.feedback.line_5'|trans({'%description%': description})|markdown_to_html }}</p>
+    {% endif %}
+{% endblock %}
