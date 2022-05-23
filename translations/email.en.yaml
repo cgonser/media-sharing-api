@@ -95,6 +95,7 @@ user_follow:
         cta_2: "Check this profile in the app"
 
     video_published:
+        pre_header: "%followingUsername% has just uploaded a new memory video"
         greeting: "Hey %name%!"
         line_1: "%followingUsername% has just uploaded a new memory video which might be interesting for you."
         cta: "View video"

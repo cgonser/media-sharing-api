@@ -2,7 +2,7 @@
 
 {% extends "email/base.html.twig" %}
 
-{% set pre_header_text = 'user_follow.video_published.pre_header' %}
+{% set pre_header_text = 'user_follow.video_published.pre_header'|trans({'%followingUsername%': followingUsername}) %}
 
 {% block hero %}
 {% endblock %}

@@ -2,7 +2,7 @@
 
 {% extends "email/base.html.twig" %}
 
-{% set pre_header_text = 'video.liked.pre_header' %}
+{% set pre_header_text = 'video.liked.pre_header'|trans({'%videoLikeUsername%': videoLikeUsername}) %}
 
 {% block hero %}
 {% endblock %}

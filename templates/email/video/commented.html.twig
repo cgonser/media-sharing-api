@@ -2,7 +2,7 @@
 
 {% extends "email/base.html.twig" %}
 
-{% set pre_header_text = 'video.commented.pre_header' %}
+{% set pre_header_text = 'video.commented.pre_header'|trans({'%videoCommentUsername%': videoCommentUsername}) %}
 
 {% block hero %}
 {% endblock %}

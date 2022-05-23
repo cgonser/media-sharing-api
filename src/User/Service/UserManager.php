@@ -16,13 +16,13 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class UserManager
 {
     public function __construct(
-        private UserRepository $userRepository,
-        private EntityValidator $validator,
-        private MessageBusInterface $messageBus,
-        private Reader $geoIpReader,
-        private string $defaultLocale,
-        private string $defaultTimezone,
-        private string $userTestEmailMask,
+        private readonly UserRepository $userRepository,
+        private readonly EntityValidator $validator,
+        private readonly MessageBusInterface $messageBus,
+        private readonly Reader $geoIpReader,
+        private readonly string $defaultLocale,
+        private readonly string $defaultTimezone,
+        private readonly string $userTestEmailMask,
     ) {
     }
 
