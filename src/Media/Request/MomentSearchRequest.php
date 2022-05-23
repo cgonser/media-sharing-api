@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[OA\RequestBody]
 class MomentSearchRequest extends SearchRequest
 {
-    public ?VideoStatus $status;
+    public ?VideoStatus $status = null;
 
     /** @var VideoStatus[]  */
     #[Assert\All(new Assert\Type(VideoStatus::class))]
