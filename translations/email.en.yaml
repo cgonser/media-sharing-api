@@ -51,11 +51,15 @@ user:
         line_4: "This link is valid for 24 hours or until it is used."
         cta: "Verify your email address"
 
-    email_validation:
-        subject: "Verify your email address"
-        pre_header: "Please verify your email address to complete your registration."
-        content: "Thanks for creating an Itinair account! To complete your registration please verify your email address."
-        cta: "Verify email address"
+    email_validation_with_code:
+        subject: "Your verification code"
+        pre_header: "To complete your registration please verify your email address."
+        greeting: "Thanks for signing up"
+        line_1: "To complete your registration please verify your email address."
+        line_2: "You are just one step away to use the **Moments by Itinair** application with the **%username%** username."
+        line_3: "5 digit verification code:"
+        line_4: "Use this code in the application to verify your email."
+        line_5: "The code is valid for 24 hours but you can always send a new one if needed."
 
     password_reset:
         subject: "Forgotten password recovery"

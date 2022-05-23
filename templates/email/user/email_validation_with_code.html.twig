@@ -1,0 +1,21 @@
+{% trans_default_domain 'email' %}
+
+{% extends "email/base.html.twig" %}
+
+{% set pre_header_text = 'user.email_validation_with_code.pre_header' %}
+
+{% block hero %}
+{% endblock %}
+
+{% block greeting %}
+    <h1>{{ 'user.email_validation_with_code.greeting'|trans }}</h1>
+{% endblock %}
+
+{% block content %}
+    {{ 'user.email_validation_with_code.line_1'|trans|markdown_to_html }}
+    {{ 'user.email_validation_with_code.line_2'|trans({'%username%': username})|markdown_to_html }}
+    {{ 'user.email_validation_with_code.line_3'|trans|markdown_to_html }}
+    <p style="font-size: 20px; font-weight: bold; margin-bottom: 20px">{{ email_verification_code }}</p>
+    {{ 'user.email_validation_with_code.line_4'|trans|markdown_to_html }}
+    {{ 'user.email_validation_with_code.line_5'|trans|markdown_to_html }}
+{% endblock %}

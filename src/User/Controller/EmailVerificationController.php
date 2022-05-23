@@ -10,6 +10,7 @@ use App\User\Service\UserEmailManager;
 use App\User\Service\UserRequestManager;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
+use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,7 +48,7 @@ class EmailVerificationController extends AbstractController
     )]
     public function verifyEmail(UserEmailVerificationRequest $userEmailVerificationRequest): Response
     {
-        $this->userManager->verifyEmail($userEmailVerificationRequest);
+        $this->userManager->verifyEmailFromRequest($userEmailVerificationRequest);
 
         return new ApiJsonResponse(Response::HTTP_NO_CONTENT);
     }

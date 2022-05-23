@@ -9,6 +9,7 @@ use App\User\Message\UserCreatedEvent;
 use App\User\Message\UserStatusChangedEvent;
 use App\User\Message\UserUpdatedEvent;
 use App\User\Repository\UserRepository;
+use Exception;
 use GeoIp2\Database\Reader;
 use Symfony\Component\Intl\Timezones;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -93,7 +94,7 @@ class UserManager
             if (null === $user->getTimezone()) {
                 $user->setTimezone(Timezones::forCountryCode($user->getCountry())[0]);
             }
-        } catch (\Exception) {
+        } catch (Exception) {
             // do nothing
         }
     }

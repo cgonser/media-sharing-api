@@ -3,6 +3,8 @@
 namespace App\User\Entity;
 
 use App\User\Repository\UserRepository;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -28,14 +30,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
     use SoftDeletableTrait;
 
     public const ROLE_USER = 'ROLE_USER';
-    public const ROLE_STREAMER = 'ROLE_STREAMER';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
 
     #[ORM\Id, ORM\GeneratedValue('CUSTOM'), ORM\CustomIdGenerator(UuidGenerator::class)]
     #[ORM\Column(type: 'uuid', unique: true)]
     private UuidInterface $id;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $name = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
@@ -90,10 +91,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
     private bool $isProfilePrivate = false;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $emailValidatedAt = null;
+    private ?DateTimeInterface $emailValidatedAt = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $lastLoginAt = null;
+    private ?DateTimeInterface $lastLoginAt = null;
 
     #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => false])]
     private bool $isBlocked = false;
@@ -295,12 +296,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
         return $this;
     }
 
-    public function getEmailValidatedAt(): ?\DateTimeInterface
+    public function getEmailValidatedAt(): ?DateTimeInterface
     {
         return $this->emailValidatedAt;
     }
 
-    public function setEmailValidatedAt(?\DateTimeInterface $emailValidatedAt): self
+    public function setEmailValidatedAt(?DateTimeInterface $emailValidatedAt): self
     {
         $this->emailValidatedAt = $emailValidatedAt;
 
@@ -382,15 +383,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
         return $this->adminNotes;
     }
 
-    public function appendAdminNotes(string $notes, ?\DateTime $timestamp = null): self
+    public function appendAdminNotes(string $notes, ?DateTime $timestamp = null): self
     {
         if (null === $timestamp) {
-            $timestamp = new \DateTime();
+            $timestamp = new DateTime();
         }
 
         $this->setAdminNotes(
             ltrim(
-                $this->getAdminNotes().PHP_EOL.$timestamp->format(\DateTimeInterface::ATOM).' - '.$notes,
+                $this->getAdminNotes().PHP_EOL.$timestamp->format(DateTimeInterface::ATOM).' - '.$notes,
                 PHP_EOL
             )
         );
@@ -405,12 +406,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, SoftDel
         return $this;
     }
 
-    public function getLastLoginAt(): ?\DateTimeInterface
+    public function getLastLoginAt(): ?DateTimeInterface
     {
         return $this->lastLoginAt;
     }
 
-    public function setLastLoginAt(?\DateTimeInterface $lastLoginAt): self
+    public function setLastLoginAt(?DateTimeInterface $lastLoginAt): self
     {
         $this->lastLoginAt = $lastLoginAt;
 

@@ -2,8 +2,10 @@
 
 namespace App\User\Service;
 
+use App\Core\Response\ApiJsonResponse;
 use App\User\Entity\User;
 use App\User\Exception\UserInvalidRoleException;
+use App\User\Exception\UserInvalidVerificationCodeException;
 use App\User\Exception\UserNotFoundException;
 use App\User\Exception\UserRoleNotFoundException;
 use App\User\Provider\UserProvider;
@@ -12,7 +14,10 @@ use App\User\Request\UserPasswordChangeRequest;
 use App\User\Request\UserPasswordResetRequest;
 use App\User\Request\UserPasswordResetTokenRequest;
 use App\User\Request\UserRequest;
+use DateTime;
 use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserRequestManager
 {
@@ -20,6 +25,7 @@ class UserRequestManager
         private readonly UserManager $userManager,
         private readonly UserProvider $userProvider,
         private readonly UserPasswordManager $userPasswordManager,
+        private readonly UserEmailManager $userEmailManager,
     ) {
     }
 
@@ -135,21 +141,24 @@ class UserRequestManager
         $this->userPasswordManager->resetPassword($user, $token, $userPasswordResetTokenRequest->password);
     }
 
-    public function verifyEmail(UserEmailVerificationRequest $userEmailVerificationRequest): void
+    public function verifyEmailFromRequest(UserEmailVerificationRequest $userEmailVerificationRequest): void
     {
-        [$userId, $emailAddress] = explode('|', base64_decode($userEmailVerificationRequest->token));
+        if (null !== $userEmailVerificationRequest->token) {
+            $this->userEmailManager->verifyEmailWithToken($userEmailVerificationRequest->token);
 
-        /** @var User $user */
-        $user = $this->userProvider->get(Uuid::fromString($userId));
-
-        if ($user->getEmail() !== $emailAddress) {
-            throw new UserNotFoundException();
+            return;
         }
 
-        $user->setIsEmailValidated(true);
-        $user->setEmailValidatedAt(new \DateTime());
+        if (null !== $userEmailVerificationRequest->code && null !== $userEmailVerificationRequest->userId) {
+            $this->userEmailManager->verifyEmailWithCode(
+                Uuid::fromString($userEmailVerificationRequest->userId),
+                $userEmailVerificationRequest->code
+            );
 
-        $this->userManager->update($user);
+            return;
+        }
+
+        throw new UserInvalidVerificationCodeException();
     }
 
     public function addRole(User $user, string $roleName): void

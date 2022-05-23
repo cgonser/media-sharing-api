@@ -38,7 +38,7 @@ class UserEmailCreatedCommand extends Command
             return Command::FAILURE;
         }
 
-        $this->userEmailManager->sendCreatedEmail($user);
+        $this->userEmailManager->sendAccountValidationEmail($user);
 
         return Command::SUCCESS;
     }
