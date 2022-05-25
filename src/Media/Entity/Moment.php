@@ -42,10 +42,9 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
     private Mood $mood;
 
     #[ORM\ManyToOne(targetEntity: Location::class)]
-    #[Assert\NotNull]
     private ?Location $location = null;
 
-    #[ORM\Column(type: 'uuid')]
+    #[ORM\Column(type: 'uuid', nullable: true)]
     private ?UuidInterface $locationId = null;
 
     #[Assert\NotNull]
@@ -126,12 +125,12 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getLocation(): Location
+    public function getLocation(): ?Location
     {
         return $this->location;
     }
 
-    public function setLocation(Location $location): void
+    public function setLocation(?Location $location): void
     {
         $this->location = $location;
     }
