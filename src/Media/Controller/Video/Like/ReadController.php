@@ -45,6 +45,8 @@ class ReadController extends AbstractController
         $video = $this->videoProvider->get(Uuid::fromString($videoId));
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::READ, $video);
 
+        $searchRequest->videoId = $videoId;
+
         $results = $this->videoLikeProvider->search($searchRequest);
         $count = $this->videoLikeProvider->count($searchRequest);
 
