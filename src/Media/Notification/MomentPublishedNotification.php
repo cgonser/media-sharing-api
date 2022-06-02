@@ -3,6 +3,7 @@
 namespace App\Media\Notification;
 
 use App\Media\Entity\Moment;
+use App\Notification\Enumeration\NotificationChannel;
 use App\Notification\Notification\AbstractNotification;
 
 class MomentPublishedNotification extends AbstractNotification
@@ -20,6 +21,7 @@ class MomentPublishedNotification extends AbstractNotification
     public function getAvailableChannels(): array
     {
         return [
+            NotificationChannel::CHAT,
 //            NotificationChannel::PUSH,
         ];
     }

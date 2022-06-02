@@ -59,6 +59,7 @@
     "symfony/expression-language": "6.0.*",
     "symfony/filesystem": "6.0.*",
     "symfony/finder": "6.0.*",
+    "symfony/firebase-notifier": "6.0.*",
     "symfony/flex": "^1.18.3",
     "symfony/framework-bundle": "6.0.*",
     "symfony/http-foundation": "6.0.*",

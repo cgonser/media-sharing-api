@@ -4,15 +4,17 @@ namespace App\Notification\Service;
 
 use App\Notification\Enumeration\NotificationChannel;
 use App\Notification\Notification\AbstractNotification;
+use App\Notification\Provider\UserNotificationChannelProvider;
+use App\Notification\Recipient\Recipient;
 use App\User\Entity\User;
 use Symfony\Component\Notifier\NotifierInterface;
-use Symfony\Component\Notifier\Recipient\Recipient;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Notifier
 {
     public function __construct(
         private readonly TranslatorInterface $translator,
+        private readonly UserNotificationChannelProvider $userNotificationChannelProvider,
         private readonly NotifierInterface $notifier,
         private readonly NotificationManager $notificationManager,
     ) {
@@ -61,12 +63,26 @@ class Notifier
 
     private function prepareRecipient(User $user, array $channels): Recipient
     {
-        $recipient = new Recipient(
-            $user->getEmail(),
-            $user->getPhonenumber() ?? ''
-        );
+        $recipient = new Recipient();
 
-        // TODO: adjust according to the channels
+        if (in_array(NotificationChannel::EMAIL->value, $channels) && null !== $user->getEmail()) {
+            $recipient->email($user->getEmail());
+        }
+
+        if (in_array(NotificationChannel::SMS->value, $channels) && null !== $user->getPhonenumber()) {
+            $recipient->phone($user->getPhonenumber());
+        }
+
+        if (in_array(NotificationChannel::PUSH->value, $channels) || in_array(NotificationChannel::CHAT->value, $channels)) {
+            $userNotificationChannel = $this->userNotificationChannelProvider->findOneByUserAndChannel(
+                $user->getId(),
+                NotificationChannel::PUSH
+            );
+
+            if ($userNotificationChannel) {
+                $recipient->pushSettings($userNotificationChannel->getDetails());
+            }
+        }
 
         return $recipient;
     }

@@ -8,4 +8,5 @@ enum NotificationChannel: string
     case SMS = 'sms';
     case PUSH = 'push';
     case BROWSER = 'browser';
+    case CHAT = 'chat';
 }
