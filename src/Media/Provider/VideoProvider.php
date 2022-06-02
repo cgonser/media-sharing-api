@@ -6,13 +6,16 @@ use App\Core\Provider\AbstractProvider;
 use App\Media\Entity\Video;
 use App\Media\Exception\VideoNotFoundException;
 use App\Media\Repository\VideoRepository;
+use App\User\Repository\UserFollowRepository;
 use Doctrine\ORM\QueryBuilder;
 use Ramsey\Uuid\UuidInterface;
 
 class VideoProvider extends AbstractProvider
 {
-    public function __construct(VideoRepository $repository)
-    {
+    public function __construct(
+        VideoRepository $repository,
+        private readonly UserFollowRepository $userFollowRepository,
+    ) {
         $this->repository = $repository;
     }
 
@@ -63,19 +66,31 @@ class VideoProvider extends AbstractProvider
             unset ($filters['root.mood']);
         }
 
+
         if (isset($filters['root.followerId'])) {
-            $queryBuilder
-                ->leftJoin('videoOwner.followers', 'follower', 'WITH', 'follower.isApproved = TRUE')
-                ->andWhere(
-                    $filters['root.followingOnly']
-                        ? 'follower.followerId = :followerId'
-                        : 'videoOwner.isProfilePrivate = FALSE OR follower.followerId = :followerId'
-                )
-                ->setParameter('followerId', $filters['root.followerId'])
+            $subQuery = ($this->userFollowRepository->createQueryBuilder('uf'))
+                ->select("uf")
+                ->andWhere('uf.isApproved = TRUE')
+                ->andWhere('uf.followerId = :followerId')
             ;
+
+            $queryBuilder->setParameter('followerId', $filters['root.followerId']);
+
+            if ($filters['root.followingOnly']) {
+
+                $queryBuilder->andWhere($queryBuilder->expr()->exists($subQuery->getDQL()));
+            } else {
+                $queryBuilder->andWhere(
+                    $queryBuilder->expr()->orX(
+                        'videoOwner.isProfilePrivate = FALSE',
+                        $queryBuilder->expr()->exists($subQuery->getDQL())
+                    )
+                );
+            }
 
             unset($filters['root.followerId']);
         }
+
         unset($filters['root.followingOnly']);
 
         if (isset($filters['root.statuses']) && !empty($filters['root.statuses'])) {
