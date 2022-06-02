@@ -10,7 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class UserEmailVerificationRequest extends AbstractRequest
 {
     #[OA\Property]
-    #[Assert\Type('uuid')]
     public ?string $userId = null;
 
     #[OA\Property]

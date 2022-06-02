@@ -22,7 +22,6 @@ class MomentMoodSearchRequest extends SearchRequest
     #[Assert\NotBlank]
     public float $latMax;
 
-    #[Assert\Type('uuid')]
     public ?string $userId = null;
 
     #[Assert\Type(Mood::class)]
