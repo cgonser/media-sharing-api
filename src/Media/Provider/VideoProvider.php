@@ -93,6 +93,15 @@ class VideoProvider extends AbstractProvider
 
         unset($filters['root.followingOnly']);
 
+        if (isset($filters['root.userIdExclusions'])) {
+            if (!empty($filters['root.userIdExclusions'])) {
+                $queryBuilder->andWhere('root.userId NOT IN (:userIdExclusions)')
+                    ->setParameter('userIdExclusions', $filters['root.userIdExclusions']);
+            }
+
+            unset($filters['root.userIdExclusions']);
+        }
+
         if (isset($filters['root.statuses']) && !empty($filters['root.statuses'])) {
             $queryBuilder->andWhere('root.status IN (:statuses)')
                 ->setParameter('statuses', $filters['root.statuses']);
@@ -118,6 +127,7 @@ class VideoProvider extends AbstractProvider
             'statuses',
             'followerId',
             'followingOnly',
+            'userIdExclusions',
             'location',
             'mood',
             'moods',

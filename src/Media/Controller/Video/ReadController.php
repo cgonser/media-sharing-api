@@ -55,6 +55,14 @@ class ReadController extends AbstractController
             $searchRequest->status = VideoStatus::PUBLISHED;
         }
 
+        if (!empty($searchRequest->userIdExclusions)) {
+            $searchRequest->userIdExclusions = str_replace(
+                'current',
+                $this->getUser()->getId()->toString(),
+                $searchRequest->userIdExclusions,
+            );
+        }
+
         $count = $this->videoProvider->count($searchRequest);
         $results = $this->videoProvider->search($searchRequest);
 

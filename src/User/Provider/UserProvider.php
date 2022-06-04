@@ -40,9 +40,12 @@ class UserProvider extends AbstractProvider
         if (!empty($filters['root.exclusions'])) {
             $queryBuilder->andWhere('root.id NOT IN (:exclusions)')
                 ->setParameter('exclusions', $filters['root.exclusions']);
+
         }
 
-        unset($filters['root.exclusions']);
+        if (isset($filters['root.exclusions'])) {
+            unset($filters['root.exclusions']);
+        }
 
         parent::addFilters($queryBuilder, $filters);
     }
