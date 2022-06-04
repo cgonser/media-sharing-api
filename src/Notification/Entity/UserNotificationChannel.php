@@ -34,6 +34,9 @@ class UserNotificationChannel implements SoftDeletableInterface, TimestampableIn
     private NotificationChannel $channel;
 
     #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $device = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $externalId = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -42,8 +45,8 @@ class UserNotificationChannel implements SoftDeletableInterface, TimestampableIn
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?DateTimeInterface $expiresAt = null;
 
-    #[ORM\Column(type: 'json')]
-    private ?array $details = [];
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $details = null;
 
     #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => true])]
     private bool $isActive = true;
@@ -84,6 +87,18 @@ class UserNotificationChannel implements SoftDeletableInterface, TimestampableIn
     public function setChannel(NotificationChannel|string $channel): self
     {
         $this->channel = $channel instanceOf NotificationChannel ? $channel : NotificationChannel::from($channel);
+
+        return $this;
+    }
+
+    public function getDevice(): ?string
+    {
+        return $this->device;
+    }
+
+    public function setDevice(?string $device): self
+    {
+        $this->device = $device;
 
         return $this;
     }

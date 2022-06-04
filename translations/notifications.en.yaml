@@ -1,3 +1,4 @@
 moment:
     published:
-        content: Your moment was successfully published
+        subject: Your moment was successfully published, %momentId%, %userId%
+        content: "%momentId%"

@@ -2,6 +2,7 @@
 
 namespace App\Notification\Service;
 
+use App\Notification\Entity\UserNotificationChannel;
 use App\Notification\Enumeration\NotificationChannel;
 use App\Notification\Notification\AbstractNotification;
 use App\Notification\Provider\UserNotificationChannelProvider;
@@ -23,37 +24,45 @@ class Notifier
     public function send(AbstractNotification $notification, User $user): void
     {
         $userLocale = $this->getUserLocale($user);
-        $channels = $this->getNotificationChannels($notification, $user);
-        $recipient = $this->prepareRecipient($user, $channels);
+        $userNotificationChannels = $this->getNotificationChannels($notification, $user);
 
         $type = $notification::TYPE;
         $subjectKey = $type.'.subject';
         $contentKey = $type.'.content';
 
-        $notification->setLocale($userLocale);
-        $notification->setTranslator($this->translator);
-        $notification->channels($channels);
-        $notification->subject($this->translator->trans($subjectKey, [], 'notifications', $userLocale));
-        $notification->content($this->translator->trans($contentKey, [], 'notifications', $userLocale));
+        $notification
+            ->setLocale($userLocale)
+            ->setTranslator($this->translator)
+            ->subject($notification->translate($subjectKey, 'notifications'))
+            ->content($notification->translate($contentKey, 'notifications'))
+        ;
 
-        $this->notificationManager->create($notification, $user, $channels);
+        /** @var UserNotificationChannel $userNotificationChannel */
+        foreach ($userNotificationChannels as $userNotificationChannel) {
+            $channel = $this->identifyNotificationChannel($userNotificationChannel);
 
-        if (!empty($channels)) {
-            $this->notifier->send($notification, $recipient);
+            $channels = [$channel->value];
+            $notification->channels($channels);
+
+            $this->notificationManager->create($notification, $user, $channels);
+            $this->notifier->send($notification, $this->prepareRecipient($user, $userNotificationChannel));
         }
     }
 
     private function getNotificationChannels(AbstractNotification $notification, User $user): array
     {
-        $channels = [];
+        $userNotificationChannels = $this->userNotificationChannelProvider->findActiveByUser($user->getId());
 
-        /** @var NotificationChannel $notificationChannel */
-        foreach ($notification->getAvailableChannels() as $notificationChannel) {
-            // todo: check if the user opted for receiving notifications in each of these channels
-            $channels[] = $notificationChannel->value;
+        /** @var UserNotificationChannel $userNotificationChannel */
+        foreach ($userNotificationChannels as $key => $userNotificationChannel) {
+            $channel = $this->identifyNotificationChannel($userNotificationChannel);
+
+            if (!in_array($channel, $notification->getAvailableChannels())) {
+                unset ($userNotificationChannels[$key]);
+            }
         }
 
-        return $channels;
+        return $userNotificationChannels;
     }
 
     private function getUserLocale(User $user): string
@@ -61,29 +70,30 @@ class Notifier
         return $this->translator->getFallbackLocales()[0];
     }
 
-    private function prepareRecipient(User $user, array $channels): Recipient
+    private function prepareRecipient(User $user, UserNotificationChannel $userNotificationChannel): Recipient
     {
         $recipient = new Recipient();
 
-        if (in_array(NotificationChannel::EMAIL->value, $channels) && null !== $user->getEmail()) {
+        if (NotificationChannel::EMAIL === $userNotificationChannel->getChannel() && null !== $user->getEmail()) {
             $recipient->email($user->getEmail());
         }
 
-        if (in_array(NotificationChannel::SMS->value, $channels) && null !== $user->getPhonenumber()) {
+        if (NotificationChannel::SMS === $userNotificationChannel->getChannel() && null !== $user->getPhonenumber()) {
             $recipient->phone($user->getPhonenumber());
         }
 
-        if (in_array(NotificationChannel::PUSH->value, $channels) || in_array(NotificationChannel::CHAT->value, $channels)) {
-            $userNotificationChannel = $this->userNotificationChannelProvider->findOneByUserAndChannel(
-                $user->getId(),
-                NotificationChannel::PUSH
-            );
-
-            if ($userNotificationChannel) {
-                $recipient->pushSettings($userNotificationChannel->getDetails());
-            }
+        if (in_array($userNotificationChannel->getChannel(), [NotificationChannel::PUSH, NotificationChannel::CHAT])) {
+            $recipient->userNotificationChannel($userNotificationChannel);
         }
 
         return $recipient;
+    }
+
+    private function identifyNotificationChannel(UserNotificationChannel $userNotificationChannel): NotificationChannel
+    {
+        return match ($userNotificationChannel->getChannel()) {
+            NotificationChannel::PUSH => NotificationChannel::CHAT,
+            default => $userNotificationChannel->getChannel(),
+        };
     }
 }

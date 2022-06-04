@@ -22,7 +22,6 @@ class MomentPublishedNotification extends AbstractNotification
     {
         return [
             NotificationChannel::CHAT,
-//            NotificationChannel::PUSH,
         ];
     }
 }

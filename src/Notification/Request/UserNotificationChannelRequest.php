@@ -17,6 +17,10 @@ class UserNotificationChannelRequest extends AbstractRequest
     #[Assert\Type(NotificationChannel::class)]
     public ?NotificationChannel $channel;
 
+    public ?string $device;
+
+    public ?string $token;
+
     public ?string $externalId;
 
     #[Assert\DateTime(format: DateTimeInterface::ATOM)]

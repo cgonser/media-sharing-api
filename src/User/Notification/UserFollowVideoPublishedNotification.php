@@ -25,7 +25,7 @@ class UserFollowVideoPublishedNotification extends AbstractNotification
     public function getAvailableChannels(): array
     {
         return [
-//            NotificationChannel::PUSH,
+            NotificationChannel::CHAT,
         ];
     }
 }

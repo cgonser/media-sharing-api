@@ -2,6 +2,7 @@
 
 namespace App\Notification\Recipient;
 
+use App\Notification\Entity\UserNotificationChannel;
 use Symfony\Component\Notifier\Recipient\EmailRecipientInterface;
 use Symfony\Component\Notifier\Recipient\EmailRecipientTrait;
 use Symfony\Component\Notifier\Recipient\SmsRecipientInterface;
@@ -12,7 +13,7 @@ class Recipient implements EmailRecipientInterface, SmsRecipientInterface
     use EmailRecipientTrait;
     use SmsRecipientTrait;
 
-    private ?array $pushSettings = null;
+    private ?UserNotificationChannel $userNotificationChannel = null;
 
     public function email(string $email): self
     {
@@ -28,15 +29,15 @@ class Recipient implements EmailRecipientInterface, SmsRecipientInterface
         return $this;
     }
 
-    public function pushSettings(array $pushSettings): self
+    public function userNotificationChannel(?UserNotificationChannel $userNotificationChannel): self
     {
-        $this->pushSettings = $pushSettings;
+        $this->userNotificationChannel = $userNotificationChannel;
 
         return $this;
     }
 
-    public function getPushSettings(): ?array
+    public function getUserNotificationChannel(): ?UserNotificationChannel
     {
-        return $this->pushSettings;
+        return $this->userNotificationChannel;
     }
 }

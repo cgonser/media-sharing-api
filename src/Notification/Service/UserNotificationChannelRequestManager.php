@@ -3,7 +3,6 @@
 namespace App\Notification\Service;
 
 use App\Notification\Entity\UserNotificationChannel;
-use App\Notification\Provider\UserNotificationChannelProvider;
 use App\Notification\Request\UserNotificationChannelRequest;
 use App\User\Provider\UserProvider;
 use DateTime;
@@ -14,24 +13,14 @@ class UserNotificationChannelRequestManager
 {
     public function __construct(
         private readonly UserNotificationChannelManager $userNotificationChannelManager,
-        private readonly UserNotificationChannelProvider $userNotificationChannelProvider,
         private readonly UserProvider $userProvider,
     ) {
     }
 
-    public function createOrUpdateFromRequest(
-        UserNotificationChannelRequest $userNotificationChannelRequest
+    public function createFromRequest(
+        UserNotificationChannelRequest $userNotificationChannelRequest,
     ): UserNotificationChannel {
-        $userId = Uuid::fromString($userNotificationChannelRequest->userId);
-
-        $userNotificationChannel = $this->userNotificationChannelProvider->findOneByUserAndChannel(
-            $userId,
-            $userNotificationChannelRequest->channel
-        );
-
-        if (null === $userNotificationChannel) {
-            $userNotificationChannel = new UserNotificationChannel();
-        }
+        $userNotificationChannel = new UserNotificationChannel();
 
         $this->mapFromRequest($userNotificationChannel, $userNotificationChannelRequest);
 
@@ -40,6 +29,14 @@ class UserNotificationChannelRequestManager
         return $userNotificationChannel;
     }
 
+    public function updateFromRequest(
+        UserNotificationChannel $userNotificationChannel,
+        UserNotificationChannelRequest $userNotificationChannelRequest,
+    ): void {
+        $this->mapFromRequest($userNotificationChannel, $userNotificationChannelRequest);
+
+        $this->userNotificationChannelManager->save($userNotificationChannel);
+    }
 
     public function mapFromRequest(
         UserNotificationChannel $userNotificationChannel,
@@ -51,10 +48,20 @@ class UserNotificationChannelRequestManager
             );
         }
 
-        $userNotificationChannel->setChannel($userNotificationChannelRequest->channel);
+        if ($userNotificationChannelRequest->has('channel')) {
+            $userNotificationChannel->setChannel($userNotificationChannelRequest->channel);
+        }
+
+        if ($userNotificationChannelRequest->has('device')) {
+            $userNotificationChannel->setDevice($userNotificationChannelRequest->device);
+        }
 
         if ($userNotificationChannelRequest->has('externalId')) {
             $userNotificationChannel->setExternalId($userNotificationChannelRequest->externalId);
+        }
+
+        if ($userNotificationChannelRequest->has('token')) {
+            $userNotificationChannel->setToken($userNotificationChannelRequest->token);
         }
 
         if ($userNotificationChannelRequest->has('details')) {

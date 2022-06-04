@@ -4,7 +4,9 @@ namespace App\Notification\Service;
 
 use App\Core\Validation\EntityValidator;
 use App\Notification\Entity\UserNotificationChannel;
+use App\Notification\Enumeration\NotificationChannel;
 use App\Notification\Repository\UserNotificationChannelRepository;
+use App\User\Entity\User;
 
 class UserNotificationChannelManager
 {
@@ -24,5 +26,15 @@ class UserNotificationChannelManager
     public function delete(?UserNotificationChannel $userNotificationChannel): void
     {
         $this->userNotificationChannelRepository->delete($userNotificationChannel);
+    }
+
+    public function enableEmailNotifications(User $user): void
+    {
+        $userNotificationChannel = (new UserNotificationChannel())
+            ->setUser($user)
+            ->setChannel(NotificationChannel::EMAIL)
+        ;
+
+        $this->save($userNotificationChannel);
     }
 }

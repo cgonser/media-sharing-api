@@ -2,6 +2,8 @@
 
 namespace App\Notification\Notification;
 
+use App\Notification\Entity\UserNotificationChannel;
+use App\Notification\Exception\NotificationSettingsNotFoundException;
 use App\Notification\Exception\PushSettingsNotFoundException;
 use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -18,7 +20,7 @@ use Symfony\Component\Notifier\Recipient\EmailRecipientInterface;
 use Symfony\Component\Notifier\Recipient\RecipientInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-abstract class AbstractNotification extends Notification implements EmailNotificationInterface, PushNotificationInterface, ChatNotificationInterface
+abstract class AbstractNotification extends Notification implements EmailNotificationInterface, ChatNotificationInterface
 {
     public const TYPE = null;
 
@@ -41,14 +43,18 @@ abstract class AbstractNotification extends Notification implements EmailNotific
         parent::__construct();
     }
 
-    public function setTranslator(TranslatorInterface $translator): void
+    public function setTranslator(TranslatorInterface $translator): self
     {
         $this->translator = $translator;
+
+        return $this;
     }
 
-    public function setLocale(string $locale): void
+    public function setLocale(string $locale): self
     {
         $this->locale = $locale;
+
+        return $this;
     }
 
     public function getContext(): array
@@ -56,83 +62,50 @@ abstract class AbstractNotification extends Notification implements EmailNotific
         return $this->context;
     }
 
-    public function setContext(array $context): void
+    public function setContext(array $context): self
     {
         $this->context = $context;
+
+        return $this;
     }
 
     public function asChatMessage(RecipientInterface $recipient, string $transport = null): ?ChatMessage
     {
         $chatMessage = ChatMessage::fromNotification($this);
-        $messageSettings = $recipient->getPushSettings();
+        /** @var UserNotificationChannel $userNotificationChannel */
+        $userNotificationChannel = $recipient->getUserNotificationChannel();
 
-        if (null === $messageSettings) {
+        if (null === $userNotificationChannel) {
             return null;
         }
 
         $messageOptions = null;
 
-        if ('ios' === $messageSettings['os']) {
+        if ('ios' === $userNotificationChannel->getDevice()) {
             $messageOptions = new IOSNotification(
-                $messageSettings['token'],
+                $userNotificationChannel->getToken(),
                 [
-                    'to' => $messageSettings['token'],
+                    'to' => $userNotificationChannel->getToken(),
                 ]
             );
         }
 
-        if ('android' === $messageSettings['os']) {
+        if ('android' === $userNotificationChannel->getDevice()) {
             $messageOptions = new AndroidNotification(
-                $messageSettings['token'],
+                $userNotificationChannel->getToken(),
                 [
-                    'to' => $messageSettings['token'],
+                    'to' => $userNotificationChannel->getToken(),
                 ]
             );
         }
 
         if (null === $messageOptions) {
-            throw new PushSettingsNotFoundException();
+            throw new NotificationSettingsNotFoundException();
         }
 
-//        $chatMessage->content('test contents');
         $chatMessage->options($messageOptions);
 
         return $chatMessage;
-    }
-
-    public function asPushMessage(RecipientInterface $recipient, string $transport = null): ?PushMessage
-    {
-        $pushMessage = PushMessage::fromNotification($this);
-        $pushSettings = $recipient->getPushSettings();
-
-        if (null === $pushSettings) {
-            return null;
-        }
-
-        $messageOptions = null;
-
-        if ('ios' === $pushSettings['os']) {
-            $messageOptions = new IOSNotification(
-                $pushSettings['token'],
-                []
-            );
-        }
-
-        if ('android' === $pushSettings['os']) {
-            $messageOptions = new AndroidNotification(
-                $pushSettings['token'],
-                []
-            );
-        }
-
-        if (null === $messageOptions) {
-            throw new PushSettingsNotFoundException();
-        }
-
-        $pushMessage->content('test contents');
-        $pushMessage->options($messageOptions);
-
-        return $pushMessage;
     }
 
     public function asEmailMessage(EmailRecipientInterface $recipient, string $transport = null): ?EmailMessage
@@ -140,22 +113,17 @@ abstract class AbstractNotification extends Notification implements EmailNotific
         $email = new TemplatedEmail();
         $email->addTo($recipient->getEmail());
 
-        $this->applyEmailTemplate($email, $this::TYPE, $this->context, $this->locale);
+        $this->applyEmailTemplate($email, $this::TYPE);
 
         return new EmailMessage($email);
     }
 
-    public function applyEmailTemplate(TemplatedEmail $email, string $identifier, array $context, ?string $locale = null)
+    public function applyEmailTemplate(TemplatedEmail $email, string $identifier): void
     {
         $templateFile = str_replace('.', '/', $identifier);
 
         $subjectTranslationKey = $identifier.'.subject';
-        $subject = $this->translator->trans(
-            $subjectTranslationKey,
-            $this->convertContextToPlaceholders($context),
-            'email',
-            $locale
-        );
+        $subject = $this->translate($subjectTranslationKey, 'email');
 
         $email
             ->subject($subject)
@@ -167,12 +135,20 @@ abstract class AbstractNotification extends Notification implements EmailNotific
                         'identifier' => $identifier,
                         'subject' => $subject,
                     ],
-                    $context,
+                    $this->context,
                 )
             );
     }
 
-    abstract public function getAvailableChannels(): array;
+    public function translate(string $translationKey, string $domain): string
+    {
+        return $this->translator->trans(
+            $translationKey,
+            $this->convertContextToPlaceholders($this->context),
+            $domain,
+            $this->locale
+        );
+    }
 
     private function convertContextToPlaceholders(array $context): array
     {
@@ -184,4 +160,6 @@ abstract class AbstractNotification extends Notification implements EmailNotific
 
         return $placeholders;
     }
+
+    abstract public function getAvailableChannels(): array;
 }

@@ -28,7 +28,7 @@ class VideoLikedNotification extends AbstractNotification
     {
         return [
             NotificationChannel::EMAIL,
-//            NotificationChannel::PUSH,
+            NotificationChannel::CHAT,
         ];
     }
 }

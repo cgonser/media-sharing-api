@@ -16,6 +16,21 @@ class UserNotificationChannelProvider extends AbstractProvider
         $this->repository = $repository;
     }
 
+    public function getByUserAndId(UuidInterface $userId, UuidInterface $momentId): UserNotificationChannel
+    {
+        /** @var UserNotificationChannel|null $userNotificationChannel */
+        $userNotificationChannel = $this->repository->findOneBy([
+            'id' => $momentId,
+            'userId' => $userId,
+        ]);
+
+        if (!$userNotificationChannel) {
+            $this->throwNotFoundException();
+        }
+
+        return $userNotificationChannel;
+    }
+
     public function findOneByUserAndChannel(
         UuidInterface $userId,
         NotificationChannel $channel,
@@ -26,5 +41,23 @@ class UserNotificationChannelProvider extends AbstractProvider
         ], [
             'createdAt' => 'DESC',
         ]);
+    }
+
+    public function findActiveByUser(UuidInterface $userId): array
+    {
+        return $this->repository->findBy([
+            'userId' => $userId,
+            'isActive' => true,
+        ]);
+    }
+
+    protected function getFilterableFields(): array
+    {
+        return [
+            'userId',
+            'channel',
+            'device',
+            'externalId',
+        ];
     }
 }
