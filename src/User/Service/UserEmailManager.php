@@ -178,7 +178,7 @@ class UserEmailManager
             $user->getLocale()
         );
 
-        if (null !== $userFeedbackRequest->attachmentContents) {
+        if (null !== $userFeedbackRequest->attachmentContents && trim($userFeedbackRequest->attachmentContents) !== '') {
             $email->attach(
                 base64_decode($userFeedbackRequest->attachmentContents),
                 $userFeedbackRequest->attachmentFilename,
