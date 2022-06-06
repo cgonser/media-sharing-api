@@ -26,11 +26,11 @@ class VideoSearchRequest extends SearchRequest
     #[OA\Property(type: 'array', items: new OA\Items(type: 'string'))]
     public ?array $moods = null;
 
-    #[Assert\All(constraints: [new Assert\Uuid()])]
+    #[Assert\All(constraints: [new Assert\AtLeastOneOf([new Assert\Uuid(), new Assert\EqualTo('current')])])]
     #[OA\Property(type: 'array', items: new OA\Items(type: 'string'))]
     public ?array $userIdExclusions = [];
 
-    #[Assert\Uuid()]
+    #[Assert\Uuid]
     public ?string $userId = null;
 
     public ?string $followerId = null;
