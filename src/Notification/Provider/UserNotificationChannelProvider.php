@@ -56,7 +56,7 @@ class UserNotificationChannelProvider extends AbstractProvider
         return [
             'userId',
             'channel',
-            'device',
+            'deviceType',
             'externalId',
         ];
     }

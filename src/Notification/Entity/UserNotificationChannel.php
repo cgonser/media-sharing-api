@@ -34,7 +34,7 @@ class UserNotificationChannel implements SoftDeletableInterface, TimestampableIn
     private NotificationChannel $channel;
 
     #[ORM\Column(type: 'string', nullable: true)]
-    private ?string $device = null;
+    private ?string $deviceType = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $externalId = null;
@@ -91,14 +91,14 @@ class UserNotificationChannel implements SoftDeletableInterface, TimestampableIn
         return $this;
     }
 
-    public function getDevice(): ?string
+    public function getDeviceType(): ?string
     {
-        return $this->device;
+        return $this->deviceType;
     }
 
-    public function setDevice(?string $device): self
+    public function setDeviceType(?string $deviceType): self
     {
-        $this->device = $device;
+        $this->deviceType = $deviceType;
 
         return $this;
     }

@@ -52,8 +52,8 @@ class UserNotificationChannelRequestManager
             $userNotificationChannel->setChannel($userNotificationChannelRequest->channel);
         }
 
-        if ($userNotificationChannelRequest->has('device')) {
-            $userNotificationChannel->setDevice($userNotificationChannelRequest->device);
+        if ($userNotificationChannelRequest->has('deviceType')) {
+            $userNotificationChannel->setDeviceType($userNotificationChannelRequest->deviceType);
         }
 
         if ($userNotificationChannelRequest->has('externalId')) {

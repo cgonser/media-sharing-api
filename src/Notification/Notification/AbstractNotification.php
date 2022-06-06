@@ -81,7 +81,7 @@ abstract class AbstractNotification extends Notification implements EmailNotific
 
         $messageOptions = null;
 
-        if ('ios' === $userNotificationChannel->getDevice()) {
+        if ('ios' === $userNotificationChannel->getDeviceType()) {
             $messageOptions = new IOSNotification(
                 $userNotificationChannel->getToken(),
                 [
@@ -90,7 +90,7 @@ abstract class AbstractNotification extends Notification implements EmailNotific
             );
         }
 
-        if ('android' === $userNotificationChannel->getDevice()) {
+        if ('android' === $userNotificationChannel->getDeviceType()) {
             $messageOptions = new AndroidNotification(
                 $userNotificationChannel->getToken(),
                 [

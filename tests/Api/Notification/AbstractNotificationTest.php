@@ -10,7 +10,7 @@ abstract class AbstractNotificationTest extends AbstractApiTest
     {
         return [
             'channel' => 'push',
-            'device' => 'android',
+            'deviceType' => 'android',
             'token' => 'test-token',
             'externalId' => 'external-id',
         ];

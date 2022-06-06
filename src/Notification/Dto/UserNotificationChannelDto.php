@@ -12,7 +12,7 @@ class UserNotificationChannelDto
 
     public string $channel;
 
-    public ?string $device = null;
+    public ?string $deviceType = null;
 
     public ?string $externalId = null;
 

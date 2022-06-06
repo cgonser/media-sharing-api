@@ -16,7 +16,7 @@ class UserNotificationChannelResponseMapper
         $userNotificationChannelDto->id = $userNotificationChannel->getId()->toString();
         $userNotificationChannelDto->userId = $userNotificationChannel->getUserId()->toString();
         $userNotificationChannelDto->channel = $userNotificationChannel->getChannel()->value;
-        $userNotificationChannelDto->device = $userNotificationChannel->getDevice();
+        $userNotificationChannelDto->deviceType = $userNotificationChannel->getDeviceType();
         $userNotificationChannelDto->externalId = $userNotificationChannel->getExternalId();
         $userNotificationChannelDto->token = $userNotificationChannel->getToken();
         $userNotificationChannelDto->expiresAt = $userNotificationChannel->getExpiresAt()?->format(DateTimeInterface::ATOM);
