@@ -23,7 +23,12 @@ class MomentSearchRequest extends SearchRequest
     #[Assert\Type(Mood::class)]
     public ?Mood $mood = null;
 
+    #[Assert\AtLeastOneOf([new Assert\Uuid(), new Assert\EqualTo('current')])]
     public ?string $userId = null;
+
+    #[Assert\All(constraints: [new Assert\AtLeastOneOf([new Assert\Uuid(), new Assert\EqualTo('current')])])]
+    #[OA\Property(type: 'array', items: new OA\Items(type: 'string'))]
+    public ?array $userIdExclusions = [];
 
     #[Assert\DateTime(format: 'Y-m-d')]
     public ?string $recordedOn = null;

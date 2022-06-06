@@ -24,6 +24,10 @@ class MomentMoodSearchRequest extends SearchRequest
 
     public ?string $userId = null;
 
+    #[Assert\All(constraints: [new Assert\AtLeastOneOf([new Assert\Uuid(), new Assert\EqualTo('current')])])]
+    #[OA\Property(type: 'array', items: new OA\Items(type: 'string'))]
+    public ?array $userIdExclusions = [];
+
     #[Assert\Type(Mood::class)]
     public ?Mood $mood = null;
 }

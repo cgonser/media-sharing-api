@@ -112,6 +112,15 @@ class MomentProvider extends AbstractProvider
             unset($filters['root.status'], $filters['root.statuses']);
         }
 
+        if (isset($filters['root.userIdExclusions'])) {
+            if (!empty($filters['root.userIdExclusions'])) {
+                $queryBuilder->andWhere('root.userId NOT IN (:userIdExclusions)')
+                    ->setParameter('userIdExclusions', $filters['root.userIdExclusions']);
+            }
+
+            unset($filters['root.userIdExclusions']);
+        }
+
         parent::addFilters($queryBuilder, $filters);
     }
 
@@ -144,6 +153,7 @@ class MomentProvider extends AbstractProvider
     {
         return [
             'userId',
+            'userIdExclusions',
             'status',
             'statuses',
             'recordedOn',
