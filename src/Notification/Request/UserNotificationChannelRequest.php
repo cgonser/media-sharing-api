@@ -13,7 +13,6 @@ class UserNotificationChannelRequest extends AbstractRequest
 {
     public ?string $userId;
 
-    #[Assert\NotBlank]
     #[Assert\Type(NotificationChannel::class)]
     public ?NotificationChannel $channel;
 
