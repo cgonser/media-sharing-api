@@ -4,18 +4,15 @@ namespace App\Notification\Notification;
 
 use App\Notification\Entity\UserNotificationChannel;
 use App\Notification\Exception\NotificationSettingsNotFoundException;
-use App\Notification\Exception\PushSettingsNotFoundException;
 use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Notifier\Bridge\Firebase\Notification\AndroidNotification;
 use Symfony\Component\Notifier\Bridge\Firebase\Notification\IOSNotification;
 use Symfony\Component\Notifier\Message\ChatMessage;
 use Symfony\Component\Notifier\Message\EmailMessage;
-use Symfony\Component\Notifier\Message\PushMessage;
 use Symfony\Component\Notifier\Notification\ChatNotificationInterface;
 use Symfony\Component\Notifier\Notification\EmailNotificationInterface;
 use Symfony\Component\Notifier\Notification\Notification;
-use Symfony\Component\Notifier\Notification\PushNotificationInterface;
 use Symfony\Component\Notifier\Recipient\EmailRecipientInterface;
 use Symfony\Component\Notifier\Recipient\RecipientInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;

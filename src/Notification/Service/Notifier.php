@@ -24,7 +24,6 @@ class Notifier
     public function send(AbstractNotification $notification, User $user): void
     {
         $userLocale = $this->getUserLocale($user);
-        $userNotificationChannels = $this->getNotificationChannels($notification, $user);
 
         $type = $notification::TYPE;
         $subjectKey = $type.'.subject';
@@ -34,9 +33,23 @@ class Notifier
             ->setLocale($userLocale)
             ->setTranslator($this->translator)
             ->subject($notification->translate($subjectKey, 'notifications'))
-            ->content($notification->translate($contentKey, 'notifications'))
-        ;
+            ->content($notification->translate($contentKey, 'notifications'));
 
+        $this->sendRaw($notification, $user);
+    }
+
+    public function sendRaw(AbstractNotification $notification, User $user): void
+    {
+        $userNotificationChannels = $this->getNotificationChannels($notification, $user);
+
+        $this->doSend($notification, $user, $userNotificationChannels);
+    }
+
+    private function doSend(
+        AbstractNotification $notification,
+        User $user,
+        array $userNotificationChannels,
+    ): void {
         /** @var UserNotificationChannel $userNotificationChannel */
         foreach ($userNotificationChannels as $userNotificationChannel) {
             $channel = $this->identifyNotificationChannel($userNotificationChannel);
