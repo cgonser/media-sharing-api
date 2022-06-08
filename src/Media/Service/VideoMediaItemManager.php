@@ -7,6 +7,7 @@ use App\Media\Entity\MediaItem;
 use App\Media\Entity\Video;
 use App\Media\Entity\VideoMediaItem;
 use App\Media\Enumeration\MediaItemExtension;
+use App\Media\Enumeration\MediaItemStatus;
 use App\Media\Enumeration\MediaItemType;
 use App\Media\Message\VideoMediaItemUploadedEvent;
 use App\Media\Provider\VideoMediaItemProvider;
@@ -42,6 +43,7 @@ class VideoMediaItemManager
             ->setType($type)
             ->setExtension($extension)
             ->setFilename($filename)
+            ->setStatus(MediaItemStatus::AVAILABLE)
         ;
         $this->mediaItemManager->create($mediaItem);
 
