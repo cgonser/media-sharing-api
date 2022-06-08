@@ -5,7 +5,7 @@ namespace App\Media\Message;
 use App\Core\Messenger\ExternalJsonMessageSerializerInterface;
 use App\Media\Provider\MediaItemProvider;
 use Exception;
-use Ramsey\Uuid\Uuid;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
 
 class MediaItemUploadedEventSerializer implements ExternalJsonMessageSerializerInterface
@@ -15,6 +15,7 @@ class MediaItemUploadedEventSerializer implements ExternalJsonMessageSerializerI
 
     public function __construct(
         private readonly MediaItemProvider $mediaItemProvider,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -26,13 +27,17 @@ class MediaItemUploadedEventSerializer implements ExternalJsonMessageSerializerI
     public function parse(array $record): MediaItemUploadedEvent
     {
         try {
-            $mediaItemId = Uuid::fromString(pathinfo($record['s3']['object']['key'],PATHINFO_FILENAME));
+            $objectKey = $record['s3']['object']['key'];
 
-            $this->mediaItemProvider->get($mediaItemId);
+            $this->logger->info('s3.ObjectCreated', [
+                'objectKey' => $objectKey,
+            ]);
 
-            return new MediaItemUploadedEvent($mediaItemId);
+            $mediaItem = $this->mediaItemProvider->getByFilename($objectKey);
+
+            return new MediaItemUploadedEvent($mediaItem->getId(), $objectKey);
         } catch (Exception) {
-            throw new MessageDecodingFailedException('Invalid media item ID');
+            throw new MessageDecodingFailedException('Media item not found: '.$objectKey);
         }
     }
 }

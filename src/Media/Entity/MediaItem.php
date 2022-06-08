@@ -28,7 +28,7 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
 
     #[Assert\Type(MediaItemStatus::class)]
     #[ORM\Column(type: 'string', nullable: false, enumType: MediaItemStatus::class)]
-    private MediaItemStatus $status;
+    private ?MediaItemStatus $status = null;
 
     #[Assert\Type(MediaItemType::class)]
     #[ORM\Column(type: 'string', nullable: false, enumType: MediaItemType::class)]
@@ -37,7 +37,7 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $publicUrl = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(unique: true, nullable: true)]
     private ?string $filename = null;
 
     #[Assert\Type(MediaItemExtension::class)]
@@ -61,7 +61,7 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
         return $this->id;
     }
 
-    public function getStatus(): MediaItemStatus
+    public function getStatus(): ?MediaItemStatus
     {
         return $this->status;
     }

@@ -2,6 +2,8 @@
 
 namespace App\Core\Messenger;
 
+use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
@@ -10,6 +12,7 @@ class ExternalJsonMessageSerializer implements SerializerInterface
 {
     public function __construct(
         private readonly iterable $serializers,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -26,8 +29,12 @@ class ExternalJsonMessageSerializer implements SerializerInterface
 
         foreach ($data['Records'] as $record) {
             foreach ($this->serializers as $serializer) {
-                if ($serializer->supports($record['eventSource'], $record['eventName'])) {
-                    $message->add($serializer->parse($record));
+                try {
+                    if ($serializer->supports($record['eventSource'], $record['eventName'])) {
+                        $message->add($serializer->parse($record));
+                    }
+                } catch (Exception $e) {
+                    $this->logger->error($e->getMessage());
                 }
             }
         }

@@ -5,6 +5,7 @@ namespace App\Media\Service;
 use App\Core\Validation\EntityValidator;
 use App\Media\Entity\Video;
 use App\Media\Enumeration\VideoStatus;
+use App\Media\Message\VideoCreatedEvent;
 use App\Media\Message\VideoPublishedEvent;
 use App\Media\Notification\VideoPublishedNotification;
 use App\Media\Repository\VideoRepository;
@@ -25,6 +26,8 @@ class VideoManager
     public function create(Video $video): void
     {
         $this->save($video);
+
+        $this->messageBus->dispatch(new VideoCreatedEvent($video->getId(), $video->getUserId()));
     }
 
     public function update(Video $video): void

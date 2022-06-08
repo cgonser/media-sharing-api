@@ -55,7 +55,7 @@ class CreateController extends AbstractController
 
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::UPDATE, $video);
 
-        $videoMediaItem = $this->videoMediaItemManager->createForVideo(
+        $videoMediaItem = $this->videoMediaItemManager->createUploadableItemForVideo(
             $video,
             $videoMediaItemRequest->type,
             $videoMediaItemRequest->extension,

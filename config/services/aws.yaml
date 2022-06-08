@@ -1,5 +1,6 @@
 parameters:
     aws.region: '%env(AWS_REGION)%'
+    aws.media_convert.endpoint: '%env(AWS_MEDIA_CONVERT_ENDPOINT)%'
 
 services:
     _defaults:
@@ -10,10 +11,17 @@ services:
         arguments:
             -
                 version: '2006-03-01'
-                region: '%env(AWS_REGION)%'
+                region: '%aws.region%'
+
+    Aws\MediaConvert\MediaConvertClient:
+        -
+            version: "2017-08-29"
+            region: '%aws.region%'
+            endpoint: '%aws.media_convert.endpoint%'
 
     Aws\Sdk:
         arguments:
             -
                 version: 'latest'
                 region: '%aws.region%'
+

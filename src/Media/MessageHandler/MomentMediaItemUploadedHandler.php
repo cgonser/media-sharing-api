@@ -3,6 +3,8 @@
 namespace App\Media\MessageHandler;
 
 use App\Media\Entity\Moment;
+use App\Media\Entity\MomentMediaItem;
+use App\Media\Enumeration\MediaItemType;
 use App\Media\Enumeration\MomentStatus;
 use App\Media\Message\MomentMediaItemUploadedEvent;
 use App\Media\Provider\MomentMediaItemProvider;
@@ -21,7 +23,9 @@ class MomentMediaItemUploadedHandler implements MessageHandlerInterface
 
     public function __invoke(MomentMediaItemUploadedEvent $event)
     {
+        /** @var MomentMediaItem $momentMediaItem */
         $momentMediaItem = $this->momentMediaItemProvider->get($event->getMomentMediaItemId());
+        $moment = $momentMediaItem->getMoment();
 
         $this->logger->info(
             $event::NAME,
@@ -30,9 +34,21 @@ class MomentMediaItemUploadedHandler implements MessageHandlerInterface
             ]
         );
 
-        /** @var Moment $moment */
-        $moment = $momentMediaItem->getMoment();
+        if (MediaItemType::VIDEO_ORIGINAL === $momentMediaItem->getMediaItem()->getType()) {
+            $this->generateMediaVersions($moment);
+        }
 
+        $this->updatePublishedStatus($moment);
+    }
+
+    private function generateMediaVersions(Moment $moment): void
+    {
+
+    }
+
+    private function updatePublishedStatus(Moment $moment): void
+    {
+        // todo: check if all required media types were generated and uploaded
         if (MomentStatus::PUBLISHED !== $moment->getStatus()) {
             $this->momentManager->publish($moment);
         }

@@ -3,6 +3,7 @@
 namespace App\Media\MessageHandler;
 
 use App\Media\Entity\Video;
+use App\Media\Entity\VideoMediaItem;
 use App\Media\Enumeration\VideoStatus;
 use App\Media\Message\VideoMediaItemUploadedEvent;
 use App\Media\Provider\VideoMediaItemProvider;
@@ -21,7 +22,9 @@ class VideoMediaItemUploadedHandler implements MessageHandlerInterface
 
     public function __invoke(VideoMediaItemUploadedEvent $event)
     {
+        /** @var VideoMediaItem $videoMediaItem */
         $videoMediaItem = $this->videoMediaItemProvider->get($event->getVideoMediaItemId());
+        $video = $videoMediaItem->getVideo();
 
         $this->logger->info(
             $event::NAME,
@@ -30,9 +33,12 @@ class VideoMediaItemUploadedHandler implements MessageHandlerInterface
             ]
         );
 
-        /** @var Video $video */
-        $video = $videoMediaItem->getVideo();
+        $this->updatePublishedStatus($video);
+    }
 
+    private function updatePublishedStatus(Video $video): void
+    {
+        // todo: check if all required media types were generated and uploaded
         if (VideoStatus::PUBLISHED !== $video->getStatus()) {
             $this->videoManager->publish($video);
         }

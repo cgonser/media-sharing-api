@@ -2,6 +2,7 @@
 
 namespace App\Media\Entity;
 
+use App\Media\Enumeration\MediaItemType;
 use App\Media\Repository\MomentMediaItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface;
@@ -16,6 +17,15 @@ class MomentMediaItem implements TimestampableInterface, SoftDeletableInterface
 {
     use TimestampableTrait;
     use SoftDeletableTrait;
+
+    public const REQUIRED_TYPES = [
+        50 => [
+            MediaItemType::IMAGE_THUMBNAIL,
+            MediaItemType::VIDEO_LOW,
+        ],
+        10 => MediaItemType::VIDEO_HIGH,
+        0 => MediaItemType::VIDEO_ORIGINAL,
+    ];
 
     #[ORM\Id, ORM\GeneratedValue('CUSTOM'), ORM\CustomIdGenerator(UuidGenerator::class)]
     #[ORM\Column(type: 'uuid', unique: true)]

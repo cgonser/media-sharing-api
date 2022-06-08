@@ -15,10 +15,18 @@ services:
         tags: ['controller.service_arguments']
 
     App\Media\Service\MediaItemManager:
-        class: App\Media\Service\MediaItemManager
         arguments:
             $s3BucketName: '%media_item.s3_bucket%'
 
     _instanceof:
         App\Core\Messenger\ExternalJsonMessageSerializerInterface:
             tags: [ 'app.core.messenger.serializer' ]
+
+    App\Media\Service\VideoMediaManager:
+        arguments:
+            $s3BucketName: '%media_item.s3_bucket%'
+
+    App\Media\Service\AwsMediaConverterManager:
+        arguments:
+            $awsMediaConvertQueueArn: "%env(AWS_MEDIA_CONVERT_VIDEO_COMPOSE_QUEUE_ARN)%"
+            $awsMediaConvertRoleArn: "%env(AWS_MEDIA_CONVERT_JOB_ROLE_ARN)%"

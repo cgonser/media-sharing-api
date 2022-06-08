@@ -69,6 +69,10 @@ class MediaItemManager
 
     public function create(MediaItem $mediaItem): void
     {
+        if (null === $mediaItem->getStatus()) {
+            $mediaItem->setStatus(MediaItemStatus::UPLOAD_PENDING);
+        }
+
         $this->save($mediaItem);
     }
 
