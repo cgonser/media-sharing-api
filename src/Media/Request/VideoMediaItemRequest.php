@@ -14,8 +14,4 @@ class VideoMediaItemRequest extends AbstractRequest
     #[Assert\NotBlank]
     #[Assert\Type(MediaItemExtension::class)]
     public MediaItemExtension $extension;
-
-    #[Assert\NotBlank]
-    #[Assert\Type(MediaItemType::class)]
-    public MediaItemType $type;
 }

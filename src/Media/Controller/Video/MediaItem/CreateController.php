@@ -5,6 +5,7 @@ namespace App\Media\Controller\Video\MediaItem;
 use App\Core\Response\ApiJsonResponse;
 use App\Core\Security\AuthorizationVoterInterface;
 use App\Media\Dto\MediaItemDto;
+use App\Media\Enumeration\MediaItemType;
 use App\Media\Provider\VideoProvider;
 use App\Media\Request\VideoMediaItemRequest;
 use App\Media\ResponseMapper\MediaItemResponseMapper;
@@ -57,7 +58,7 @@ class CreateController extends AbstractController
 
         $videoMediaItem = $this->videoMediaItemManager->createUploadableItemForVideo(
             $video,
-            $videoMediaItemRequest->type,
+            MediaItemType::VIDEO_ORIGINAL,
             $videoMediaItemRequest->extension,
         );
 

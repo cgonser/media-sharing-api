@@ -39,8 +39,6 @@ class VideoComposeCommand extends Command
 
         $this->messageBus->dispatch(new VideoCreatedEvent($video->getId(), $video->getUserId()));
 
-//        $this->videoMediaManager->compose($video);
-
         return 0;
     }
 }

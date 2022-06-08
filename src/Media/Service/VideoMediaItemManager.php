@@ -9,6 +9,7 @@ use App\Media\Entity\VideoMediaItem;
 use App\Media\Enumeration\MediaItemExtension;
 use App\Media\Enumeration\MediaItemType;
 use App\Media\Message\VideoMediaItemUploadedEvent;
+use App\Media\Provider\VideoMediaItemProvider;
 use App\Media\Repository\VideoMediaItemRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityNotFoundException;
@@ -18,6 +19,7 @@ class VideoMediaItemManager
 {
     public function __construct(
         private readonly VideoMediaItemRepository $videoMediaItemRepository,
+        private readonly VideoMediaItemProvider $videoMediaItemProvider,
         private readonly MediaItemManager $mediaItemManager,
         private readonly EntityValidator $validator,
     ) {
@@ -29,6 +31,13 @@ class VideoMediaItemManager
         MediaItemExtension $extension,
         string $filename,
     ): VideoMediaItem {
+        $videoMediaItem = $this->videoMediaItemProvider->findOneByVideoAndType($video->getId(), $type);
+
+        if (!$videoMediaItem) {
+            $videoMediaItem = new VideoMediaItem();
+            $videoMediaItem->setVideo($video);
+        }
+
         $mediaItem = (new MediaItem())
             ->setType($type)
             ->setExtension($extension)
@@ -36,9 +45,7 @@ class VideoMediaItemManager
         ;
         $this->mediaItemManager->create($mediaItem);
 
-        $videoMediaItem = new VideoMediaItem();
         $videoMediaItem->setMediaItem($mediaItem);
-        $videoMediaItem->setVideo($video);
 
         $this->save($videoMediaItem);
 
@@ -50,11 +57,15 @@ class VideoMediaItemManager
         MediaItemType $type,
         MediaItemExtension $extension
     ): VideoMediaItem {
-        $mediaItem = $this->mediaItemManager->createUploadableItem($type, $extension);
+        $videoMediaItem = $this->videoMediaItemProvider->findOneByVideoAndType($video->getId(), $type);
 
-        $videoMediaItem = new VideoMediaItem();
+        if (!$videoMediaItem) {
+            $videoMediaItem = new VideoMediaItem();
+            $videoMediaItem->setVideo($video);
+        }
+
+        $mediaItem = $this->mediaItemManager->createUploadableItem($type, $extension);
         $videoMediaItem->setMediaItem($mediaItem);
-        $videoMediaItem->setVideo($video);
 
         $this->save($videoMediaItem);
 

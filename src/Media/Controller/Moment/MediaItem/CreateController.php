@@ -5,6 +5,7 @@ namespace App\Media\Controller\Moment\MediaItem;
 use App\Core\Response\ApiJsonResponse;
 use App\Core\Security\AuthorizationVoterInterface;
 use App\Media\Dto\MediaItemDto;
+use App\Media\Enumeration\MediaItemType;
 use App\Media\Provider\MomentProvider;
 use App\Media\Request\MomentMediaItemRequest;
 use App\Media\ResponseMapper\MediaItemResponseMapper;
@@ -57,7 +58,7 @@ class CreateController extends AbstractController
 
         $momentMediaItem = $this->momentMediaItemManager->createForMoment(
             $moment,
-            $momentMediaItemRequest->type,
+            MediaItemType::VIDEO_ORIGINAL,
             $momentMediaItemRequest->extension,
         );
 
