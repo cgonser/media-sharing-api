@@ -36,6 +36,7 @@ framework:
             'App\Media\Message\MomentMediaItemUploadedEvent': async_internal
             'App\Media\Message\VideoMediaItemUploadedEvent': async_internal
             'App\Media\Message\MomentPublishedEvent': void
+            'App\Media\Message\VideoCreatedEvent': async_internal
             'App\Media\Message\VideoPublishedEvent': sync
 
             'Symfony\Component\Mailer\Messenger\SendEmailMessage': async_internal
