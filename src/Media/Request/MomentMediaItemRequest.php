@@ -14,6 +14,4 @@ class MomentMediaItemRequest extends AbstractRequest
     #[Assert\NotBlank]
     #[Assert\Type(MediaItemExtension::class)]
     public MediaItemExtension $extension;
-
-    public ?string $type;
 }

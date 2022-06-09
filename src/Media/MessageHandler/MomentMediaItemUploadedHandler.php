@@ -36,6 +36,10 @@ class MomentMediaItemUploadedHandler implements MessageHandlerInterface
             ]
         );
 
+        if (MomentStatus::PUBLISHED === $moment->getStatus()) {
+            return;
+        }
+
         if (MediaItemType::VIDEO_ORIGINAL === $momentMediaItem->getMediaItem()->getType()) {
             $this->momentMediaManager->convert($moment);
         }

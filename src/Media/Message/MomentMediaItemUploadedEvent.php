@@ -9,12 +9,12 @@ class MomentMediaItemUploadedEvent
     public const NAME = 'media.moment.uploaded';
 
     public function __construct(
-        private readonly UuidInterface $videoMediaItemId,
+        private readonly UuidInterface $momentMediaItemId,
     ) {
     }
 
     public function getMomentMediaItemId(): UuidInterface
     {
-        return $this->videoMediaItemId;
+        return $this->momentMediaItemId;
     }
 }

@@ -43,6 +43,7 @@
     "stripe/stripe-php": "^7.79",
     "symfony/amazon-mailer": "6.0.*",
     "symfony/amazon-sqs-messenger": "6.0.*",
+    "symfony/amqp-messenger": "6.0.*",
     "symfony/asset": "6.0.*",
     "symfony/browser-kit": "6.0.*",
     "symfony/cache": "6.0.*",

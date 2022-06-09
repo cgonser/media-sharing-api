@@ -22,6 +22,22 @@ class MediaItemManager
     ) {
     }
 
+    public function uploadFile(string $key, mixed $contents, ?string $contentType = null): void
+    {
+        $config = [
+            'Bucket' => $this->s3BucketName,
+            'Key' => $key,
+            'Body' => $contents,
+            'ACL' => 'public-read',
+        ];
+
+        if (null !== $contentType) {
+            $config['Content-Type'] = $contentType;
+        }
+
+        $this->s3Client->putObject($config);
+    }
+
     public function createUploadableItem(MediaItemType $type, MediaItemExtension $extension): MediaItem
     {
         $mediaItem = new MediaItem();

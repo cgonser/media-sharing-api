@@ -521,6 +521,9 @@
     "symfony/amazon-sqs-messenger": {
         "version": "v5.3.14"
     },
+    "symfony/amqp-messenger": {
+        "version": "v6.0.7"
+    },
     "symfony/asset": {
         "version": "v5.3.14"
     },
