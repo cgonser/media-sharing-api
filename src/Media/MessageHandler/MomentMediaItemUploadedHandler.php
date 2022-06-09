@@ -9,6 +9,7 @@ use App\Media\Enumeration\MomentStatus;
 use App\Media\Message\MomentMediaItemUploadedEvent;
 use App\Media\Provider\MomentMediaItemProvider;
 use App\Media\Service\MomentManager;
+use App\Media\Service\MomentMediaManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -16,6 +17,7 @@ class MomentMediaItemUploadedHandler implements MessageHandlerInterface
 {
     public function __construct(
         private readonly MomentMediaItemProvider $momentMediaItemProvider,
+        private readonly MomentMediaManager $momentMediaManager,
         private readonly MomentManager $momentManager,
         private readonly LoggerInterface $logger
     ) {
@@ -35,15 +37,10 @@ class MomentMediaItemUploadedHandler implements MessageHandlerInterface
         );
 
         if (MediaItemType::VIDEO_ORIGINAL === $momentMediaItem->getMediaItem()->getType()) {
-            $this->generateMediaVersions($moment);
+            $this->momentMediaManager->convert($moment);
         }
 
         $this->updatePublishedStatus($moment);
-    }
-
-    private function generateMediaVersions(Moment $moment): void
-    {
-
     }
 
     private function updatePublishedStatus(Moment $moment): void

@@ -44,7 +44,7 @@ class CreateController extends AbstractController
         options: ['deserializationContext' => ['allow_extra_attributes' => false]],
         converter: 'fos_rest.request_body')
     ]
-    public function update(
+    public function create(
         #[OA\PathParameter] string $momentId,
         MomentMediaItemRequest $momentMediaItemRequest,
         ConstraintViolationListInterface $validationErrors,
@@ -56,7 +56,7 @@ class CreateController extends AbstractController
 
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::UPDATE, $moment);
 
-        $momentMediaItem = $this->momentMediaItemManager->createForMoment(
+        $momentMediaItem = $this->momentMediaItemManager->createUploadableItemForMoment(
             $moment,
             MediaItemType::VIDEO_ORIGINAL,
             $momentMediaItemRequest->extension,

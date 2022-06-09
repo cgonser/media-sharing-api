@@ -7,6 +7,7 @@ use App\Media\Entity\MediaItem;
 use App\Media\Entity\Moment;
 use App\Media\Entity\MomentMediaItem;
 use App\Media\Enumeration\MediaItemExtension;
+use App\Media\Enumeration\MediaItemStatus;
 use App\Media\Enumeration\MediaItemType;
 use App\Media\Provider\MomentMediaItemProvider;
 use App\Media\Repository\MomentMediaItemRepository;
@@ -23,8 +24,39 @@ class MomentMediaItemManager
     ) {
     }
 
-    public function createForMoment(Moment $moment, MediaItemType $type, MediaItemExtension $extension): MomentMediaItem
-    {
+    public function createItemForMoment(
+        Moment $moment,
+        MediaItemType $type,
+        MediaItemExtension $extension,
+        string $filename,
+    ): MomentMediaItem {
+        $momentMediaItem = $this->momentMediaItemProvider->findOneByMomentAndType($moment->getId(), $type);
+
+        if (!$momentMediaItem) {
+            $momentMediaItem = new MomentMediaItem();
+            $momentMediaItem->setMoment($moment);
+        }
+
+        $mediaItem = (new MediaItem())
+            ->setType($type)
+            ->setExtension($extension)
+            ->setFilename($filename)
+            ->setStatus(MediaItemStatus::AVAILABLE)
+        ;
+        $this->mediaItemManager->create($mediaItem);
+
+        $momentMediaItem->setMediaItem($mediaItem);
+
+        $this->save($momentMediaItem);
+
+        return $momentMediaItem;
+    }
+
+    public function createUploadableItemForMoment(
+        Moment $moment,
+        MediaItemType $type,
+        MediaItemExtension $extension,
+    ): MomentMediaItem {
         $momentMediaItem = $this->momentMediaItemProvider->findOneByMomentAndType($moment->getId(), $type);
 
         if (!$momentMediaItem) {
