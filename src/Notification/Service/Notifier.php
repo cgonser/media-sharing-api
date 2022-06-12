@@ -8,6 +8,8 @@ use App\Notification\Notification\AbstractNotification;
 use App\Notification\Provider\UserNotificationChannelProvider;
 use App\Notification\Recipient\Recipient;
 use App\User\Entity\User;
+use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Notifier\NotifierInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -18,6 +20,7 @@ class Notifier
         private readonly UserNotificationChannelProvider $userNotificationChannelProvider,
         private readonly NotifierInterface $notifier,
         private readonly NotificationManager $notificationManager,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -42,7 +45,17 @@ class Notifier
     {
         $userNotificationChannels = $this->getNotificationChannels($notification, $user);
 
-        $this->doSend($notification, $user, $userNotificationChannels);
+        try {
+            $this->doSend($notification, $user, $userNotificationChannels);
+        } catch (Exception $e) {
+            $this->logger->error(
+                'notifier.sendRaw',
+                [
+                    'exception' => get_class($e),
+                    'message' => $e->getMessage(),
+                ]
+            );
+        }
     }
 
     private function doSend(
