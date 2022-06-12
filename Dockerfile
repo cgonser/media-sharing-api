@@ -78,6 +78,8 @@ RUN mkdir -p /var/log/newrelic /var/run/newrelic && \
 
 ADD ./docker/php-fpm/newrelic.ini /usr/local/etc/php/conf.d/newrelic.ini
 
+ADD ./docker/php-fpm/custom.ini /usr/local/etc/php/conf.d/99_custom.ini
+
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install gd pdo_pgsql intl exif zip bcmath
 
