@@ -6,6 +6,7 @@ use App\Core\Validation\EntityValidator;
 use App\Media\Entity\Video;
 use App\Media\Enumeration\VideoStatus;
 use App\Media\Message\VideoCreatedEvent;
+use App\Media\Message\VideoDeletedEvent;
 use App\Media\Message\VideoPublishedEvent;
 use App\Media\Notification\VideoPublishedNotification;
 use App\Media\Repository\VideoRepository;
@@ -38,6 +39,8 @@ class VideoManager
     public function delete(object $video): void
     {
         $this->videoRepository->delete($video);
+
+        $this->messageBus->dispatch(new VideoDeletedEvent($video->getId(), $video->getUserId()));
     }
 
     public function save(Video $video): void
@@ -49,6 +52,10 @@ class VideoManager
 
     public function publish(Video $video): void
     {
+        if (VideoStatus::PUBLISHED === $video->getStatus()) {
+            return;
+        }
+
         $video->setStatus(VideoStatus::PUBLISHED);
         $video->setPublishedAt(new DateTime());
 

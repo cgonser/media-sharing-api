@@ -79,7 +79,7 @@ class MomentProvider extends AbstractProvider
 
     protected function addFilters(QueryBuilder $queryBuilder, array $filters): void
     {
-        $queryBuilder->innerJoin('root.location', 'location');
+        $queryBuilder->leftJoin('root.location', 'location');
 
         if (isset($filters['location.longMin'])) {
             $queryBuilder->andWhere('location.long >= :longMin');
