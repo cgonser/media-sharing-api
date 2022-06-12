@@ -43,13 +43,14 @@ class MomentMediaItemManager
 
         $filename = $moment->getUserId()->toString().'/'.$moment->getId()->toString().'.'.$extension->value;
 
-        $this->mediaItemManager->uploadFile($filename, $fileContents, $contentType);
+        $publicUrl = $this->mediaItemManager->uploadFile($filename, $fileContents, $contentType);
 
         $mediaItem = (new MediaItem())
             ->setType($type)
             ->setExtension($extension)
             ->setFilename($filename)
             ->setStatus(MediaItemStatus::AVAILABLE)
+            ->setPublicUrl($publicUrl)
         ;
 
         $this->mediaItemManager->create($mediaItem);

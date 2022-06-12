@@ -7,6 +7,7 @@ use App\Media\Dto\MomentDto;
 use App\Media\Dto\MomentMoodClusterDto;
 use App\Media\Dto\MomentMoodDto;
 use App\Media\Dto\MomentMoodMapDto;
+use App\Media\Entity\MediaItem;
 use App\Media\Entity\Moment;
 use App\Media\Entity\MomentMediaItem;
 use App\Media\Provider\MomentProvider;
@@ -56,6 +57,7 @@ class MomentResponseMapper
 
         /** @var MomentMediaItem $momentMediaItems */
         foreach ($momentMediaItems as $momentMediaItem) {
+            /** @var MediaItem $mediaItem */
             $mediaItem = $momentMediaItem->getMediaItem();
             $return[$mediaItem->getType()->value] = $mediaItem->getPublicUrl();
         }
