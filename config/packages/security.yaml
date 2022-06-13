@@ -20,6 +20,12 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        aws:
+            pattern: ^/public/aws/
+            stateless: true
+            custom_authenticators:
+                - 'aws_public_api_key_authenticator'
+
         user_login:
             pattern: ^/users/login$
             stateless: true
@@ -54,6 +60,8 @@ security:
 
         - { path: ^/payments/stripe/checkout/callback, roles: PUBLIC_ACCESS, methods: [ POST ] }
         - { path: ^/payments/stripe/webhook, roles: PUBLIC_ACCESS, methods: [ POST ] }
+
+        - { path: ^/public/aws, roles: IS_AUTHENTICATED_FULLY }
 
         - { path: ^/health, roles: PUBLIC_ACCESS }
         - { path: ^/doc, roles: PUBLIC_ACCESS }

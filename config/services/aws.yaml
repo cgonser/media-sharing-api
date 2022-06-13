@@ -25,3 +25,7 @@ services:
                 version: 'latest'
                 region: '%aws.region%'
 
+    aws_public_api_key_authenticator:
+        class: App\Core\Security\ApiKeyAuthenticator
+        arguments:
+            $apiKey: '%env(AWS_INTEGRATION_API_KEY)%'
