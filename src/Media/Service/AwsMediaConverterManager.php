@@ -15,18 +15,21 @@ class AwsMediaConverterManager
     ) {
     }
 
-    public function createJob(array $inputs, array $outputGroups): void
+    public function createJob(array $inputs, array $outputGroups, ?array $userMetadata = []): string
     {
-        $this->mediaConvertClient->createJob([
+        $return = $this->mediaConvertClient->createJob([
             "Role" => $this->awsMediaConvertRoleArn,
             "Queue" => $this->awsMediaConvertQueueArn,
             "Settings" => $this->prepareJobSettings($inputs, $outputGroups),
             "AccelerationSettings" => [
                 "Mode" => "DISABLED",
             ],
-            "StatusUpdateInterval" => "SECONDS_60",
+            "UserMetadata" => $userMetadata,
+            "StatusUpdateInterval" => "SECONDS_10",
             "Priority" => 0,
         ]);
+
+        return $return->get('Job')['Id'];
     }
 
     public function prepareVideoInput(string $fileInput): array

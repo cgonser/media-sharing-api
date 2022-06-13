@@ -17,6 +17,8 @@ use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MediaItemRepository::class)]
+#[ORM\Table]
+#[ORM\Index(columns: ["aws_job_id"])]
 class MediaItem implements TimestampableInterface, SoftDeletableInterface
 {
     use TimestampableTrait;
@@ -46,6 +48,9 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
 
     #[ORM\Column(nullable: true)]
     private ?string $mimeType = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $awsJobId = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $comments = null;
@@ -141,6 +146,18 @@ class MediaItem implements TimestampableInterface, SoftDeletableInterface
     public function setComment(?string $comments): self
     {
         $this->comments = $comments;
+
+        return $this;
+    }
+
+    public function getAwsJobId(): ?string
+    {
+        return $this->awsJobId;
+    }
+
+    public function setAwsJobId(?string $awsJobId): self
+    {
+        $this->awsJobId = $awsJobId;
 
         return $this;
     }

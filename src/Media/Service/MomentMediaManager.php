@@ -4,6 +4,7 @@ namespace App\Media\Service;
 
 use App\Media\Dto\MediaConverterOutputDto;
 use App\Media\Entity\Moment;
+use App\Media\Entity\MomentMediaItem;
 use App\Media\Enumeration\MediaItemType;
 
 class MomentMediaManager extends AbstractMediaManager
@@ -18,23 +19,50 @@ class MomentMediaManager extends AbstractMediaManager
     public function convert(Moment $moment): void
     {
         $inputs = $this->prepareInputs($moment);
-        $outputGroupsThumbnail = $this->prepareOutputGroups(
+        $filenamePrefix = $moment->getUserId()->toString().'/'.$moment->getId()->toString().'-';
+
+        $this->convertToFormats(
             $moment,
+            $inputs,
+            $filenamePrefix,
             [
                 MediaItemType::VIDEO_LOW,
                 MediaItemType::IMAGE_THUMBNAIL,
             ]
         );
-        $this->awsMediaConverterManager->createJob($inputs, $outputGroupsThumbnail);
 
-        $outputGroupsHigh = $this->prepareOutputGroups(
+        $this->convertToFormats(
             $moment,
+            $inputs,
+            $filenamePrefix,
             [
                 MediaItemType::VIDEO_HIGH,
             ]
         );
+    }
 
-        $this->awsMediaConverterManager->createJob($inputs, $outputGroupsHigh);
+    private function convertToFormats(
+        Moment $moment,
+        array $inputs,
+        string $filenamePrefix,
+        array $formats,
+    ): void {
+        $outputGroupsDtos = $this->prepareOutputGroups(
+            $moment,
+            $formats,
+            $filenamePrefix
+        );
+
+        $outputGroups = $this->awsMediaConverterManager->prepareOutputGroup(
+            $outputGroupsDtos,
+            's3://'.$this->s3BucketName.'/'.$filenamePrefix
+        );
+
+        $awsJobId = $this->awsMediaConverterManager->createJob($inputs, $outputGroups);
+
+        foreach ($outputGroupsDtos as $outputGroupsDto) {
+            $this->createMomentMediaItem($moment, $outputGroupsDto, $awsJobId);
+        }
     }
 
     private function prepareInputs(Moment $moment): array
@@ -55,11 +83,9 @@ class MomentMediaManager extends AbstractMediaManager
         ];
     }
 
-    private function prepareOutputGroups(Moment $moment, array $mediaItemTypes): array
+    private function prepareOutputGroups(Moment $moment, array $mediaItemTypes, string $filenamePrefix): array
     {
-        $filenamePrefix = $moment->getUserId()->toString().'/'.$moment->getId()->toString().'-';
-
-        $mediaConverterOutputDtos = array_map(
+        return array_map(
             function(MediaItemType $mediaItemType) use ($moment, $filenamePrefix) {
                 return match($mediaItemType) {
                     MediaItemType::VIDEO_HIGH => $this->prepareOutputVideoHigh($filenamePrefix),
@@ -69,24 +95,19 @@ class MomentMediaManager extends AbstractMediaManager
             },
             $mediaItemTypes
         );
-
-        foreach ($mediaConverterOutputDtos as $mediaConverterOutputDto) {
-            $this->createMomentMediaItem($moment, $mediaConverterOutputDto);
-        }
-
-        return $this->awsMediaConverterManager->prepareOutputGroup(
-            $mediaConverterOutputDtos,
-            's3://'.$this->s3BucketName.'/'.$filenamePrefix
-        );
     }
 
-    private function createMomentMediaItem(Moment $moment, MediaConverterOutputDto $mediaConverterOutputDto): void
-    {
+    private function createMomentMediaItem(
+        Moment $moment,
+        MediaConverterOutputDto $mediaConverterOutputDto,
+        string $awsJobId,
+    ): void {
         $this->momentMediaItemManager->createItemForMoment(
             $moment,
             $mediaConverterOutputDto->mediaItemType,
             $mediaConverterOutputDto->mediaItemExtension,
             $mediaConverterOutputDto->filename,
+            $awsJobId,
         );
     }
 }

@@ -19,15 +19,51 @@ class ExternalJsonMessageSerializer implements SerializerInterface
     public function decode(array $encodedEnvelope): Envelope
     {
         $body = $encodedEnvelope['body'];
-        $data = json_decode($body,true);
+        $data = json_decode($body, true);
 
-        if (!isset($data['Records'])) {
-            throw new MessageDecodingFailedException("Record entries not found. Could not decode message: ".$encodedEnvelope['body']);
+        $this->logger->warning('message', $encodedEnvelope);
+
+        try {
+            if (isset($data['source'], $data['detail-type'])) {
+                return $this->processSimpleEvent($data);
+            }
+
+            if (isset($data['Records'])) {
+                return $this->processEventWithRecords($data);
+            }
+        } catch (Exception $e) {
+            $this->logger->error(
+                'Could not decode message',
+                [
+                    'error' => $e->getMessage(),
+                    'message' => $encodedEnvelope,
+                ]
+            );
+        }
+    }
+
+    private function processSimpleEvent(array $eventData): Envelope
+    {
+        foreach ($this->serializers as $serializer) {
+            if ($serializer->supports($eventData['source'], $eventData['detail-type'])) {
+                return new Envelope($serializer->parse($eventData));
+            }
         }
 
+        throw new MessageDecodingFailedException(
+            "Could not find a serializer",
+            [
+                'source' => $eventData['source'],
+                'detail-type' => $eventData['detail-type'],
+            ]
+        );
+    }
+
+    private function processEventWithRecords(array $eventData): Envelope
+    {
         $message = new MessageBatch();
 
-        foreach ($data['Records'] as $record) {
+        foreach ($eventData['Records'] as $record) {
             foreach ($this->serializers as $serializer) {
                 try {
                     if ($serializer->supports($record['eventSource'], $record['eventName'])) {

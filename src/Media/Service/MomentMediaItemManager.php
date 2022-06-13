@@ -69,6 +69,7 @@ class MomentMediaItemManager
         MediaItemType $type,
         MediaItemExtension $extension,
         string $filename,
+        ?string $awsJobId = null,
     ): MomentMediaItem {
         $momentMediaItem = $this->momentMediaItemProvider->findOneByMomentAndType($moment->getId(), $type);
 
@@ -81,7 +82,7 @@ class MomentMediaItemManager
             ->setType($type)
             ->setExtension($extension)
             ->setFilename($filename)
-            ->setStatus(MediaItemStatus::AVAILABLE)
+            ->setAwsJobId($awsJobId)
         ;
         $this->mediaItemManager->create($mediaItem);
 

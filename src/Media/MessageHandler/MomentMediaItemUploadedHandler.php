@@ -32,7 +32,7 @@ class MomentMediaItemUploadedHandler implements MessageHandlerInterface
         $this->logger->info(
             $event::NAME,
             [
-                'id' => $momentMediaItem->getId(),
+                'id' => $momentMediaItem->getId()->toString(),
             ]
         );
 
