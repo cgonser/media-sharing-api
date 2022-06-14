@@ -33,6 +33,12 @@ class Video implements TimestampableInterface, SoftDeletableInterface
     #[Assert\NotBlank]
     private User $user;
 
+    #[ORM\Column(type: 'uuid', nullable: true)]
+    private ?UuidInterface $musicId = null;
+
+    #[ORM\ManyToOne]
+    private ?Music $music = null;
+
     #[ORM\Column(type: 'string', nullable: false, enumType: VideoStatus::class)]
     private VideoStatus $status;
 
@@ -71,6 +77,9 @@ class Video implements TimestampableInterface, SoftDeletableInterface
 
     #[ORM\OneToMany(mappedBy: 'video', targetEntity: VideoMediaItem::class, cascade: ["persist"])]
     private Collection $videoMediaItems;
+
+    #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => true])]
+    private bool $overrideMomentsAudio = true;
 
     public function __construct()
     {
@@ -273,6 +282,42 @@ class Video implements TimestampableInterface, SoftDeletableInterface
                 $this->videoLocations->removeElement($videoLocation);
             }
         }
+    }
+
+    public function getMusicId(): ?UuidInterface
+    {
+        return $this->musicId;
+    }
+
+    public function setMusicId(?UuidInterface $musicId): self
+    {
+        $this->musicId = $musicId;
+
+        return $this;
+    }
+
+    public function getMusic(): ?Music
+    {
+        return $this->music;
+    }
+
+    public function setMusic(?Music $music): self
+    {
+        $this->music = $music;
+
+        return $this;
+    }
+
+    public function overrideMomentsAudio(): bool
+    {
+        return $this->overrideMomentsAudio;
+    }
+
+    public function setOverrideMomentsAudio(bool $overrideMomentsAudio): self
+    {
+        $this->overrideMomentsAudio = $overrideMomentsAudio;
+
+        return $this;
     }
 
     public function getVideoMoments(): Collection

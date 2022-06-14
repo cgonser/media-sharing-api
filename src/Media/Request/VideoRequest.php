@@ -33,8 +33,10 @@ class VideoRequest extends AbstractRequest
     #[Assert\Valid]
     public ?array $moments;
 
-    #[Assert\Type('int')]
-    public ?int $duration;
+    #[Assert\Uuid]
+    public ?string $musicId;
+
+    public ?bool $overrideMomentsAudio;
 
     #[Assert\DateTime(format: DateTimeInterface::ATOM)]
     public ?string $recordedAt;

@@ -16,6 +16,7 @@ class VideoResponseMapper
 {
     public function __construct(
         private readonly MomentResponseMapper $momentResponseMapper,
+        private readonly MusicResponseMapper $musicResponseMapper,
         private readonly LocationResponseMapper $locationResponseMapper,
         private readonly UserResponseMapper $userResponseMapper,
     ) {
@@ -26,6 +27,11 @@ class VideoResponseMapper
         $videoDto = new VideoDto();
         $this->mapBaseData($videoDto, $video);
         $videoDto->status = $video->getStatus()->value;
+        $videoDto->overrideMomentsAudio = $video->overrideMomentsAudio();
+
+        if (null !== $video->getMusic()) {
+            $videoDto->music = $this->musicResponseMapper->map($video->getMusic());
+        }
 
         return $videoDto;
     }

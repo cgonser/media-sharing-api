@@ -4,8 +4,11 @@ namespace App\Media\Service;
 
 use App\Media\Entity\Video;
 use App\Media\Provider\MomentProvider;
+use App\Media\Provider\MusicProvider;
 use App\Media\Request\VideoRequest;
 use App\User\Provider\UserProvider;
+use DateTime;
+use DateTimeInterface;
 use Ramsey\Uuid\Uuid;
 
 class VideoRequestManager
@@ -14,6 +17,7 @@ class VideoRequestManager
         private readonly VideoManager $videoManager,
         private readonly MomentProvider $momentProvider,
         private readonly UserProvider $userProvider,
+        private readonly MusicProvider $musicProvider,
         private readonly LocationRequestManager $locationRequestManager,
     ) {
     }
@@ -59,14 +63,19 @@ class VideoRequestManager
         if ($videoRequest->has('moments')) {
             $this->mapVideoMoments($video, $videoRequest->moments);
         }
+        if ($videoRequest->has('musicId')) {
+            $video->setMusic(
+                $this->musicProvider->get(Uuid::fromString($videoRequest->musicId))
+            );
+        }
 
-        if ($videoRequest->has('duration')) {
-            $video->setDuration($videoRequest->duration);
+        if ($videoRequest->has('overrideMomentsAudio')) {
+            $video->setOverrideMomentsAudio($videoRequest->overrideMomentsAudio);
         }
 
         if ($videoRequest->has('recordedAt')) {
             $video->setRecordedAt(
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, $videoRequest->recordedAt)
+                DateTime::createFromFormat(DateTimeInterface::ATOM, $videoRequest->recordedAt)
             );
         }
     }

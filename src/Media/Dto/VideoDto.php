@@ -14,6 +14,8 @@ class VideoDto
 
     public ?PublicUserDto $user;
 
+    public ?MusicDto $music;
+
     public ?string $status;
 
     public ?string $description;
@@ -29,6 +31,8 @@ class VideoDto
 
     #[OA\Property(type: "object")]
     public ?array $mediaItems;
+
+    public ?bool $overrideMomentsAudio;
 
     public ?int $duration;
 
