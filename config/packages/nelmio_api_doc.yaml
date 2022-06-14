@@ -18,6 +18,7 @@ nelmio_api_doc:
                 - ^/currencies
                 - ^/demo
                 - ^/moments
+                - ^/music
                 - ^/timezones
                 - ^/users
                 - ^/videos
