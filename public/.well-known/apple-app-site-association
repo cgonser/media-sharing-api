@@ -1,0 +1,13 @@
+@{
+  "applinks": {
+      "details": [
+           {
+             "appIDs": ["com.itinair.moment"],
+             "paths": ["*"]
+           }
+       ]
+   },
+   "webcredentials": {
+      "apps": ["itinair.com", "com.itinair.moment"]
+   },
+}
