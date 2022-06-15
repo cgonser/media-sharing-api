@@ -4,6 +4,7 @@ namespace App\Core\Messenger;
 
 use Exception;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
@@ -32,7 +33,7 @@ class ExternalJsonMessageSerializer implements SerializerInterface
                 return $this->processEventWithRecords($data);
             }
         } catch (Exception $e) {
-            $this->logger->error(
+            $this->logger->warning(
                 'Could not decode message',
                 [
                     'error' => $e->getMessage(),
@@ -40,13 +41,17 @@ class ExternalJsonMessageSerializer implements SerializerInterface
                 ]
             );
         }
+
+        return new Envelope(new GenericEvent());
     }
 
-    private function processSimpleEvent(array $eventData): Envelope
+    private function processSimpleEvent(array $eventData): ?Envelope
     {
         foreach ($this->serializers as $serializer) {
             if ($serializer->supports($eventData['source'], $eventData['detail-type'])) {
-                return new Envelope($serializer->parse($eventData));
+                $event = $serializer->parse($eventData);
+
+                return $event !== null ? new Envelope($event) : null;
             }
         }
 

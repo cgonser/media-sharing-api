@@ -4,9 +4,11 @@ namespace App\Media\MessageHandler;
 
 use App\Media\Entity\Video;
 use App\Media\Entity\VideoMediaItem;
+use App\Media\Enumeration\MediaItemStatus;
 use App\Media\Enumeration\VideoStatus;
 use App\Media\Message\VideoMediaItemUploadedEvent;
 use App\Media\Provider\VideoMediaItemProvider;
+use App\Media\Provider\VideoProvider;
 use App\Media\Service\VideoManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -15,6 +17,7 @@ class VideoMediaItemUploadedHandler implements MessageHandlerInterface
 {
     public function __construct(
         private readonly VideoMediaItemProvider $videoMediaItemProvider,
+        private readonly VideoProvider $videoProvider,
         private readonly VideoManager $videoManager,
         private readonly LoggerInterface $logger
     ) {
@@ -33,14 +36,24 @@ class VideoMediaItemUploadedHandler implements MessageHandlerInterface
             ]
         );
 
+        if (VideoStatus::PUBLISHED === $video->getStatus()) {
+            return;
+        }
+
         $this->updatePublishedStatus($video);
     }
 
     private function updatePublishedStatus(Video $video): void
     {
-        // todo: check if all required media types were generated and uploaded
-        if (VideoStatus::PUBLISHED !== $video->getStatus()) {
-            $this->videoManager->publish($video);
+        $this->videoProvider->refresh($video);
+
+        /** @var VideoMediaItem $videoMediaItem */
+        foreach ($video->getVideoMediaItems() as $videoMediaItem) {
+            if (MediaItemStatus::AVAILABLE !== $videoMediaItem->getMediaItem()->getStatus()) {
+                return;
+            }
         }
+
+        $this->videoManager->publish($video);
     }
 }

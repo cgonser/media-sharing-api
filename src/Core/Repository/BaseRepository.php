@@ -6,24 +6,29 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 abstract class BaseRepository extends ServiceEntityRepository
 {
-    public function save($object)
+    public function save($object): void
     {
         $this->getEntityManager()->persist($object);
         $this->getEntityManager()->flush();
     }
 
-    public function delete($object)
+    public function delete($object): void
     {
         $this->getEntityManager()->remove($object);
         $this->getEntityManager()->flush();
     }
 
-    public function persist($object)
+    public function refresh($object): void
+    {
+        $this->getEntityManager()->refresh($object);
+    }
+
+    public function persist($object): void
     {
         $this->getEntityManager()->persist($object);
     }
 
-    public function flush()
+    public function flush(): void
     {
         $this->getEntityManager()->flush();
     }

@@ -16,15 +16,23 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 class ApiExceptionEventSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private LoggerInterface $logger,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
     public function onKernelException(ExceptionEvent $event): void
     {
-        $event->setResponse(
-            $this->prepareResponse($event->getThrowable())
+        $response = $this->prepareResponse($event->getThrowable());
+
+        $this->logger->debug(
+            'api_exception',
+            [
+                'message' => $response->getContent(),
+                'status_code' => $response->getStatusCode(),
+            ]
         );
+
+        $event->setResponse($response);
     }
 
     public static function getSubscribedEvents(): array
@@ -34,7 +42,7 @@ class ApiExceptionEventSubscriber implements EventSubscriberInterface
         ];
     }
 
-    private function prepareResponse(\Throwable $e)
+    private function prepareResponse(\Throwable $e): ApiJsonErrorResponse
     {
         if ($e instanceof HandlerFailedException) {
             return $this->prepareResponse($e->getNestedExceptions()[0]);

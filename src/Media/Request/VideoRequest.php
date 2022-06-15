@@ -40,4 +40,7 @@ class VideoRequest extends AbstractRequest
 
     #[Assert\DateTime(format: DateTimeInterface::ATOM)]
     public ?string $recordedAt;
+
+    // todo: remove it
+    public ?int $duration;
 }

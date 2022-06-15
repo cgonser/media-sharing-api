@@ -4,10 +4,12 @@ namespace App\Media\MessageHandler;
 
 use App\Media\Entity\Moment;
 use App\Media\Entity\MomentMediaItem;
+use App\Media\Enumeration\MediaItemStatus;
 use App\Media\Enumeration\MediaItemType;
 use App\Media\Enumeration\MomentStatus;
 use App\Media\Message\MomentMediaItemUploadedEvent;
 use App\Media\Provider\MomentMediaItemProvider;
+use App\Media\Provider\MomentProvider;
 use App\Media\Service\MomentManager;
 use App\Media\Service\MomentMediaManager;
 use Psr\Log\LoggerInterface;
@@ -16,6 +18,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class MomentMediaItemUploadedHandler implements MessageHandlerInterface
 {
     public function __construct(
+        private readonly MomentProvider $momentProvider,
         private readonly MomentMediaItemProvider $momentMediaItemProvider,
         private readonly MomentMediaManager $momentMediaManager,
         private readonly MomentManager $momentManager,
@@ -49,9 +52,15 @@ class MomentMediaItemUploadedHandler implements MessageHandlerInterface
 
     private function updatePublishedStatus(Moment $moment): void
     {
-        // todo: check if all required media types were generated and uploaded
-        if (MomentStatus::PUBLISHED !== $moment->getStatus()) {
-            $this->momentManager->publish($moment);
+        $this->momentProvider->refresh($moment);
+
+        /** @var MomentMediaItem $momentMediaItem */
+        foreach ($moment->getMomentMediaItems() as $momentMediaItem) {
+            if (MediaItemStatus::AVAILABLE !== $momentMediaItem->getMediaItem()->getStatus()) {
+                return;
+            }
         }
+
+        $this->momentManager->publish($moment);
     }
 }

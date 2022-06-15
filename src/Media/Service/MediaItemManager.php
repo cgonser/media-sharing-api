@@ -7,13 +7,10 @@ use App\Media\Entity\MediaItem;
 use App\Media\Enumeration\MediaItemExtension;
 use App\Media\Enumeration\MediaItemStatus;
 use App\Media\Enumeration\MediaItemType;
-use App\Media\Message\MediaItemPublishedEvent;
 use App\Media\Repository\MediaItemRepository;
 use Aws\S3\S3Client;
-use DateTime;
 use Exception;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
 
 class MediaItemManager
 {
@@ -24,7 +21,6 @@ class MediaItemManager
         private readonly EntityValidator $validator,
         private readonly S3Client $s3Client,
         private readonly string $s3BucketName,
-        private readonly MessageBusInterface $messageBus,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -73,8 +69,12 @@ class MediaItemManager
         return $mediaItem;
     }
 
-    public function refreshStatus(MediaItem $mediaItem): void
+    public function refreshStatus(MediaItem $mediaItem, bool $forceUpdate = false): void
     {
+        if (!$forceUpdate && MediaItemStatus::AVAILABLE === $mediaItem->getStatus()) {
+            return;
+        }
+
         try {
             $publicUrl = $this->s3Client->getObjectUrl($this->s3BucketName, $mediaItem->getFilename());
 
@@ -86,8 +86,6 @@ class MediaItemManager
             $mediaItem->setStatus(MediaItemStatus::AVAILABLE);
 
             $this->save($mediaItem);
-
-            $this->messageBus->dispatch(new MediaItemPublishedEvent($mediaItem->getId()));
         } catch (Exception $e) {
             $this->logger->warning(
                 'media_item.refresh_status',

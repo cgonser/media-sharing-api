@@ -4,6 +4,8 @@ namespace App\Media\Message;
 
 use App\Core\Messenger\ExternalJsonMessageSerializerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\GenericEvent;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class AwsMediaConvertStateChangedEventSerializer implements ExternalJsonMessageSerializerInterface
 {
@@ -20,7 +22,7 @@ class AwsMediaConvertStateChangedEventSerializer implements ExternalJsonMessageS
         return $eventSource === self::EVENT_SOURCE && $eventName === self::EVENT_NAME;
     }
 
-    public function parse(array $record): MediaItemUploadedEvent
+    public function parse(array $record): GenericEvent|MediaItemUploadedEvent
     {
         $jobId = $record['detail']['jobId'];
         $status = $record['detail']['status'];
@@ -29,6 +31,10 @@ class AwsMediaConvertStateChangedEventSerializer implements ExternalJsonMessageS
             'jobId' => $jobId,
             'status' => $status,
         ]);
+
+        if ('COMPLETE' !== $status) {
+            return new GenericEvent();
+        }
 
         return new MediaItemUploadedEvent(awsJobId: $jobId);
     }

@@ -1,0 +1,11 @@
+monolog:
+    handlers:
+        main:
+            type:    stream
+            handler: nested
+            level:   info
+        nested:
+            type:  stream
+            path:  "php://stderr"
+            level:   info
+            channels: ["!event", "!messenger", "!doctrine", "!console", "!deprecation"]

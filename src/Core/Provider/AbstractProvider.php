@@ -41,6 +41,11 @@ abstract class AbstractProvider
         return $this->repository->findOneBy($criteria, $orderBy);
     }
 
+    public function refresh(object $object): void
+    {
+        $this->repository->refresh($object);
+    }
+
     public function getBy(array $criteria): object
     {
         /** @var object|null $object */

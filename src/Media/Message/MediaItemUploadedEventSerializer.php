@@ -35,7 +35,10 @@ class MediaItemUploadedEventSerializer implements ExternalJsonMessageSerializerI
 
             $mediaItem = $this->mediaItemProvider->getByFilename($objectKey);
 
-            return new MediaItemUploadedEvent($mediaItem->getId(), $objectKey);
+            return new MediaItemUploadedEvent(
+                mediaItemId: $mediaItem->getId(),
+                filename: $objectKey
+            );
         } catch (Exception) {
             throw new MessageDecodingFailedException('Media item not found: '.$objectKey);
         }
