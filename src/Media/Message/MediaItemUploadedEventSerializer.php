@@ -6,6 +6,7 @@ use App\Core\Messenger\ExternalJsonMessageSerializerInterface;
 use App\Media\Provider\MediaItemProvider;
 use Exception;
 use Psr\Log\LoggerInterface;
+use RectorPrefix20211020\Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
 
 class MediaItemUploadedEventSerializer implements ExternalJsonMessageSerializerInterface
@@ -24,7 +25,7 @@ class MediaItemUploadedEventSerializer implements ExternalJsonMessageSerializerI
         return $eventSource === self::EVENT_SOURCE && $eventName === self::EVENT_NAME;
     }
 
-    public function parse(array $record): MediaItemUploadedEvent
+    public function parse(array $record): GenericEvent|MediaItemUploadedEvent
     {
         try {
             $objectKey = $record['s3']['object']['key'];
@@ -40,7 +41,12 @@ class MediaItemUploadedEventSerializer implements ExternalJsonMessageSerializerI
                 filename: $objectKey
             );
         } catch (Exception) {
-            throw new MessageDecodingFailedException('Media item not found: '.$objectKey);
+            $this->logger->notice('s3.ObjectCreated', [
+                'objectKey' => $objectKey,
+                'error' => 'media_item_not_found',
+            ]);
+
+            return new GenericEvent();
         }
     }
 }
