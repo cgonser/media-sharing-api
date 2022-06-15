@@ -27,14 +27,14 @@ class AwsMediaConvertStateChangedEventSerializer implements ExternalJsonMessageS
         $jobId = $record['detail']['jobId'];
         $status = $record['detail']['status'];
 
+        if ('COMPLETE' !== $status) {
+            return new GenericEvent();
+        }
+
         $this->logger->info('mediaconvert.status_change', [
             'jobId' => $jobId,
             'status' => $status,
         ]);
-
-        if ('COMPLETE' !== $status) {
-            return new GenericEvent();
-        }
 
         return new MediaItemUploadedEvent(awsJobId: $jobId);
     }
