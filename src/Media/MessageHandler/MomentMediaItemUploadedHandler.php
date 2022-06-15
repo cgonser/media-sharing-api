@@ -59,6 +59,15 @@ class MomentMediaItemUploadedHandler implements MessageHandlerInterface
 
         /** @var MomentMediaItem $momentMediaItem */
         foreach ($moment->getMomentMediaItems() as $momentMediaItem) {
+            $this->logger->info(
+                'moment.media_item_uploaded.update_published_status',
+                [
+                    'moment.id' => $moment->getId()->toString(),
+                    'media_item.id' => $momentMediaItem->getMediaItemId()->toString(),
+                    'media_item.status' => $momentMediaItem->getMediaItem()->getStatus()->value,
+                ]
+            );
+
             if (MediaItemStatus::AVAILABLE !== $momentMediaItem->getMediaItem()->getStatus()) {
                 return;
             }

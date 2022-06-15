@@ -32,14 +32,12 @@ class VideoMediaItemManager
         MediaItemExtension $extension,
         string $filename,
     ): VideoMediaItem {
-        $videoMediaItem = $this->videoMediaItemProvider->findOneByVideoAndType($video->getId(), $type);
+        $videoMediaItem = $this->videoMediaItemProvider->findOneByVideoAndType($video->getId(), $type)
+            ?? (new VideoMediaItem())->setVideo($video);
 
-        if (!$videoMediaItem) {
-            $videoMediaItem = new VideoMediaItem();
-            $videoMediaItem->setVideo($video);
-        }
+        $mediaItem = $videoMediaItem->getMediaItem() ?? new MediaItem();
 
-        $mediaItem = (new MediaItem())
+        $mediaItem
             ->setType($type)
             ->setExtension($extension)
             ->setFilename($filename)

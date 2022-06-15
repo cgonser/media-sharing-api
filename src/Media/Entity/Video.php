@@ -341,13 +341,13 @@ class Video implements TimestampableInterface, SoftDeletableInterface
         }
     }
 
-    public function addMoment(Moment $moment, int $position, float $duration): self
+    public function addMoment(Moment $moment, int $position): self
     {
         $videoMoment = new VideoMoment();
         $videoMoment->setVideo($this);
         $videoMoment->setMoment($moment);
         $videoMoment->setPosition($position);
-        $videoMoment->setDuration($duration);
+        $videoMoment->setDuration($moment->getDuration());
 
         $this->videoMoments->add($videoMoment);
 
@@ -361,7 +361,7 @@ class Video implements TimestampableInterface, SoftDeletableInterface
         )->isEmpty();
     }
 
-    public function updateMoment(Moment $moment, int $position, float $duration): void
+    public function updateMoment(Moment $moment, int $position): void
     {
         $videoMoment = $this->videoMoments->filter(
             fn (VideoMoment $videoMoment) => $moment->getId()->equals($videoMoment->getMomentId())
@@ -372,7 +372,6 @@ class Video implements TimestampableInterface, SoftDeletableInterface
         }
 
         $videoMoment->position = $position;
-        $videoMoment->duration = $duration;
 
         $this->videoMoments->set(
             $this->videoMoments->indexOf($videoMoment),

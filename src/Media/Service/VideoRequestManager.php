@@ -5,6 +5,7 @@ namespace App\Media\Service;
 use App\Media\Entity\Video;
 use App\Media\Provider\MomentProvider;
 use App\Media\Provider\MusicProvider;
+use App\Media\Request\VideoMomentRequest;
 use App\Media\Request\VideoRequest;
 use App\User\Provider\UserProvider;
 use DateTime;
@@ -92,6 +93,7 @@ class VideoRequestManager
 
     private function mapVideoMoments(Video $video, ?array $videoMomentRequests): void
     {
+        /** @var VideoMomentRequest $videoMomentRequest */
         foreach ($videoMomentRequests as $videoMomentRequest) {
             $moment = $this->momentProvider->getByUserAndId(
                 $video->getUserId(),
@@ -99,9 +101,9 @@ class VideoRequestManager
             );
 
             if ($video->hasMoment($moment)) {
-                $video->updateMoment($moment, $videoMomentRequest->position, $videoMomentRequest->duration);
+                $video->updateMoment($moment, $videoMomentRequest->position);
             } else {
-                $video->addMoment($moment, $videoMomentRequest->position, $videoMomentRequest->duration);
+                $video->addMoment($moment, $videoMomentRequest->position);
             }
         }
     }
