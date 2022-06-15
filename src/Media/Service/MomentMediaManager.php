@@ -6,6 +6,7 @@ use App\Media\Dto\MediaConverterOutputDto;
 use App\Media\Entity\Moment;
 use App\Media\Entity\MomentMediaItem;
 use App\Media\Enumeration\MediaItemType;
+use Psr\Log\LoggerInterface;
 
 class MomentMediaManager extends AbstractMediaManager
 {
@@ -13,6 +14,7 @@ class MomentMediaManager extends AbstractMediaManager
         private readonly AwsMediaConverterManager $awsMediaConverterManager,
         private readonly MomentMediaItemManager $momentMediaItemManager,
         private readonly string $s3BucketName,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -60,6 +62,16 @@ class MomentMediaManager extends AbstractMediaManager
 
         $awsJobId = $this->awsMediaConverterManager->createJob($inputs, $outputGroups);
 
+        $this->logger->info(
+            'moment.media_manager.convert_to_formats',
+            [
+                'moment.id' => $moment->getId()->toString(),
+                'formats' => array_map(fn ($format) => $format->value, $formats),
+                'filename_prefix' => $filenamePrefix,
+                'aws_job_id' => $awsJobId,
+            ]
+        );
+
         foreach ($outputGroupsDtos as $outputGroupsDto) {
             $this->createMomentMediaItem($moment, $outputGroupsDto, $awsJobId);
         }
@@ -102,12 +114,21 @@ class MomentMediaManager extends AbstractMediaManager
         MediaConverterOutputDto $mediaConverterOutputDto,
         string $awsJobId,
     ): void {
-        $this->momentMediaItemManager->createItemForMoment(
+        $momentMediaItem = $this->momentMediaItemManager->createItemForMoment(
             $moment,
             $mediaConverterOutputDto->mediaItemType,
             $mediaConverterOutputDto->mediaItemExtension,
             $mediaConverterOutputDto->filename,
             $awsJobId,
+        );
+
+        $this->logger->info(
+            'moment.media_manager.create_moment_media_item',
+            [
+                'moment.id' => $moment->getId()->toString(),
+                'moment_media_item.id' => $momentMediaItem->getId()->toString(),
+                'aws_job_id' => $awsJobId,
+            ]
         );
     }
 }

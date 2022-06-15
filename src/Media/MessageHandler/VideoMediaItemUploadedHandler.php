@@ -32,7 +32,10 @@ class VideoMediaItemUploadedHandler implements MessageHandlerInterface
         $this->logger->info(
             $event::NAME,
             [
-                'id' => $videoMediaItem->getId(),
+                'video_media_item.id' => $videoMediaItem->getId()->toString(),
+                'media_item.id' => $videoMediaItem->getMediaItemId()->toString(),
+                'video.id' => $video->getId()->toString(),
+                'video.status' => $video->getStatus()->value,
             ]
         );
 
