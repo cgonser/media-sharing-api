@@ -38,10 +38,10 @@ class VideoMediaItem implements TimestampableInterface, SoftDeletableInterface
     private Video $video;
 
     #[ORM\Column(type: 'uuid')]
-    private UuidInterface $mediaItemId;
+    private ?UuidInterface $mediaItemId = null;
 
     #[ORM\ManyToOne(targetEntity: MediaItem::class)]
-    private MediaItem $mediaItem;
+    private ?MediaItem $mediaItem = null;
 
     public function getId(): ?UuidInterface
     {
@@ -73,7 +73,7 @@ class VideoMediaItem implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getMediaItemId(): UuidInterface
+    public function getMediaItemId(): ?UuidInterface
     {
         return $this->mediaItemId;
     }
@@ -85,7 +85,7 @@ class VideoMediaItem implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getMediaItem(): MediaItem
+    public function getMediaItem(): ?MediaItem
     {
         return $this->mediaItem;
     }

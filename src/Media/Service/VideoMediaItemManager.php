@@ -41,7 +41,6 @@ class VideoMediaItemManager
             ->setType($type)
             ->setExtension($extension)
             ->setFilename($filename)
-            ->setStatus(MediaItemStatus::AVAILABLE)
         ;
         $this->mediaItemManager->create($mediaItem);
 
