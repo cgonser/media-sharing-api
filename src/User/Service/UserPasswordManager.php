@@ -35,6 +35,17 @@ class UserPasswordManager
             throw new UserInvalidPasswordException();
         }
 
+        $this->doChangePassword($user, $newPassword);
+
+        $user->setPassword(
+            $this->userPasswordHasher->hashPassword($user, $newPassword)
+        );
+
+        $this->userRepository->save($user);
+    }
+
+    public function doChangePassword(User $user, string $newPassword): void
+    {
         $user->setPassword(
             $this->userPasswordHasher->hashPassword($user, $newPassword)
         );

@@ -4,6 +4,8 @@ namespace App\User\MessageHandler;
 
 use App\User\Entity\User;
 use App\User\Service\UserEmailManager;
+use DateTime;
+use DateTimeInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Psr\Log\LoggerInterface;
@@ -12,8 +14,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class UserLoggedInHandler implements EventSubscriberInterface
 {
     public function __construct(
-        private UserEmailManager $userEmailManager,
-        private LoggerInterface $logger
+        private readonly UserEmailManager $userEmailManager,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -22,8 +24,7 @@ class UserLoggedInHandler implements EventSubscriberInterface
         /** @var User $user */
         $user = $event->getUser();
 
-        if (!$user instanceof User || $user->getCreatedAt()->add(new \DateInterval('PT24H')) > (new \DateTime())) {
-            // send only after 24h from registration
+        if (!$user instanceof User) {
             return;
         }
 
@@ -31,13 +32,13 @@ class UserLoggedInHandler implements EventSubscriberInterface
             'user.logged_in',
             [
                 'userId' => $user->getId()->toString(),
-                'loggedInAt' => (new \DateTime())->format(\DateTimeInterface::ATOM),
+                'loggedInAt' => (new DateTime())->format(DateTimeInterface::ATOM),
             ]
         );
 
-//        if (!$user->isEmailValidated()) {
-//            $this->userEmailManager->sendAccountValidationEmail($user);
-//        }
+        if (!$user->isEmailValidated()) {
+            $this->userEmailManager->sendAccountValidationEmail($user);
+        }
     }
 
     public static function getSubscribedEvents(): array

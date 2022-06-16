@@ -9,9 +9,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UserPasswordResetCommand extends Command
+class UserPasswordChangeCommand extends Command
 {
-    protected static $defaultName = 'user:password-reset';
+    protected static $defaultName = 'user:password-change';
 
     public function __construct(
         private readonly UserPasswordManager $userPasswordManager,
@@ -23,8 +23,9 @@ class UserPasswordResetCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('resets an user password')
-            ->addArgument('email', InputArgument::OPTIONAL, 'User e-mail')
+            ->setDescription('changes an user password')
+            ->addArgument('email', InputArgument::REQUIRED, 'User e-mail')
+            ->addArgument('password', InputArgument::REQUIRED, 'new password')
         ;
     }
 
@@ -38,7 +39,7 @@ class UserPasswordResetCommand extends Command
             return Command::FAILURE;
         }
 
-        $this->userPasswordManager->startPasswordReset($user);
+        $this->userPasswordManager->doChangePassword($user, $input->getArgument('password'));
 
         return Command::SUCCESS;
     }
