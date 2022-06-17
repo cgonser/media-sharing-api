@@ -18,15 +18,6 @@ class VideoMediaItem implements TimestampableInterface, SoftDeletableInterface
     use TimestampableTrait;
     use SoftDeletableTrait;
 
-    public const REQUIRED_TYPES = [
-        50 => [
-            MediaItemType::IMAGE_THUMBNAIL,
-            MediaItemType::VIDEO_LOW,
-        ],
-        10 => MediaItemType::VIDEO_HIGH,
-        0 => MediaItemType::VIDEO_ORIGINAL,
-    ];
-
     #[ORM\Id, ORM\GeneratedValue('CUSTOM'), ORM\CustomIdGenerator(UuidGenerator::class)]
     #[ORM\Column(type: 'uuid', unique: true)]
     private UuidInterface $id;
@@ -93,6 +84,7 @@ class VideoMediaItem implements TimestampableInterface, SoftDeletableInterface
     public function setMediaItem(MediaItem $mediaItem): self
     {
         $this->mediaItem = $mediaItem;
+        $this->mediaItemId = $mediaItem->getId();
 
         return $this;
     }

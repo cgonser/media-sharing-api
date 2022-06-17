@@ -18,15 +18,6 @@ class MomentMediaItem implements TimestampableInterface, SoftDeletableInterface
     use TimestampableTrait;
     use SoftDeletableTrait;
 
-    public const REQUIRED_TYPES = [
-        50 => [
-            MediaItemType::IMAGE_THUMBNAIL,
-            MediaItemType::VIDEO_LOW,
-        ],
-        10 => MediaItemType::VIDEO_HIGH,
-        0 => MediaItemType::VIDEO_ORIGINAL,
-    ];
-
     #[ORM\Id, ORM\GeneratedValue('CUSTOM'), ORM\CustomIdGenerator(UuidGenerator::class)]
     #[ORM\Column(type: 'uuid', unique: true)]
     private UuidInterface $id;
@@ -38,10 +29,10 @@ class MomentMediaItem implements TimestampableInterface, SoftDeletableInterface
     private Moment $moment;
 
     #[ORM\Column(type: 'uuid')]
-    private UuidInterface $mediaItemId;
+    private ?UuidInterface $mediaItemId = null;
 
     #[ORM\ManyToOne(targetEntity: MediaItem::class)]
-    private MediaItem $mediaItem;
+    private ?MediaItem $mediaItem = null;
 
     public function getId(): ?UuidInterface
     {
@@ -73,7 +64,7 @@ class MomentMediaItem implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getMediaItemId(): UuidInterface
+    public function getMediaItemId(): ?UuidInterface
     {
         return $this->mediaItemId;
     }
@@ -85,7 +76,7 @@ class MomentMediaItem implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getMediaItem(): MediaItem
+    public function getMediaItem(): ?MediaItem
     {
         return $this->mediaItem;
     }
