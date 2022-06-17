@@ -15,6 +15,8 @@ use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
 #[ORM\Entity(repositoryClass: UserNotificationChannelRepository::class)]
+#[ORM\Index(fields: ["userId", "channel", "deviceType"])]
+#[ORM\UniqueConstraint(fields: ["userId", "channel", "deviceType", "isActive", "deletedAt"])]
 class UserNotificationChannel implements SoftDeletableInterface, TimestampableInterface
 {
     use TimestampableTrait;
