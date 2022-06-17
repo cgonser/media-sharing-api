@@ -32,20 +32,16 @@ class MomentMediaItemManager
         string $contentType,
         string $fileContents,
     ): MomentMediaItem {
-        $momentMediaItem = $this->momentMediaItemProvider->findOneByMomentAndType($moment->getId(), $type);
+        $momentMediaItem = $this->momentMediaItemProvider->findOneByMomentAndType($moment->getId(), $type)
+            ??  (new MomentMediaItem())->setMoment($moment);
 
-        if (!$momentMediaItem) {
-            $momentMediaItem = new MomentMediaItem();
-            $momentMediaItem->setMoment($moment);
-        }
+        $mediaItem = $momentMediaItem->getMediaItem() ?? new MediaItem();
 
         $extension = $this->mapContentTypeToExtension($contentType);
-
         $filename = $moment->getUserId()->toString().'/'.$moment->getId()->toString().'.'.$extension->value;
-
         $publicUrl = $this->mediaItemManager->uploadFile($filename, $fileContents, $contentType);
 
-        $mediaItem = (new MediaItem())
+        $mediaItem
             ->setType($type)
             ->setExtension($extension)
             ->setFilename($filename)

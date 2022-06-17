@@ -6,8 +6,7 @@ use App\Core\Messenger\ExternalJsonMessageSerializerInterface;
 use App\Media\Provider\MediaItemProvider;
 use Exception;
 use Psr\Log\LoggerInterface;
-use RectorPrefix20211020\Symfony\Component\EventDispatcher\GenericEvent;
-use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 class MediaItemUploadedEventSerializer implements ExternalJsonMessageSerializerInterface
 {
