@@ -71,14 +71,12 @@ class MomentMediaItemManager
         string $filename,
         ?string $awsJobId = null,
     ): MomentMediaItem {
-        $momentMediaItem = $this->momentMediaItemProvider->findOneByMomentAndType($moment->getId(), $type);
+        $momentMediaItem = $this->momentMediaItemProvider->findOneByMomentAndType($moment->getId(), $type)
+            ??  (new MomentMediaItem())->setMoment($moment);
 
-        if (!$momentMediaItem) {
-            $momentMediaItem = new MomentMediaItem();
-            $momentMediaItem->setMoment($moment);
-        }
+        $mediaItem = $momentMediaItem->getMediaItem() ?? new MediaItem();
 
-        $mediaItem = (new MediaItem())
+        $mediaItem
             ->setType($type)
             ->setExtension($extension)
             ->setFilename($filename)

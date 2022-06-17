@@ -7,12 +7,14 @@ use App\Media\Entity\Video;
 use App\Media\Entity\VideoMoment;
 use App\Media\Enumeration\MediaItemType;
 use App\Media\Enumeration\MomentStatus;
+use Psr\Log\LoggerInterface;
 
 class VideoMediaManager extends AbstractMediaManager
 {
     public function __construct(
         private readonly AwsMediaConverterManager $awsMediaConverterManager,
         private readonly VideoMediaItemManager $videoMediaItemManager,
+        private readonly LoggerInterface $logger,
         private readonly string $s3BucketName,
     ) {
     }
@@ -20,24 +22,57 @@ class VideoMediaManager extends AbstractMediaManager
     public function compose(Video $video): void
     {
         $inputs = $this->prepareInputs($video);
-        $outputGroupsThumbnail = $this->prepareOutputGroups(
+
+        $filenamePrefix = $video->getUserId()->toString().'/'.$video->getId()->toString().'-';
+
+        $this->convertToFormats(
             $video,
+            $inputs,
+            $filenamePrefix,
             [
                 MediaItemType::VIDEO_LOW,
                 MediaItemType::IMAGE_THUMBNAIL,
             ]
         );
-        $this->awsMediaConverterManager->createJob($inputs, $outputGroupsThumbnail);
 
-        $outputGroupsHigh = $this->prepareOutputGroups(
+        $this->convertToFormats(
             $video,
+            $inputs,
+            $filenamePrefix,
             [
                 MediaItemType::VIDEO_HIGH,
             ]
         );
+    }
 
-        $this->awsMediaConverterManager->createJob($inputs, $outputGroupsHigh);
-//        $this->awsMediaConverterManager->createJob($inputs, $outputGroupsExport);
+    private function convertToFormats(
+        Video $video,
+        array $inputs,
+        string $filenamePrefix,
+        array $formats,
+    ): void {
+        $outputGroupsDtos = $this->prepareOutputGroups($video, $formats, $filenamePrefix);
+
+        $outputGroups = $this->awsMediaConverterManager->prepareOutputGroup(
+            $outputGroupsDtos,
+            's3://'.$this->s3BucketName.'/'.$filenamePrefix
+        );
+
+        $awsJobId = $this->awsMediaConverterManager->createJob($inputs, $outputGroups);
+
+        $this->logger->info(
+            'video.media_manager.convert_to_formats',
+            [
+                'video.id' => $video->getId()->toString(),
+                'formats' => array_map(fn ($format) => $format->value, $formats),
+                'filename_prefix' => $filenamePrefix,
+                'aws_job_id' => $awsJobId,
+            ]
+        );
+
+        foreach ($outputGroupsDtos as $outputGroupsDto) {
+            $this->createVideoMediaItem($video, $outputGroupsDto, $awsJobId);
+        }
     }
 
     private function prepareInputs(Video $video): array
@@ -69,11 +104,9 @@ class VideoMediaManager extends AbstractMediaManager
         return $inputs;
     }
 
-    private function prepareOutputGroups(Video $video, array $mediaItemTypes): array
+    private function prepareOutputGroups(Video $video, array $mediaItemTypes, string $filenamePrefix): array
     {
-        $filenamePrefix = $video->getUserId()->toString().'/'.$video->getId()->toString().'-';
-
-        $mediaConverterOutputDtos = array_map(
+        return array_map(
             function(MediaItemType $mediaItemType) use ($video, $filenamePrefix) {
                 return match($mediaItemType) {
                     MediaItemType::VIDEO_HIGH => $this->prepareOutputVideoHigh($filenamePrefix),
@@ -83,24 +116,28 @@ class VideoMediaManager extends AbstractMediaManager
             },
             $mediaItemTypes
         );
-
-        foreach ($mediaConverterOutputDtos as $mediaConverterOutputDto) {
-            $this->createVideoMediaItem($video, $mediaConverterOutputDto);
-        }
-
-        return $this->awsMediaConverterManager->prepareOutputGroup(
-            $mediaConverterOutputDtos,
-            's3://'.$this->s3BucketName.'/'.$filenamePrefix
-        );
     }
 
-    private function createVideoMediaItem(Video $video, MediaConverterOutputDto $mediaConverterOutputDto): void
-    {
-        $this->videoMediaItemManager->createItemForVideo(
+    private function createVideoMediaItem(
+        Video $video,
+        MediaConverterOutputDto $mediaConverterOutputDto,
+        string $awsJobId,
+    ): void {
+        $videoMediaItem = $this->videoMediaItemManager->createItemForVideo(
             $video,
             $mediaConverterOutputDto->mediaItemType,
             $mediaConverterOutputDto->mediaItemExtension,
             $mediaConverterOutputDto->filename,
+            $awsJobId,
+        );
+
+        $this->logger->info(
+            'video.media_manager.create_moment_media_item',
+            [
+                'moment.id' => $video->getId()->toString(),
+                'video_media_item.id' => $videoMediaItem->getId()->toString(),
+                'aws_job_id' => $awsJobId,
+            ]
         );
     }
 }

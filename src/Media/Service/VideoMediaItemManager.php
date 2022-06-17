@@ -31,6 +31,7 @@ class VideoMediaItemManager
         MediaItemType $type,
         MediaItemExtension $extension,
         string $filename,
+        ?string $awsJobId = null,
     ): VideoMediaItem {
         $videoMediaItem = $this->videoMediaItemProvider->findOneByVideoAndType($video->getId(), $type)
             ?? (new VideoMediaItem())->setVideo($video);
@@ -41,6 +42,7 @@ class VideoMediaItemManager
             ->setType($type)
             ->setExtension($extension)
             ->setFilename($filename)
+            ->setAwsJobId($awsJobId)
         ;
         $this->mediaItemManager->create($mediaItem);
 

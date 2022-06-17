@@ -23,6 +23,7 @@ class VideoPublishedNotification extends AbstractNotification
     public function getAvailableChannels(): array
     {
         return [
+            NotificationChannel::EMAIL,
             NotificationChannel::CHAT,
         ];
     }
