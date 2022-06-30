@@ -10,7 +10,7 @@ class MomentMediaItemUploadedEvent
 
     public function __construct(
         private readonly UuidInterface $momentMediaItemId,
-        private readonly ?int $duration,
+        private readonly ?int $duration = null,
     ) {
     }
 

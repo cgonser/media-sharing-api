@@ -107,7 +107,7 @@ class VideoMediaManager extends AbstractMediaManager
                 's3://'.$this->s3BucketName.'/'.$mediaItem->getFilename(),
                 (string) $i,
                 $audioInputFile,
-                $audioOffset,
+                $audioInputFile !== null ? $audioOffset : null,
             );
 
             $audioOffset += $videoMoment->getDuration();

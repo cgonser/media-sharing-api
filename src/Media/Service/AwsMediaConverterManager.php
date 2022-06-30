@@ -34,7 +34,7 @@ class AwsMediaConverterManager
 
     public function prepareVideoInput(
         string $videoFileInput,
-        string $videoId,
+        ?string $videoId = '1',
         ?string $audioFileInput = null,
         ?string $audioOffset = null,
     ): array {
