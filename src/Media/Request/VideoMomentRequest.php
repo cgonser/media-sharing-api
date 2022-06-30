@@ -17,6 +17,5 @@ class VideoMomentRequest extends AbstractRequest
     #[Assert\Type('int')]
     public int $position;
 
-    #[Assert\Type('float')]
-    public float $duration;
+    public ?float $duration;
 }

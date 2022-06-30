@@ -79,8 +79,15 @@ class VideoMediaManager extends AbstractMediaManager
     {
         $inputs = [];
 
+        $audioInputFile = null !== $video->getMusic()
+            ? 's3://'.$this->s3BucketName.'/'.$video->getMusic()->getFilename()
+            : null;
+
         /** @var VideoMoment $videoMoment */
+        $i = 0;
+        $audioOffset = 0;
         foreach ($video->getVideoMoments() as $videoMoment) {
+            $i++;
             $moment = $videoMoment->getMoment();
 
             if (MomentStatus::PUBLISHED !== $moment->getStatus()) {
@@ -97,8 +104,13 @@ class VideoMediaManager extends AbstractMediaManager
             }
 
             $inputs[] = $this->awsMediaConverterManager->prepareVideoInput(
-                's3://'.$this->s3BucketName.'/'.$mediaItem->getFilename()
+                's3://'.$this->s3BucketName.'/'.$mediaItem->getFilename(),
+                (string) $i,
+                $audioInputFile,
+                $audioOffset,
             );
+
+            $audioOffset += $videoMoment->getDuration();
         }
 
         return $inputs;

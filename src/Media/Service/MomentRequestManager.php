@@ -48,10 +48,6 @@ class MomentRequestManager
             $moment->setMood($momentRequest->mood);
         }
 
-        if ($momentRequest->has('duration')) {
-            $moment->setDuration($momentRequest->duration);
-        }
-
         if ($momentRequest->has('recordedAt')) {
             $moment->setRecordedAt(
                 DateTime::createFromFormat(DateTimeInterface::ATOM, $momentRequest->recordedAt)

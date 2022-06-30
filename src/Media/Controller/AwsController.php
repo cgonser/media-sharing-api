@@ -51,12 +51,31 @@ class AwsController extends AbstractController
             'timestamp' => $content['time'],
         ]);
 
+        $duration = $this->extractDurationFromRequest($detail['outputGroupDetails']);
+
         $mediaItems = $this->mediaItemProvider->findBy(['awsJobId' => $detail['jobId']]);
 
         foreach ($mediaItems as $mediaItem) {
-            $this->messageBus->dispatch(new MediaItemUploadedEvent(mediaItemId: $mediaItem->getId()));
+            $this->messageBus->dispatch(
+                new MediaItemUploadedEvent(mediaItemId: $mediaItem->getId(), duration: $duration)
+            );
         }
 
         return new ApiJsonResponse(Response::HTTP_NO_CONTENT);
+    }
+
+    private function extractDurationFromRequest($outputGroupDetails): ?int
+    {
+        foreach ($outputGroupDetails as $outputGroupDetail) {
+            foreach ($outputGroupDetail['outputDetails'] as $outputDetail) {
+                foreach ($outputDetail['outputFilePaths'] as $outputFilePath) {
+                    if ('jpg' !== pathinfo($outputFilePath, PATHINFO_EXTENSION)) {
+                        return (int) $outputDetail['durationInMs'];
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 }

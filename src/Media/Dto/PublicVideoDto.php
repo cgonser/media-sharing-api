@@ -28,7 +28,7 @@ class PublicVideoDto
     #[OA\Property(type: "array", items: new OA\Items(type: "object"))]
     public ?array $mediaItems;
 
-    public ?int $duration;
+    public ?float $duration;
 
     public ?int $likes;
 

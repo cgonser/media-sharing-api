@@ -34,7 +34,7 @@ class VideoDto
 
     public ?bool $overrideMomentsAudio;
 
-    public ?int $duration;
+    public ?float $duration;
 
     public ?int $likes;
 

@@ -43,10 +43,10 @@ class VideoMediaItemUploadedHandler implements MessageHandlerInterface
             return;
         }
 
-        $this->updatePublishedStatus($video);
+        $this->updatePublishedStatus($video, $event->getDuration());
     }
 
-    private function updatePublishedStatus(Video $video): void
+    private function updatePublishedStatus(Video $video, ?int $duration = null): void
     {
         $this->videoProvider->refresh($video);
 
@@ -57,6 +57,6 @@ class VideoMediaItemUploadedHandler implements MessageHandlerInterface
             }
         }
 
-        $this->videoManager->publish($video);
+        $this->videoManager->publish($video, $duration);
     }
 }

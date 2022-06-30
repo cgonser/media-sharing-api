@@ -10,11 +10,17 @@ class MomentMediaItemUploadedEvent
 
     public function __construct(
         private readonly UuidInterface $momentMediaItemId,
+        private readonly ?int $duration,
     ) {
     }
 
     public function getMomentMediaItemId(): UuidInterface
     {
         return $this->momentMediaItemId;
+    }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
     }
 }

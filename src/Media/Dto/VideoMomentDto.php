@@ -11,5 +11,4 @@ class VideoMomentDto
     public ?int $position;
 
     public ?float $duration;
-
 }

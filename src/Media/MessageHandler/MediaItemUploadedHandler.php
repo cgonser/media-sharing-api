@@ -36,7 +36,7 @@ class MediaItemUploadedHandler implements MessageHandlerInterface
 
             $this->mediaItemManager->refreshStatus($mediaItem);
 
-            $this->updateReferences($mediaItem);
+            $this->updateReferences($mediaItem, $event->getDuration());
         }
     }
 
@@ -57,18 +57,22 @@ class MediaItemUploadedHandler implements MessageHandlerInterface
         return [];
     }
 
-    private function updateReferences(MediaItem $mediaItem): void
+    private function updateReferences(MediaItem $mediaItem, ?int $duration = null): void
     {
         $momentMediaItem = $this->momentMediaItemProvider->findOneBy(['mediaItemId' => $mediaItem->getId()]);
         if (null !== $momentMediaItem) {
-            $this->messageBus->dispatch(new MomentMediaItemUploadedEvent($momentMediaItem->getId()));
+            $this->messageBus->dispatch(
+                new MomentMediaItemUploadedEvent($momentMediaItem->getId(), $duration)
+            );
 
             return;
         }
 
         $videoMediaItem = $this->videoMediaItemProvider->findOneBy(['mediaItemId' => $mediaItem->getId()]);
         if (null !== $videoMediaItem) {
-            $this->messageBus->dispatch(new VideoMediaItemUploadedEvent($videoMediaItem->getId()));
+            $this->messageBus->dispatch(
+                new VideoMediaItemUploadedEvent($videoMediaItem->getId(), $duration)
+            );
 
             return;
         }

@@ -19,7 +19,6 @@ class MomentRequest extends AbstractRequest
     #[Assert\Valid]
     public ?LocationRequest $location;
 
-    #[Assert\Type('int')]
     public ?int $duration;
 
     #[Assert\DateTime(format: DateTimeInterface::ATOM)]
