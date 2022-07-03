@@ -81,7 +81,7 @@ class VideoResponseMapper
         $videoDto->description = $video->getDescription();
         $videoDto->moods = $video->getMoods();
         $videoDto->moments = $this->mapVideoMoments($video->getVideoMoments()->toArray());
-        $videoDto->duration = $video->getDuration();
+        $videoDto->duration = null !== $video->getDuration() ? round($video->getDuration() / 1000, 2) : null;
         $videoDto->likes = $video->getLikes();
         $videoDto->comments = $video->getComments();
         $videoDto->recordedAt = $video->getRecordedAt()?->format(DateTimeInterface::ATOM);
@@ -106,7 +106,7 @@ class VideoResponseMapper
             $videoMomentDto = new VideoMomentDto();
             $videoMomentDto->momentId = $videoMoment->getMoment()->getId();
             $videoMomentDto->position = $videoMoment->getPosition();
-            $videoMomentDto->duration = $videoMoment->getDuration();
+            $videoMomentDto->duration = round($videoMoment->getDuration() / 1000, 2);
 
             try {
                 $videoMomentDto->moment = $this->momentResponseMapper->map($videoMoment->getMoment());

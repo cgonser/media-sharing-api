@@ -50,10 +50,10 @@ class MomentMediaItemUploadedHandler implements MessageHandlerInterface
             $this->momentMediaManager->convert($moment);
         }
 
-        $this->updatePublishedStatus($moment);
+        $this->updatePublishedStatus($moment, $event->getDuration());
     }
 
-    private function updatePublishedStatus(Moment $moment): void
+    private function updatePublishedStatus(Moment $moment, ?int $duration = null): void
     {
         $this->momentProvider->refresh($moment);
 
@@ -73,6 +73,6 @@ class MomentMediaItemUploadedHandler implements MessageHandlerInterface
             }
         }
 
-        $this->momentManager->publish($moment);
+        $this->momentManager->publish($moment, $duration);
     }
 }

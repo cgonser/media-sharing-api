@@ -40,9 +40,8 @@ class VideoMoment implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(type: 'integer', nullable: false)]
     private int $position;
 
-    #[Assert\NotNull]
-    #[ORM\Column(type: 'decimal', nullable: false, options: ['precision' => 5, 'scale' => 2])]
-    private float $duration;
+    #[ORM\Column(nullable: false)]
+    private int $duration;
 
     public function getId(): ?UuidInterface
     {
@@ -110,12 +109,12 @@ class VideoMoment implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
-    public function getDuration(): float
+    public function getDuration(): int
     {
         return $this->duration;
     }
 
-    public function setDuration(float $duration): self
+    public function setDuration(int $duration): self
     {
         $this->duration = $duration;
 

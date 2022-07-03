@@ -50,12 +50,13 @@ class VideoManager
         $this->videoRepository->save($video);
     }
 
-    public function publish(Video $video): void
+    public function publish(Video $video, ?int $duration = null): void
     {
         if (VideoStatus::PUBLISHED === $video->getStatus()) {
             return;
         }
 
+        $video->setDuration($duration);
         $video->setStatus(VideoStatus::PUBLISHED);
         $video->setPublishedAt(new DateTime());
 

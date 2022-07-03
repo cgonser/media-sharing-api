@@ -32,11 +32,15 @@ class AwsMediaConverterManager
         return $return->get('Job')['Id'];
     }
 
-    public function prepareVideoInput(string $fileInput): array
-    {
-        return [
+    public function prepareVideoInput(
+        string $videoFileInput,
+        ?string $videoId = '1',
+        ?string $audioFileInput = null,
+        ?string $audioOffset = null,
+    ): array {
+        $input = [
             "AudioSelectors" => [
-                "Audio Selector 1" => [
+                "Audio Selector ".$videoId => [
                     "DefaultSelection" => "DEFAULT",
                 ],
             ],
@@ -44,8 +48,17 @@ class AwsMediaConverterManager
                 "Rotate" => "AUTO",
             ],
             "TimecodeSource" => "ZEROBASED",
-            "FileInput" => $fileInput,
+            "FileInput" => $videoFileInput,
         ];
+
+        if (null !== $audioFileInput) {
+            $input['AudioSelectors']['Audio Selector '.$videoId]["ExternalAudioFileInput"] = $audioFileInput;
+        }
+        if (null !== $audioOffset) {
+            $input['AudioSelectors']['Audio Selector '.$videoId]["Offset"] = -1 * $audioOffset;
+        }
+
+        return $input;
     }
 
     public function prepareVideoOutput(MediaConverterOutputDto $mediaConverterOutputDto): array

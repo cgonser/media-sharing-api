@@ -10,6 +10,7 @@ class MediaItemUploadedEvent
         private readonly ?UuidInterface $mediaItemId = null,
         private readonly ?string $awsJobId = null,
         private readonly ?string $filename = null,
+        private readonly ?int $duration = null,
     ) {
     }
 
@@ -26,5 +27,10 @@ class MediaItemUploadedEvent
     public function getFilename(): ?string
     {
         return $this->filename;
+    }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
     }
 }

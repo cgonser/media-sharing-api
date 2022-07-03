@@ -29,7 +29,7 @@ class MomentResponseMapper
         $momentDto->userId = $moment->getUser()->getId()->toString();
         $momentDto->status = $moment->getStatus()->value;
         $momentDto->mood = $moment->getMood()->value;
-        $momentDto->duration = $moment->getDuration();
+        $momentDto->duration = null !== $moment->getDuration() ? round($moment->getDuration() / 1000, 2) : null;
         $momentDto->recordedOn = $moment->getRecordedAt()?->format('Y-m-d');
         $momentDto->recordedAt = $moment->getRecordedAt()?->format(DateTimeInterface::ATOM);
         $momentDto->mediaItems = !$moment->getMomentMediaItems()->isEmpty()

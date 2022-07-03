@@ -44,8 +44,9 @@ class MomentManager
         $this->momentRepository->save($moment);
     }
 
-    public function publish(Moment $moment): void
+    public function publish(Moment $moment, ?int $duration = null): void
     {
+        $moment->setDuration($duration);
         $moment->setStatus(MomentStatus::PUBLISHED);
         $moment->setPublishedAt(new DateTime());
 
