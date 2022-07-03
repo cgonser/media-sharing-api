@@ -8,6 +8,7 @@ enum MediaItemType: string
     case VIDEO_HIGH = 'video_high';
     case VIDEO_MEDIUM = 'video_medium';
     case VIDEO_LOW = 'video_low';
+    case VIDEO_EXPORT = 'video_export';
 
     case IMAGE_THUMBNAIL = 'image_thumbnail';
 
@@ -21,6 +22,7 @@ enum MediaItemType: string
         self::VIDEO_HIGH,
         self::VIDEO_MEDIUM,
         self::VIDEO_LOW,
+        self::VIDEO_EXPORT,
     ];
 
     public const IMAGE_TYPES = [

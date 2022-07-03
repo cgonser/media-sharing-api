@@ -43,6 +43,15 @@ class VideoMediaManager extends AbstractMediaManager
                 MediaItemType::VIDEO_HIGH,
             ]
         );
+
+        $this->convertToFormats(
+            $video,
+            $inputs,
+            $filenamePrefix,
+            [
+                MediaItemType::VIDEO_EXPORT,
+            ]
+        );
     }
 
     private function convertToFormats(
@@ -109,6 +118,7 @@ class VideoMediaManager extends AbstractMediaManager
         return array_map(
             function(MediaItemType $mediaItemType) use ($video, $filenamePrefix) {
                 return match($mediaItemType) {
+                    MediaItemType::VIDEO_EXPORT => $this->prepareOutputVideoHigh($filenamePrefix),
                     MediaItemType::VIDEO_HIGH => $this->prepareOutputVideoHigh($filenamePrefix),
                     MediaItemType::VIDEO_LOW => $this->prepareOutputVideoLow($filenamePrefix),
                     MediaItemType::IMAGE_THUMBNAIL => $this->prepareOutputImageThumbnail($filenamePrefix),
