@@ -114,7 +114,7 @@ class VideoMediaManager extends AbstractMediaManager
 
             $inputs[] = $this->awsMediaConverterManager->prepareVideoInput(
                 's3://'.$this->s3BucketName.'/'.$mediaItem->getFilename(),
-                (string) $i,
+                '1',
                 $audioInputFile,
                 $audioInputFile !== null ? $audioOffset : null,
             );

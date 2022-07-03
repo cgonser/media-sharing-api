@@ -34,13 +34,13 @@ class AwsMediaConverterManager
 
     public function prepareVideoInput(
         string $videoFileInput,
-        ?string $videoId = '1',
+        ?string $audioSelector = '1',
         ?string $audioFileInput = null,
         ?string $audioOffset = null,
     ): array {
         $input = [
             "AudioSelectors" => [
-                "Audio Selector ".$videoId => [
+                "Audio Selector ".$audioSelector => [
                     "DefaultSelection" => "DEFAULT",
                 ],
             ],
@@ -52,10 +52,10 @@ class AwsMediaConverterManager
         ];
 
         if (null !== $audioFileInput) {
-            $input['AudioSelectors']['Audio Selector '.$videoId]["ExternalAudioFileInput"] = $audioFileInput;
+            $input['AudioSelectors']['Audio Selector '.$audioSelector]["ExternalAudioFileInput"] = $audioFileInput;
         }
         if (null !== $audioOffset) {
-            $input['AudioSelectors']['Audio Selector '.$videoId]["Offset"] = -1 * $audioOffset;
+            $input['AudioSelectors']['Audio Selector '.$audioSelector]["Offset"] = -1 * $audioOffset;
         }
 
         return $input;
