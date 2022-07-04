@@ -105,7 +105,7 @@ class VideoMediaManager extends AbstractMediaManager
 
             $mediaItem = $this->findMediaItemByType(
                 $moment->getMomentMediaItems()->toArray(),
-                MediaItemType::VIDEO_ORIGINAL
+                MediaItemType::VIDEO_HIGH
             );
 
             if (null === $mediaItem) {
