@@ -52,17 +52,16 @@ class MediaItemManager
         $this->save($mediaItem);
 
         $mediaItem->setFilename($mediaItem->getId()->toString().'.'.$extension->value);
-        $mediaItem->setUploadUrlValidUntil(new \DateTime(self::S3_UPLOAD_EXPIRES_AFTER));
 
-        $uploadRequest = $this->s3Client->createPresignedRequest(
-            $this->s3Client->getCommand('PutObject', [
-                'Bucket' => $this->s3BucketName,
-                'Key' => $mediaItem->getFilename(),
-            ]),
-            self::S3_UPLOAD_EXPIRES_AFTER
-        );
-
-        $mediaItem->setUploadUrl((string)$uploadRequest->getUri());
+//        $mediaItem->setUploadUrlValidUntil(new \DateTime(self::S3_UPLOAD_EXPIRES_AFTER));
+//        $uploadRequest = $this->s3Client->createPresignedRequest(
+//            $this->s3Client->getCommand('PutObject', [
+//                'Bucket' => $this->s3BucketName,
+//                'Key' => $mediaItem->getFilename(),
+//            ]),
+//            self::S3_UPLOAD_EXPIRES_AFTER
+//        );
+//        $mediaItem->setUploadUrl((string)$uploadRequest->getUri());
 
         $this->save($mediaItem);
 

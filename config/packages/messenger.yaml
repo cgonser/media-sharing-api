@@ -30,15 +30,15 @@ framework:
 
             'App\User\Message\UserCreatedEvent': async_internal
             'App\User\Message\UserUpdatedEvent': void
-            'App\User\Message\UserFollowApprovedEvent': sync
-            'App\User\Message\UserFollowUnfollowedEvent': sync
+            'App\User\Message\UserFollowApprovedEvent': async_internal
+            'App\User\Message\UserFollowUnfollowedEvent': async_internal
 
             'App\Media\Message\MediaItemUploadedEvent': async_internal
-            'App\Media\Message\MomentMediaItemUploadedEvent': sync
+            'App\Media\Message\MomentMediaItemUploadedEvent': async_internal
             'App\Media\Message\MomentPublishedEvent': void
             'App\Media\Message\VideoCreatedEvent': async_internal
             'App\Media\Message\VideoDeletedEvent': async_internal
-            'App\Media\Message\VideoMediaItemUploadedEvent': sync
+            'App\Media\Message\VideoMediaItemUploadedEvent': async_internal
             'App\Media\Message\VideoPublishedEvent': async_internal
 
             'Symfony\Component\Mailer\Messenger\SendEmailMessage': async_internal
