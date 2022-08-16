@@ -5,9 +5,9 @@ parameters:
     routing.uuid_mask: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
     url_generator.base_host: "%env(FRONTEND_HOST)%"
     url_generator.templates:
-        email_verification: 'users/email-verification/<token>'
-        mailer_unsubscribe: 'users/email-unsubscribe'
-        password_reset: 'users/password-reset/<token>'
+        email_verification: '/users/email-verification/<token>'
+        mailer_unsubscribe: '/users/email-unsubscribe'
+        password_reset: '/users/password-reset/<token>'
 
 services:
     _defaults:

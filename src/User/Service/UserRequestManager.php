@@ -130,13 +130,9 @@ class UserRequestManager
 
     public function concludePasswordReset(UserPasswordResetTokenRequest $userPasswordResetTokenRequest): void
     {
-        [$emailAddress, $token] = explode('|', base64_decode($userPasswordResetTokenRequest->token));
+        [$userId, $token] = explode('|', base64_decode($userPasswordResetTokenRequest->token));
 
-        $user = $this->userProvider->findOneByEmail($emailAddress);
-
-        if (null === $user) {
-            throw new UserNotFoundException();
-        }
+        $user = $this->userProvider->get(Uuid::fromString($userId));
 
         $this->userPasswordManager->resetPassword($user, $token, $userPasswordResetTokenRequest->password);
     }
