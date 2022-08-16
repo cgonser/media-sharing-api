@@ -141,21 +141,17 @@ class UserRequestManager
         $this->userPasswordManager->resetPassword($user, $token, $userPasswordResetTokenRequest->password);
     }
 
-    public function verifyEmailFromRequest(UserEmailVerificationRequest $userEmailVerificationRequest): void
+    public function verifyEmailFromRequest(UserEmailVerificationRequest $userEmailVerificationRequest): User
     {
         if (null !== $userEmailVerificationRequest->token) {
-            $this->userEmailManager->verifyEmailWithToken($userEmailVerificationRequest->token);
-
-            return;
+            return $this->userEmailManager->verifyEmailWithToken($userEmailVerificationRequest->token);
         }
 
         if (null !== $userEmailVerificationRequest->code && null !== $userEmailVerificationRequest->userId) {
-            $this->userEmailManager->verifyEmailWithCode(
+            return $this->userEmailManager->verifyEmailWithCode(
                 Uuid::fromString($userEmailVerificationRequest->userId),
                 $userEmailVerificationRequest->code
             );
-
-            return;
         }
 
         throw new UserInvalidVerificationCodeException();

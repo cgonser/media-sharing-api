@@ -55,7 +55,7 @@ class UserEmailManager
         );
     }
 
-    public function verifyEmailWithToken(string $verificationToken): void
+    public function verifyEmailWithToken(string $verificationToken): User
     {
         [$userId, $emailAddress] = explode('|', base64_decode($verificationToken));
 
@@ -66,9 +66,11 @@ class UserEmailManager
         ]);
 
         $this->markUserEmailAsValidated($user);
+
+        return $user;
     }
 
-    public function verifyEmailWithCode(UuidInterface $userId, string $verificationCode): void
+    public function verifyEmailWithCode(UuidInterface $userId, string $verificationCode): User
     {
         /** @var User $user */
         $user = $this->userProvider->get($userId);
@@ -78,6 +80,8 @@ class UserEmailManager
         }
 
         $this->markUserEmailAsValidated($user);
+
+        return $user;
     }
 
     private function markUserEmailAsValidated(User $user): void

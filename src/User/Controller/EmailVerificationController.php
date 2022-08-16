@@ -8,9 +8,9 @@ use App\User\Entity\User;
 use App\User\Request\UserEmailVerificationRequest;
 use App\User\Service\UserEmailManager;
 use App\User\Service\UserRequestManager;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
-use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,8 +20,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class EmailVerificationController extends AbstractController
 {
     public function __construct(
-        private UserRequestManager $userManager,
-        private UserEmailManager $userEmailManager,
+        private readonly UserRequestManager $userManager,
+        private readonly UserEmailManager $userEmailManager,
+        private readonly AuthenticationSuccessHandler $authenticationSuccessHandler
     ) {
     }
 
@@ -48,8 +49,8 @@ class EmailVerificationController extends AbstractController
     )]
     public function verifyEmail(UserEmailVerificationRequest $userEmailVerificationRequest): Response
     {
-        $this->userManager->verifyEmailFromRequest($userEmailVerificationRequest);
-
-        return new ApiJsonResponse(Response::HTTP_NO_CONTENT);
+        return $this->authenticationSuccessHandler->handleAuthenticationSuccess(
+            $this->userManager->verifyEmailFromRequest($userEmailVerificationRequest)
+        );
     }
 }
