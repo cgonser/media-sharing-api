@@ -26,6 +26,10 @@ class VideoManager
 
     public function create(Video $video): void
     {
+        if (null === $video->getRecordedAt()) {
+            $video->setRecordedAt(new \DateTime());
+        }
+
         $this->save($video);
 
         $this->messageBus->dispatch(new VideoCreatedEvent($video->getId(), $video->getUserId()));
