@@ -72,12 +72,12 @@ class VideoProvider extends AbstractProvider
                 ->select("uf")
                 ->andWhere('uf.isApproved = TRUE')
                 ->andWhere('uf.followerId = :followerId')
+                ->andWhere('uf.followingId = root.userId')
             ;
 
             $queryBuilder->setParameter('followerId', $filters['root.followerId']);
 
             if ($filters['root.followingOnly']) {
-
                 $queryBuilder->andWhere($queryBuilder->expr()->exists($subQuery->getDQL()));
             } else {
                 $queryBuilder->andWhere(
