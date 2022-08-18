@@ -347,7 +347,7 @@ class Video implements TimestampableInterface, SoftDeletableInterface
         $videoMoment->setVideo($this);
         $videoMoment->setMoment($moment);
         $videoMoment->setPosition($position);
-        $videoMoment->setDuration($moment->getDuration());
+        $videoMoment->setDuration($moment->getDuration() ?? 0);
 
         $this->videoMoments->add($videoMoment);
 

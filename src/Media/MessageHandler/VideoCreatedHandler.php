@@ -5,14 +5,14 @@ namespace App\Media\MessageHandler;
 use App\Media\Entity\Video;
 use App\Media\Message\VideoCreatedEvent;
 use App\Media\Provider\VideoProvider;
-use App\Media\Service\VideoMediaManager;
+use App\Media\Service\VideoMediaManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class VideoCreatedHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private readonly VideoMediaManager $videoMediaManager,
+        private readonly VideoMediaManagerInterface $videoMediaManager,
         private readonly VideoProvider $videoProvider,
         private readonly LoggerInterface $logger
     ) {

@@ -29,7 +29,6 @@ abstract class AbstractMediaTest extends AbstractApiTest
                 'excited',
                 'funny',
             ],
-            'duration' => 9,
             'recordedAt' => (new \DateTime())->format(\DateTimeInterface::ATOM),
         ];
     }

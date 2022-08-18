@@ -51,7 +51,7 @@ class CreateControllerTest extends AbstractMediaTest
             [
                 'momentId' => $momentResponseData['id'],
                 'position' => 1,
-                'duration' => 3,
+                'duration' => 0,
             ]
         ];
 

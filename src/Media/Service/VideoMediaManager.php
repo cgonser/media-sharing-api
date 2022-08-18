@@ -9,7 +9,7 @@ use App\Media\Enumeration\MediaItemType;
 use App\Media\Enumeration\MomentStatus;
 use Psr\Log\LoggerInterface;
 
-class VideoMediaManager extends AbstractMediaManager
+class VideoMediaManager extends AbstractMediaManager implements VideoMediaManagerInterface
 {
     public function __construct(
         private readonly AwsMediaConverterManager $awsMediaConverterManager,
