@@ -139,6 +139,13 @@ class UserFollowProvider extends AbstractProvider
         parent::addFilters($queryBuilder, $filters);
     }
 
+    protected function buildQueryBuilder(): QueryBuilder
+    {
+        return $this->repository->createQueryBuilder('root')
+            ->innerJoin('root.follower', 'follower')
+            ->innerJoin('root.following', 'following');
+    }
+
     protected function getFilterableFields(): array
     {
         return [
@@ -146,6 +153,16 @@ class UserFollowProvider extends AbstractProvider
             'followingId',
             'isApproved',
             'isPending',
+        ];
+    }
+
+    protected function getSearchableFields(): array
+    {
+        return [
+            'follower.username' => 'text',
+            'follower.displayName' => 'text',
+            'following.username' => 'text',
+            'following.displayName' => 'text',
         ];
     }
 

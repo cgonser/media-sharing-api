@@ -157,8 +157,12 @@ abstract class AbstractProvider
 
         foreach ($this->getSearchableFields() as $fieldName => $fieldType) {
             if ('text' === $fieldType) {
+                if (!str_starts_with($fieldName, 'root.') && !str_contains($fieldName, '.')) {
+                    $fieldName = 'root.'.$fieldName;
+                }
+
                 $searchFields[] = $queryBuilder->expr()->like(
-                    sprintf('LOWER(root.%s)', $fieldName),
+                    sprintf('LOWER(%s)', $fieldName),
                     ':searchText'
                 );
             }
