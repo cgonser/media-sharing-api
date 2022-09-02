@@ -34,3 +34,11 @@ services:
         arguments:
             $awsMediaConvertQueueArn: "%env(AWS_MEDIA_CONVERT_VIDEO_COMPOSE_QUEUE_ARN)%"
             $awsMediaConvertRoleArn: "%env(AWS_MEDIA_CONVERT_JOB_ROLE_ARN)%"
+
+    App\Media\Service\VideoExportAssetManager:
+        arguments:
+            $fontPath: '%kernel.project_dir%/config/font/'
+
+    App\Media\Service\MoodBarGenerator:
+        arguments:
+            $s3BucketName: '%media_item.s3_bucket%'

@@ -20,4 +20,7 @@ class MediaConverterOutputDto
     public ?string $nameModifier;
 
     public ?string $filename = null;
+
+    /** @var MediaConverterInsertableImageDto[]  */
+    public ?array $insertableImages = [];
 }

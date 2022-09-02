@@ -2,6 +2,7 @@
 
 namespace App\Media\Service;
 
+use App\Media\Dto\MediaConverterInsertableImageDto;
 use App\Media\Dto\MediaConverterOutputDto;
 use App\Media\Enumeration\MediaItemType;
 use Aws\MediaConvert\MediaConvertClient;
@@ -18,15 +19,15 @@ class AwsMediaConverterManager
     public function createJob(array $inputs, array $outputGroups, ?array $userMetadata = []): string
     {
         $return = $this->mediaConvertClient->createJob([
-            "Role" => $this->awsMediaConvertRoleArn,
-            "Queue" => $this->awsMediaConvertQueueArn,
-            "Settings" => $this->prepareJobSettings($inputs, $outputGroups),
-            "AccelerationSettings" => [
-                "Mode" => "DISABLED",
+            'Role' => $this->awsMediaConvertRoleArn,
+            'Queue' => $this->awsMediaConvertQueueArn,
+            'Settings' => $this->prepareJobSettings($inputs, $outputGroups),
+            'AccelerationSettings' => [
+                'Mode' => 'DISABLED',
             ],
-            "UserMetadata" => $userMetadata,
-            "StatusUpdateInterval" => "SECONDS_10",
-            "Priority" => 0,
+            'UserMetadata' => $userMetadata,
+            'StatusUpdateInterval' => 'SECONDS_10',
+            'Priority' => 0,
         ]);
 
         return $return->get('Job')['Id'];
@@ -39,23 +40,23 @@ class AwsMediaConverterManager
         ?string $audioOffset = null,
     ): array {
         $input = [
-            "AudioSelectors" => [
-                "Audio Selector ".$audioSelector => [
-                    "DefaultSelection" => "DEFAULT",
+            'AudioSelectors' => [
+                'Audio Selector '.$audioSelector => [
+                    'DefaultSelection' => 'DEFAULT',
                 ],
             ],
-            "VideoSelector" => [
-                "Rotate" => "AUTO",
+            'VideoSelector' => [
+                'Rotate' => 'AUTO',
             ],
-            "TimecodeSource" => "ZEROBASED",
-            "FileInput" => $videoFileInput,
+            'TimecodeSource' => 'ZEROBASED',
+            'FileInput' => $videoFileInput,
         ];
 
         if (null !== $audioFileInput) {
-            $input['AudioSelectors']['Audio Selector '.$audioSelector]["ExternalAudioFileInput"] = $audioFileInput;
+            $input['AudioSelectors']['Audio Selector '.$audioSelector]['ExternalAudioFileInput'] = $audioFileInput;
         }
         if (null !== $audioOffset) {
-            $input['AudioSelectors']['Audio Selector '.$audioSelector]["Offset"] = -1 * $audioOffset;
+            $input['AudioSelectors']['Audio Selector '.$audioSelector]['Offset'] = -1 * $audioOffset;
         }
 
         return $input;
@@ -63,7 +64,7 @@ class AwsMediaConverterManager
 
     public function prepareVideoOutput(MediaConverterOutputDto $mediaConverterOutputDto): array
     {
-        return [
+        $output = [
             'ContainerSettings' => [
                 'Container' => 'MP4',
                 'Mp4Settings' => [
@@ -71,6 +72,7 @@ class AwsMediaConverterManager
             ],
             'VideoDescription' => [
                 'Width' => $mediaConverterOutputDto->width,
+                'VideoPreprocessors' => [],
                 'CodecSettings' => [
                     'Codec' => 'H_264',
                     'H264Settings' => [
@@ -99,6 +101,34 @@ class AwsMediaConverterManager
             ],
             'Extension' => 'mp4',
             'NameModifier' => $mediaConverterOutputDto->nameModifier,
+        ];
+
+        if (!empty($mediaConverterOutputDto->insertableImages)) {
+            $output['VideoDescription']['VideoPreprocessors']['ImageInserter'] = [
+                'InsertableImages' => [],
+            ];
+
+            foreach ($mediaConverterOutputDto->insertableImages as $insertableImageDto) {
+                $output['VideoDescription']['VideoPreprocessors']['ImageInserter']['InsertableImages'][] = $this->generateImageInserter(
+                    $insertableImageDto
+                );
+            }
+        }
+
+        return $output;
+    }
+
+    private function generateImageInserter(MediaConverterInsertableImageDto $insertableImageDto): array
+    {
+        return [
+            'Width' => $insertableImageDto->width,
+            'Height' => $insertableImageDto->height,
+            'ImageX' => $insertableImageDto->x,
+            'ImageY' => $insertableImageDto->y,
+            'Layer' => $insertableImageDto->layer,
+            'ImageInserterInput' => $insertableImageDto->input,
+            'StartTime' => $insertableImageDto->startTime,
+            'Opacity' => $insertableImageDto->opacity,
         ];
     }
 
@@ -171,7 +201,7 @@ class AwsMediaConverterManager
                         ],
                     ],
                 ],
-            ]
+            ],
         ];
     }
 }

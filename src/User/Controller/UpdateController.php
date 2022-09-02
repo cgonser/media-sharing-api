@@ -8,7 +8,7 @@ use App\User\Dto\UserDto;
 use App\User\Entity\User;
 use App\User\Request\UserRequest;
 use App\User\ResponseMapper\UserResponseMapper;
-use App\User\Service\UserProfilePictureManager;
+use App\User\Service\UserImageManager;
 use App\User\Service\UserRequestManager;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
@@ -25,7 +25,7 @@ class UpdateController extends AbstractController
     public function __construct(
         private readonly UserRequestManager $userManager,
         private readonly UserResponseMapper $userResponseMapper,
-        private readonly UserProfilePictureManager $userProfilePictureManager,
+        private readonly UserImageManager $userImageManager,
     ) {
     }
 
@@ -75,7 +75,7 @@ class UpdateController extends AbstractController
         $user = $this->getUser();
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::UPDATE, $user);
 
-        $this->userProfilePictureManager->uploadImageContents(
+        $this->userImageManager->uploadProfilePicture(
             $user,
             $request->getContent(),
             $request->headers->get('Content-Type'),
