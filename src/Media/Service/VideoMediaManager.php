@@ -30,14 +30,13 @@ class VideoMediaManager extends AbstractMediaManager implements VideoMediaManage
     public function __construct(
         private readonly AwsMediaConverterManager $awsMediaConverterManager,
         private readonly VideoMediaItemManager $videoMediaItemManager,
-        private readonly MoodBarGenerator $moodBarGenerator,
+//        private readonly MoodBarGenerator $moodBarGenerator,
         private readonly UserImageManager $userImageManager,
         private readonly LoggerInterface $logger,
         private readonly string $s3BucketName,
     ) {
     }
 
-    // TODO: DELETE IT
     public function export(Video $video): void
     {
         $filenamePrefix = $video->getUserId()->toString().'/'.$video->getId()->toString().'-';
