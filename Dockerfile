@@ -96,6 +96,7 @@ RUN set -eux; \
     composer clear-cache
 
 COPY .env.dist ./.env
+COPY assets assets/
 COPY bin bin/
 COPY config config/
 COPY docker docker/
