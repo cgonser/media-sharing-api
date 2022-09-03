@@ -9,6 +9,7 @@ class MediaConverterInsertableImageDto
     public int $x;
     public int $y;
     public int $layer;
+    public ?int $duration = null;
     public string $input;
     public string $startTime;
     public int $opacity;

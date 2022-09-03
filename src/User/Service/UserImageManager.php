@@ -91,7 +91,7 @@ class UserImageManager
     public function generateHandleImage(
         User $user,
         ?int $width = 720,
-        ?int $fontSize = 36,
+        ?int $fontSize = 42,
         array|string|null $fontColor = '#ffffff',
     ): string {
         $img = Image::canvas($width, $fontSize + 8);
@@ -102,19 +102,19 @@ class UserImageManager
 
         $img->text($user->getUsername(), $width / 2, $fontSize, function (Font $font) use ($fontColor, $fontSize) {
             $font->size($fontSize);
-            $font->file($this->fontPath.'Inter-Medium.ttf');
+            $font->file($this->fontPath.'Inter-Bold.ttf');
             $font->align('center');
             $font->color($fontColor);
         });
 
         $img->encode('png');
+        $img->save('/app/var/handle.png');
 
         return $img->getEncoded();
     }
 
     public function generateHandleWithLogoImage(
         User $user,
-        ?int $width = 720,
         ?int $fontSize = 36,
         array|string|null $fontColor = '#ffffff',
     ): string {
@@ -124,13 +124,15 @@ class UserImageManager
             $fontColor = [255, 255, 255, 0.5];
         }
 
-        $img->text($user->getUsername(), 78, $fontSize, function (Font $font) use ($fontColor, $fontSize) {
+        $img->text($user->getUsername(), 106, 44, function (Font $font) use ($fontColor, $fontSize) {
             $font->size($fontSize);
-            $font->file($this->fontPath.'Inter-Medium.ttf');
+            $font->file($this->fontPath.'Inter-Bold.ttf');
             $font->color($fontColor);
         });
 
         $img->encode('png');
+        $img->save('/app/var/handle-logo.png');
+//        exit;
 
         return $img->getEncoded();
     }

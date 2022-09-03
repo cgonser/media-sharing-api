@@ -76,11 +76,14 @@ class AwsMediaConverterManager
                 'CodecSettings' => [
                     'Codec' => 'H_264',
                     'H264Settings' => [
+                        'FramerateDenominator' => 1,
                         'MaxBitrate' => $mediaConverterOutputDto->maxBitrate,
+                        'FramerateControl' => 'SPECIFIED',
                         'RateControlMode' => 'QVBR',
                         'QvbrSettings' => [
                             'QvbrQualityLevel' => 9,
                         ],
+                        'FramerateNumerator' => 15,
                         'SceneChangeDetect' => 'TRANSITION_DETECTION',
                         'QualityTuningLevel' => 'SINGLE_PASS',
                     ],
@@ -120,7 +123,7 @@ class AwsMediaConverterManager
 
     private function generateImageInserter(MediaConverterInsertableImageDto $insertableImageDto): array
     {
-        return [
+        $imageInserter = [
             'Width' => $insertableImageDto->width,
             'Height' => $insertableImageDto->height,
             'ImageX' => $insertableImageDto->x,
@@ -130,6 +133,12 @@ class AwsMediaConverterManager
             'StartTime' => $insertableImageDto->startTime,
             'Opacity' => $insertableImageDto->opacity,
         ];
+
+        if (null !== $insertableImageDto->duration) {
+            $imageInserter['Duration'] = $insertableImageDto->duration;
+        }
+
+        return $imageInserter;
     }
 
     public function prepareImageOutput(MediaConverterOutputDto $mediaConverterOutputDto): array

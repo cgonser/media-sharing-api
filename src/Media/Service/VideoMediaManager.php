@@ -211,26 +211,31 @@ class VideoMediaManager extends AbstractMediaManager implements VideoMediaManage
         $handleInsertableImageDto->input = 's3://'.$this->userImageManager->getOrCreateHandleWithLogoImage($video->getUser());
         $handleInsertableImageDto->startTime = '00:00:00:00';
         $handleInsertableImageDto->width = 720;
-        $handleInsertableImageDto->height = 48;
+        $handleInsertableImageDto->height = 60;
         $handleInsertableImageDto->x = 0;
         $handleInsertableImageDto->y = 130;
         $handleInsertableImageDto->layer = 99;
         $handleInsertableImageDto->opacity = 100;
 
-        $moodBarInsertableImageDto = new MediaConverterInsertableImageDto();
-        $moodBarInsertableImageDto->input = 's3://'.$this->moodBarGenerator->createMoodBarImage($video);
-        $moodBarInsertableImageDto->startTime = '00:00:00:00';
-        $moodBarInsertableImageDto->width = 672;
-        $moodBarInsertableImageDto->height = 5;
-        $moodBarInsertableImageDto->x = 24;
-        $moodBarInsertableImageDto->y = 110;
-        $moodBarInsertableImageDto->layer = 98;
-        $moodBarInsertableImageDto->opacity = 100;
+//        $moodBarInsertableImageDto = new MediaConverterInsertableImageDto();
+//        $moodBarInsertableImageDto->input = 's3://'.$this->moodBarGenerator->createMoodBarImage($video);
+//        $moodBarInsertableImageDto->startTime = '00:00:00:00';
+//        $moodBarInsertableImageDto->width = 672;
+//        $moodBarInsertableImageDto->height = 5;
+//        $moodBarInsertableImageDto->x = 24;
+//        $moodBarInsertableImageDto->y = 110;
+//        $moodBarInsertableImageDto->layer = 1;
+//        $moodBarInsertableImageDto->opacity = 100;
 
         $mediaConverterOutputDto->insertableImages = [
             $handleInsertableImageDto,
-            $moodBarInsertableImageDto,
+//            $moodBarInsertableImageDto,
         ];
+
+//        $mediaConverterOutputDto->insertableImages = array_merge(
+//            $mediaConverterOutputDto->insertableImages,
+//            $this->moodBarGenerator->createInsertableImages($video, self::START_2_SEC_DURATION, 2),
+//        );
 
         return $mediaConverterOutputDto;
     }
@@ -239,29 +244,33 @@ class VideoMediaManager extends AbstractMediaManager implements VideoMediaManage
     {
         $inputs = $this->prepareInputs($video, self::START_2_SEC_DURATION);
 
-        $start = $this->awsMediaConverterManager->prepareVideoInput(
-            's3://'.$this->s3BucketName.'/'.self::START_2_SEC_FILE
+//        $start = $this->awsMediaConverterManager->prepareVideoInput(
+//            's3://'.$this->s3BucketName.'/'.self::START_2_SEC_FILE
+//        );
+//
+//        $start['ImageInserter'] = [
+//            'InsertableImages' => [
+//                [
+//                    'Width' => 720,
+//                    'Height' => 50,
+//                    'ImageX' => 0,
+//                    'ImageY' => 800,
+//                    'Duration' => self::START_2_SEC_DURATION,
+//                    'FadeIn' => 0,
+//                    'Layer' => 98,
+//                    'ImageInserterInput' => 's3://'.$this->userImageManager->getOrCreateHandleImage($video->getUser()),
+//                    'StartTime' => '00:00:00:00',
+//                    'FadeOut' => 0,
+//                    'Opacity' => 100,
+//                ],
+//            ],
+//        ];
+//
+//        array_unshift($inputs, $start);
+
+        $inputs[] = $this->awsMediaConverterManager->prepareVideoInput(
+            's3://'.$this->s3BucketName.'/'.self::START_3_SEC_FILE
         );
-
-        $start['ImageInserter'] = [
-            'InsertableImages' => [
-                [
-                    'Width' => 720,
-                    'Height' => 48,
-                    'ImageX' => 0,
-                    'ImageY' => 800,
-                    'Duration' => self::START_2_SEC_DURATION,
-                    'FadeIn' => 0,
-                    'Layer' => 98,
-                    'ImageInserterInput' => 's3://'.$this->userImageManager->getOrCreateHandleImage($video->getUser()),
-                    'StartTime' => '00:00:00:00',
-                    'FadeOut' => 0,
-                    'Opacity' => 100,
-                ],
-            ],
-        ];
-
-        array_unshift($inputs, $start);
 
         return $inputs;
     }
