@@ -121,7 +121,7 @@ class VideoMediaManager extends AbstractMediaManager implements VideoMediaManage
         $inputs = [];
 
         $audioInputFile = null !== $video->getMusic()
-            ? 's3://'.$this->s3BucketName.'/'.$video->getMusic()->getFilename()
+            ? $video->getMusic()->getFilename()
             : null;
 
         /** @var VideoMoment $videoMoment */
