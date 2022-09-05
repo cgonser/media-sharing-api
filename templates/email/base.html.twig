@@ -281,7 +281,9 @@
                    style="margin: auto;">
                 <tr>
                     <td style="padding: 20px 0">
-                        <span style="color: #414BFF; font-size: 24px">Moments Logo</span>
+                        <span style="color: #414BFF; font-size: 24px">
+                            <img src="https://cdn.itinair.com/images/moments_logo_email_top.png" alt="Moments by Itinair">
+                        </span>
                     </td>
                 </tr>
 
@@ -323,7 +325,9 @@
                                     {{ 'base.automatically_sent'|trans({ '%recipient_email%': recipient_email })|markdown_to_html }}
 
                                     <hr>
-                                    <span style="color: #000; font-size: 20px">Moments Logo</span>
+                                    <span style="color: #000; font-size: 20px">
+                                        <img src="https://cdn.itinair.com/images/moments_logo_email_bottom.png" alt="Moments by Itinair">
+                                    </span>
                                     {{ 'base.signature_address'|trans|markdown_to_html|nl2br }}
                                     {% endblock %}
                                 </td>
