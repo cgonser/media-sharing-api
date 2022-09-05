@@ -92,18 +92,18 @@ user_follow:
 
     approved:
         subject: "%followingUsername% accepted your follow request"
-        pre_header: "From now on, the videos of %followingUsername% will appear on your feed"
+        pre_header: "From now on, the videos of %followingUsername% will appear in your feed"
         greeting: "You have been accepted"
         line_1: "**%followingUsername%** accepted your follow request."
-        line_2: "From now on, the videos of %followingUsername% will appear in your feed and you can tag her/him in your moments."
+        line_2: "From now on, the videos of %followingUsername% will appear in your feed."
         cta: "Check this profile in the app"
 
     created:
         subject: "%followerUsername% started following you"
-        pre_header: "From now on you can tag her/him in your moments"
+        pre_header: "From now on this user can see your videos in his feed. Your private moments stay private until you share them."
         greeting: "You have a new follower"
         line_1: "**%followerUsername%** started following your memories."
-        line_2: "**%followerUsername%** is now able to tag you in moments and view your videos on the feed."
+        line_2: "**%followerUsername%** is now able to view your videos in the feed."
         cta_1: "Follow back"
         cta_2: "Check this profile in the app"
 
