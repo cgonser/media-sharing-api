@@ -120,9 +120,7 @@ class VideoMediaManager extends AbstractMediaManager implements VideoMediaManage
     {
         $inputs = [];
 
-        $audioInputFile = null !== $video->getMusic()
-            ? $video->getMusic()->getFilename()
-            : null;
+        $audioInputFile = $video->getMusic()?->getFilename();
 
         /** @var VideoMoment $videoMoment */
         $i = 0;

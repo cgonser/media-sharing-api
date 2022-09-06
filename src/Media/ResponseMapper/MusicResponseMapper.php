@@ -12,6 +12,8 @@ class MusicResponseMapper
         $musicDto = new MusicDto();
         $musicDto->id = $music->getId()->toString();
         $musicDto->displayName = $music->getDisplayName();
+        $musicDto->artist = $music->getArtist();
+        $musicDto->title = $music->getTitle();
         $musicDto->publicUrl = $music->getPublicUrl();
         $musicDto->duration = $music->getDuration();
 

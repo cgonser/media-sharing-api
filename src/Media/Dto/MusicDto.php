@@ -8,6 +8,10 @@ class MusicDto
 
     public string $displayName;
 
+    public ?string $artist;
+
+    public ?string $title;
+
     public string $publicUrl;
 
     public ?float $duration;

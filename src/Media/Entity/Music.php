@@ -24,6 +24,12 @@ class Music implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(nullable: false)]
     private ?string $displayName = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?string $artist = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $title = null;
+
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $filename = null;
 
@@ -49,6 +55,30 @@ class Music implements TimestampableInterface, SoftDeletableInterface
     public function setDisplayName(?string $displayName): self
     {
         $this->displayName = $displayName;
+
+        return $this;
+    }
+
+    public function getArtist(): ?string
+    {
+        return $this->artist;
+    }
+
+    public function setArtist(?string $artist): self
+    {
+        $this->artist = $artist;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): self
+    {
+        $this->title = $title;
 
         return $this;
     }
