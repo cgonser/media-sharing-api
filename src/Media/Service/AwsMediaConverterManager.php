@@ -83,7 +83,7 @@ class AwsMediaConverterManager
                         'QvbrSettings' => [
                             'QvbrQualityLevel' => 9,
                         ],
-                        'FramerateNumerator' => 15,
+                        'FramerateNumerator' => 24,
                         'SceneChangeDetect' => 'TRANSITION_DETECTION',
                         'QualityTuningLevel' => 'SINGLE_PASS',
                     ],
