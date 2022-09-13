@@ -27,6 +27,7 @@ class VideoResponseMapper
         $videoDto = new VideoDto();
         $this->mapBaseData($videoDto, $video);
         $videoDto->status = $video->getStatus()->value;
+        $videoDto->localPath = $video->getLocalPath();
         $videoDto->overrideMomentsAudio = $video->overrideMomentsAudio();
 
         if (null !== $video->getMusic()) {

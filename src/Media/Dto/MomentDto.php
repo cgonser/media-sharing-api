@@ -13,6 +13,8 @@ class MomentDto
 
     public ?string $status;
 
+    public ?string $localPath;
+
     public ?string $mood;
 
     public ?LocationDto $location;

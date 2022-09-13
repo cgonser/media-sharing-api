@@ -20,6 +20,8 @@ class VideoDto
 
     public ?string $description;
 
+    public ?string $localPath;
+
     #[OA\Property(type: "array", items: new OA\Items(type: "string"))]
     public ?array $moods;
 

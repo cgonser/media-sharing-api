@@ -13,6 +13,8 @@ class MomentRequest extends AbstractRequest
 {
     public ?string $userId;
 
+    public ?string $localPath;
+
     #[Assert\Type(Mood::class)]
     public ?Mood $mood;
 

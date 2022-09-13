@@ -5,6 +5,7 @@ namespace App\Media\Command;
 use App\Media\Entity\Moment;
 use App\Media\Provider\MomentProvider;
 use App\Media\Service\MomentMediaManager;
+use Exception;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,16 +28,29 @@ class MomentConvertCommand extends Command
     protected function configure()
     {
         $this
-            ->addArgument('momentId', InputArgument::REQUIRED)
+            ->addArgument('momentId', InputArgument::OPTIONAL)
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** @var Moment $moment */
-        $moment = $this->momentProvider->get(Uuid::fromString($input->getArgument('momentId')));
+        if ($input->getArgument('momentId')) {
+            /** @var Moment $moment */
+            $moment = $this->momentProvider->get(Uuid::fromString($input->getArgument('momentId')));
 
-        $this->momentMediaManager->convert($moment);
+            $this->momentMediaManager->convert($moment);
+
+            return 0;
+        }
+
+        /** @var Moment $moment */
+        foreach ($this->momentProvider->findAll() as $moment) {
+            try {
+                $this->momentMediaManager->convert($moment);
+            } catch (Exception $e) {
+                echo $e->getMessage().PHP_EOL;
+            }
+        }
 
         return 0;
     }

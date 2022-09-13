@@ -3,10 +3,9 @@
 namespace App\Media\Command;
 
 use App\Media\Entity\Video;
-use App\Media\Message\VideoCreatedEvent;
 use App\Media\Provider\VideoProvider;
-use App\Media\Service\MoodBarGenerator;
 use App\Media\Service\VideoMediaManager;
+use Exception;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -21,7 +20,6 @@ class VideoExportCommand extends Command
     public function __construct(
         protected readonly VideoMediaManager $videoMediaManager,
         protected readonly VideoProvider $videoProvider,
-        protected readonly MoodBarGenerator $moodBarGenerator,
         protected readonly MessageBusInterface $messageBus,
     ) {
         parent::__construct();
@@ -30,18 +28,29 @@ class VideoExportCommand extends Command
     protected function configure()
     {
         $this
-            ->addArgument('videoId', InputArgument::REQUIRED)
+            ->addArgument('videoId', InputArgument::OPTIONAL)
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        if ($input->getArgument('videoId')) {
+            /** @var Video $video */
+            $video = $this->videoProvider->get(Uuid::fromString($input->getArgument('videoId')));
+
+            $this->videoMediaManager->export($video);
+
+            return 0;
+        }
+
         /** @var Video $video */
-        $video = $this->videoProvider->get(Uuid::fromString($input->getArgument('videoId')));
-
-//        $this->moodBarGenerator->createMoodBarImage($video);
-
-        $this->videoMediaManager->export($video);
+        foreach ($this->videoProvider->findAll() as $video) {
+            try {
+                $this->videoMediaManager->export($video);
+            } catch (Exception $e) {
+                echo $e->getMessage().PHP_EOL;
+            }
+        }
 
         return 0;
     }

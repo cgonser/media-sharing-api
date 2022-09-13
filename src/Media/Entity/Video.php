@@ -45,6 +45,9 @@ class Video implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $localPath = null;
+
     #[ORM\Column(type: 'jsonb', nullable: true)]
     private ?array $moods = null;
 
@@ -141,6 +144,18 @@ class Video implements TimestampableInterface, SoftDeletableInterface
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getLocalPath(): ?string
+    {
+        return $this->localPath;
+    }
+
+    public function setLocalPath(?string $localPath): self
+    {
+        $this->localPath = $localPath;
 
         return $this;
     }

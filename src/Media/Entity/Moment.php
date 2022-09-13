@@ -38,6 +38,9 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
     #[ORM\Column(type: 'string', nullable: false, enumType: MomentStatus::class)]
     private MomentStatus $status;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $localPath = null;
+
     #[ORM\Column(type: 'string', nullable: false, enumType: Mood::class)]
     private Mood $mood;
 
@@ -108,6 +111,18 @@ class Moment implements TimestampableInterface, SoftDeletableInterface
     public function setStatus(MomentStatus|string $status): self
     {
         $this->status = $status instanceOf MomentStatus ? $status : MomentStatus::from($status);
+
+        return $this;
+    }
+
+    public function getLocalPath(): ?string
+    {
+        return $this->localPath;
+    }
+
+    public function setLocalPath(?string $localPath): self
+    {
+        $this->localPath = $localPath;
 
         return $this;
     }

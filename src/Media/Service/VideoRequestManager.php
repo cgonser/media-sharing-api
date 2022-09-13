@@ -53,6 +53,10 @@ class VideoRequestManager
             $video->setDescription($videoRequest->description);
         }
 
+        if ($videoRequest->has('localPath')) {
+            $video->setLocalPath($videoRequest->localPath);
+        }
+
         if ($videoRequest->has('moods')) {
             $video->setMoods($videoRequest->moods);
         }

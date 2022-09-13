@@ -44,6 +44,10 @@ class MomentRequestManager
             );
         }
 
+        if ($momentRequest->has('localPath')) {
+            $moment->setLocalPath($momentRequest->localPath);
+        }
+
         if ($momentRequest->has('mood')) {
             $moment->setMood($momentRequest->mood);
         }

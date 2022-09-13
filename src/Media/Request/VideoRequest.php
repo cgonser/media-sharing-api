@@ -16,6 +16,8 @@ class VideoRequest extends AbstractRequest
 
     public ?string $description;
 
+    public ?string $localPath;
+
     /** @var Mood[]  */
     #[Assert\All(new Assert\Type(Mood::class))]
     #[OA\Property(type: "array", items: new OA\Items(type: 'string'))]
