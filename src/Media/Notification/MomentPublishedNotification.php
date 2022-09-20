@@ -21,7 +21,7 @@ class MomentPublishedNotification extends AbstractNotification
     public function getAvailableChannels(): array
     {
         return [
-            NotificationChannel::CHAT,
+//            NotificationChannel::CHAT,
         ];
     }
 }

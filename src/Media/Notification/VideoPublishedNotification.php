@@ -24,7 +24,7 @@ class VideoPublishedNotification extends AbstractNotification
     {
         return [
             NotificationChannel::EMAIL,
-            NotificationChannel::CHAT,
+//            NotificationChannel::CHAT,
         ];
     }
 }
