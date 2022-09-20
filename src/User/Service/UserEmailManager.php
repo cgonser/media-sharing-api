@@ -145,7 +145,7 @@ class UserEmailManager
         $url = $this->urlGenerator->generate(
             self::PASSWORD_RESET_URL_IDENTIFIER,
             [
-                'token' => base64_encode($user->getUsername().'|'.$userPasswordResetToken->getToken()),
+                'token' => base64_encode($user->getId()->toString().'|'.$userPasswordResetToken->getToken()),
             ]
         );
 
