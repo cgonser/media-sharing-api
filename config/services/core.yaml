@@ -7,7 +7,8 @@ parameters:
     url_generator.templates:
         email_verification: '/users/email-verification/<token>'
         mailer_unsubscribe: '/users/email-unsubscribe'
-        password_reset: '/users/password-reset/<token>'
+#        password_reset: '/users/password-reset/<token>'
+        password_reset: '/demo/users/password-reset/<token>'
 
 services:
     _defaults:
