@@ -1,3 +1,6 @@
+parameters:
+    notification.email_override: 'balazs@itinair.com'
+
 services:
     _defaults:
         autowire: true
@@ -10,3 +13,7 @@ services:
     App\Notification\Controller\:
         resource: '../../src/Notification/Controller'
         tags: ['controller.service_arguments']
+
+    App\Notification\Service\Notifier:
+        arguments:
+            $notifierEmailOverride: '%notification.email_override%'

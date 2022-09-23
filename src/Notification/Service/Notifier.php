@@ -21,6 +21,7 @@ class Notifier
         private readonly NotifierInterface $notifier,
         private readonly NotificationManager $notificationManager,
         private readonly LoggerInterface $logger,
+        private readonly ?string $notifierEmailOverride = null,
     ) {
     }
 
@@ -101,7 +102,7 @@ class Notifier
         $recipient = new Recipient();
 
         if (NotificationChannel::EMAIL === $userNotificationChannel->getChannel() && null !== $user->getEmail()) {
-            $recipient->email($user->getEmail());
+            $recipient->email($this->notifierEmailOverride ?? $user->getEmail());
         }
 
         if (NotificationChannel::SMS === $userNotificationChannel->getChannel() && null !== $user->getPhonenumber()) {
