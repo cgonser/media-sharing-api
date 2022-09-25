@@ -3,7 +3,6 @@
 namespace App\User\Command;
 
 use App\Media\Provider\VideoProvider;
-use App\Media\Request\VideoSearchRequest;
 use App\User\Entity\User;
 use App\User\Provider\UserProvider;
 use App\User\Service\UserManager;
@@ -52,10 +51,7 @@ class UserFixVideosCounterCommand extends Command
 
     protected function fixUser(User $user): void
     {
-        $searchRequest = new VideoSearchRequest();
-        $searchRequest->userId = $user->getId()->toString();
-
-        $user->setVideoCount($this->videoProvider->count($searchRequest));
+        $user->setVideoCount($this->videoProvider->countByUserId($user->getId()));
 
         $this->userManager->save($user);
     }

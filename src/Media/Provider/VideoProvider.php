@@ -4,6 +4,7 @@ namespace App\Media\Provider;
 
 use App\Core\Provider\AbstractProvider;
 use App\Media\Entity\Video;
+use App\Media\Enumeration\VideoStatus;
 use App\Media\Exception\VideoNotFoundException;
 use App\Media\Repository\VideoRepository;
 use App\User\Repository\UserFollowRepository;
@@ -32,6 +33,14 @@ class VideoProvider extends AbstractProvider
         }
 
         return $moment;
+    }
+
+    public function countByUserId(UuidInterface $userId): int
+    {
+        return $this->repository->count([
+            'userId' => $userId,
+            'status' => VideoStatus::PUBLISHED,
+        ]);
     }
 
     protected function throwNotFoundException(): void

@@ -3,6 +3,7 @@
 namespace App\User\MessageHandler;
 
 use App\Media\Message\VideoDeletedEvent;
+use App\Media\Provider\VideoProvider;
 use App\User\Entity\User;
 use App\User\Provider\UserProvider;
 use App\User\Service\UserManager;
@@ -14,6 +15,7 @@ class VideoDeletedHandler implements MessageHandlerInterface
     public function __construct(
         private readonly UserProvider $userProvider,
         private readonly UserManager $userManager,
+        private readonly VideoProvider $videoProvider,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -31,7 +33,7 @@ class VideoDeletedHandler implements MessageHandlerInterface
             ]
         );
 
-        $user->setVideoCount($user->getVideoCount() - 1);
+        $user->setVideoCount($this->videoProvider->countByUserId($user->getId()));
         $this->userManager->update($user);
     }
 }

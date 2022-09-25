@@ -23,6 +23,7 @@ class UserFollowManager
     public function __construct(
         private readonly UserFollowRepository $userFollowRepository,
         private readonly UserFollowProvider $userFollowProvider,
+        private readonly UserManager $userManager,
         private readonly EntityValidator $validator,
         private readonly MessageBusInterface $messageBus,
         private readonly Notifier $notifier,
@@ -101,6 +102,14 @@ class UserFollowManager
         $this->validator->validate($userFollow);
 
         $this->userFollowRepository->save($userFollow);
+
+        $follower = $userFollow->getFollower();
+        $follower->setFollowingCount($this->userFollowProvider->countByFollowerId($follower->getId()));
+        $this->userManager->save($follower);
+
+        $following = $userFollow->getFollowing();
+        $following->setFollowersCount($this->userFollowProvider->countByFollowingId($following->getId()));
+        $this->userManager->save($following);
     }
 
     public function delete(?UserFollow $userFollow): void
