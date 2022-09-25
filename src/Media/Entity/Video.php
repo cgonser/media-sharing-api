@@ -186,7 +186,7 @@ class Video implements TimestampableInterface, SoftDeletableInterface
 
     public function getLikes(): ?int
     {
-        return $this->likes;
+        return $this->videoLikes->count();
     }
 
     public function setLikes(?int $likes): self
@@ -198,7 +198,7 @@ class Video implements TimestampableInterface, SoftDeletableInterface
 
     public function getComments(): ?int
     {
-        return $this->comments;
+        return $this->videoComments->count();
     }
 
     public function setComments(?int $comments): self
