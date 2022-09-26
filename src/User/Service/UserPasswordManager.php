@@ -14,16 +14,13 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserPasswordManager
 {
-    /**
-     * @var string
-     */
     private const TOKEN_VALIDITY = '24 hours';
 
     public function __construct(
-        private UserPasswordHasherInterface $userPasswordHasher,
-        private UserRepository $userRepository,
-        private UserPasswordResetTokenRepository $userPasswordResetTokenRepository,
-        private UserEmailManager $userEmailManager,
+        private readonly UserPasswordHasherInterface $userPasswordHasher,
+        private readonly UserRepository $userRepository,
+        private readonly UserPasswordResetTokenRepository $userPasswordResetTokenRepository,
+        private readonly UserEmailManager $userEmailManager,
     ) {
     }
 
