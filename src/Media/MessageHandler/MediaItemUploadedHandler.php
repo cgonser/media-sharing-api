@@ -71,7 +71,7 @@ class MediaItemUploadedHandler implements MessageHandlerInterface
         $videoMediaItem = $this->videoMediaItemProvider->findOneBy(['mediaItemId' => $mediaItem->getId()]);
         if (null !== $videoMediaItem) {
             $this->messageBus->dispatch(
-                new VideoMediaItemUploadedEvent($videoMediaItem->getId(), $duration)
+                new VideoMediaItemUploadedEvent($videoMediaItem->getId())
             );
 
             return;

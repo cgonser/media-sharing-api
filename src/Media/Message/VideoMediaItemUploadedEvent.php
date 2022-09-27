@@ -10,17 +10,11 @@ class VideoMediaItemUploadedEvent
 
     public function __construct(
         private readonly UuidInterface $videoMediaItemId,
-        private readonly ?int $duration,
     ) {
     }
 
     public function getVideoMediaItemId(): UuidInterface
     {
         return $this->videoMediaItemId;
-    }
-
-    public function getDuration(): ?int
-    {
-        return $this->duration;
     }
 }

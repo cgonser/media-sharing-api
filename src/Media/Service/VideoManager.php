@@ -4,6 +4,7 @@ namespace App\Media\Service;
 
 use App\Core\Validation\EntityValidator;
 use App\Media\Entity\Video;
+use App\Media\Entity\VideoMoment;
 use App\Media\Enumeration\VideoStatus;
 use App\Media\Message\VideoCreatedEvent;
 use App\Media\Message\VideoDeletedEvent;
@@ -54,13 +55,19 @@ class VideoManager
         $this->videoRepository->save($video);
     }
 
-    public function publish(Video $video, ?int $duration = null): void
+    public function publish(Video $video): void
     {
         if (VideoStatus::PUBLISHED === $video->getStatus()) {
             return;
         }
 
-        $video->setDuration($duration);
+        $video->setDuration(0);
+
+        /** @var VideoMoment $videoMoment */
+        foreach ($video->getVideoMoments() as $videoMoment) {
+            $video->setDuration($video->getDuration() + $videoMoment->getMoment()->getDuration());
+        }
+
         $video->setStatus(VideoStatus::PUBLISHED);
         $video->setPublishedAt(new DateTime());
 

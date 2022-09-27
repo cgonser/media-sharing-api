@@ -335,6 +335,9 @@ class Video implements TimestampableInterface, SoftDeletableInterface
         return $this;
     }
 
+    /**
+     * @return Collection<VideoMoment>
+     */
     public function getVideoMoments(): Collection
     {
         return $this->videoMoments;
