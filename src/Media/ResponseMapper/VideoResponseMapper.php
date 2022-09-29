@@ -6,11 +6,13 @@ use App\Media\Dto\PublicVideoDto;
 use App\Media\Dto\VideoDto;
 use App\Media\Dto\VideoMomentDto;
 use App\Media\Entity\Video;
+use App\Media\Entity\VideoLike;
 use App\Media\Entity\VideoMediaItem;
 use App\Media\Entity\VideoMoment;
 use App\User\ResponseMapper\UserResponseMapper;
 use DateTimeInterface;
 use Doctrine\ORM\EntityNotFoundException;
+use Ramsey\Uuid\UuidInterface;
 
 class VideoResponseMapper
 {
@@ -22,10 +24,10 @@ class VideoResponseMapper
     ) {
     }
 
-    public function map(Video $video): VideoDto
+    public function map(Video $video, ?UuidInterface $currentUserId = null): VideoDto
     {
         $videoDto = new VideoDto();
-        $this->mapBaseData($videoDto, $video);
+        $this->mapBaseData($videoDto, $video, $currentUserId);
         $videoDto->status = $video->getStatus()->value;
         $videoDto->localPath = $video->getLocalPath();
         $videoDto->overrideMomentsAudio = $video->overrideMomentsAudio();
@@ -37,26 +39,26 @@ class VideoResponseMapper
         return $videoDto;
     }
 
-    public function mapPublic(Video $video): PublicVideoDto
+    public function mapPublic(Video $video, ?UuidInterface $currentUserId = null): PublicVideoDto
     {
         $videoDto = new PublicVideoDto();
-        $this->mapBaseData($videoDto, $video);
+        $this->mapBaseData($videoDto, $video, $currentUserId);
 
         return $videoDto;
     }
 
-    public function mapMultiple(array $videos): array
+    public function mapMultiple(array $videos, ?UuidInterface $currentUserId = null): array
     {
         return array_map(
-            fn ($video) => $this->map($video),
+            fn ($video) => $this->map($video, $currentUserId),
             $videos
         );
     }
 
-    public function mapMultiplePublic(array $videos): array
+    public function mapMultiplePublic(array $videos, ?UuidInterface $currentUserId = null): array
     {
         return array_map(
-            fn ($video) => $this->mapPublic($video),
+            fn ($video) => $this->mapPublic($video, $currentUserId),
             $videos
         );
     }
@@ -74,7 +76,7 @@ class VideoResponseMapper
         return $return;
     }
 
-    private function mapBaseData(VideoDto|PublicVideoDto $videoDto, Video $video): void
+    private function mapBaseData(VideoDto|PublicVideoDto $videoDto, Video $video, ?UuidInterface $currentUserId = null): void
     {
         $videoDto->id = $video->getId()->toString();
         $videoDto->user = $this->userResponseMapper->mapPublic($video->getUser());
@@ -89,6 +91,12 @@ class VideoResponseMapper
         $videoDto->mediaItems = !$video->getVideoMediaItems()->isEmpty()
             ? $this->mapMediaItems($video->getVideoMediaItems()->toArray())
             : null;
+
+        if (null !== $currentUserId) {
+            $videoDto->likedByUser = $video->getVideoLikes()->filter(
+                    fn(VideoLike $videoLike) => $currentUserId->equals($videoLike->getUserId())
+                )->count() > 0;
+        }
 
         if (!$video->getVideoLocations()->isEmpty()) {
             $videoDto->locations = [];

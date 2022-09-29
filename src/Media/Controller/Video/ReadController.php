@@ -66,11 +66,13 @@ class ReadController extends AbstractController
         $count = $this->videoProvider->count($searchRequest);
         $results = $this->videoProvider->search($searchRequest);
 
+        $userId = $this->getUser()->getId();
+
         return new ApiJsonResponse(
             Response::HTTP_OK,
-            $this->getUser()->getId()->toString() === $searchRequest->userId
-                ? $this->videoResponseMapper->mapMultiple($results)
-                : $this->videoResponseMapper->mapMultiplePublic($results),
+            $userId->toString() === $searchRequest->userId
+                ? $this->videoResponseMapper->mapMultiple($results, $userId)
+                : $this->videoResponseMapper->mapMultiplePublic($results, $userId),
             [
                 'X-Total-Count' => $count,
             ]
@@ -90,11 +92,13 @@ class ReadController extends AbstractController
 
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::READ, $video);
 
+        $userId = $this->getUser()->getId();
+
         return new ApiJsonResponse(
             Response::HTTP_OK,
-            $video->getUserId()->equals($this->getUser()->getId())
-                ? $this->videoResponseMapper->map($video)
-                : $this->videoResponseMapper->mapPublic($video)
+            $video->getUserId()->equals($userId)
+                ? $this->videoResponseMapper->map($video, $userId)
+                : $this->videoResponseMapper->mapPublic($video, $userId)
         );
     }
 }

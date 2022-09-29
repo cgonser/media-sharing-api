@@ -35,4 +35,6 @@ class PublicVideoDto
     public ?int $comments;
 
     public ?string $recordedAt;
+
+    public ?bool $likedByUser;
 }
