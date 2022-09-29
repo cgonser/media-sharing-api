@@ -24,7 +24,7 @@ class UserNotificationChannelRequestManager
 
         $this->mapFromRequest($userNotificationChannel, $userNotificationChannelRequest);
 
-        $this->userNotificationChannelManager->save($userNotificationChannel);
+        $this->userNotificationChannelManager->create($userNotificationChannel);
 
         return $userNotificationChannel;
     }
