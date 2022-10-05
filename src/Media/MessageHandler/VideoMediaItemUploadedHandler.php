@@ -39,14 +39,14 @@ class VideoMediaItemUploadedHandler implements MessageHandlerInterface
             ]
         );
 
-        if (VideoStatus::PUBLISHED === $video->getStatus()) {
+        if (VideoStatus::isGenerated($video->getStatus())) {
             return;
         }
 
-        $this->updatePublishedStatus($video);
+        $this->updatePreviewStatus($video);
     }
 
-    private function updatePublishedStatus(Video $video): void
+    private function updatePreviewStatus(Video $video): void
     {
         $this->videoProvider->refresh($video);
 
@@ -57,6 +57,6 @@ class VideoMediaItemUploadedHandler implements MessageHandlerInterface
             }
         }
 
-        $this->videoManager->publish($video);
+        $this->videoManager->markAsGenerated($video);
     }
 }

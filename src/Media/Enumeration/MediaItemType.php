@@ -9,13 +9,7 @@ enum MediaItemType: string
     case VIDEO_MEDIUM = 'video_medium';
     case VIDEO_LOW = 'video_low';
     case VIDEO_EXPORT = 'video_export';
-
     case IMAGE_THUMBNAIL = 'image_thumbnail';
-
-    // deprecated
-    case VIDEO = 'video';
-    // deprecated
-    case THUMBNAIL = 'thumbnail';
 
     public const VIDEO_TYPES = [
         self::VIDEO_ORIGINAL,

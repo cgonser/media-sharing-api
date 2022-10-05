@@ -17,5 +17,4 @@ enum Mood: string
         'happy' => '#FDE056',
         'sad' => '#7D9BE3',
     ];
-
 }

@@ -5,9 +5,12 @@ namespace App\Media\Controller\Video;
 use App\Core\Response\ApiJsonResponse;
 use App\Core\Security\AuthorizationVoterInterface;
 use App\Media\Dto\VideoDto;
+use App\Media\Enumeration\VideoStatus;
 use App\Media\Provider\VideoProvider;
 use App\Media\Request\VideoRequest;
+use App\Media\Request\VideoStatusRequest;
 use App\Media\ResponseMapper\VideoResponseMapper;
+use App\Media\Service\VideoManager;
 use App\Media\Service\VideoRequestManager;
 use App\User\Entity\User;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -25,7 +28,8 @@ class UpdateController extends AbstractController
 {
     public function __construct(
         private readonly VideoProvider $videoProvider,
-        private readonly VideoRequestManager $videoManager,
+        private readonly VideoManager $videoManager,
+        private readonly VideoRequestManager $videoRequestManager,
         private readonly VideoResponseMapper $videoResponseMapper,
     ) {
     }
@@ -56,8 +60,44 @@ class UpdateController extends AbstractController
 
         $this->denyAccessUnlessGranted(AuthorizationVoterInterface::UPDATE, $video);
 
-        $this->videoManager->updateFromRequest($video, $videoRequest);
+        $this->videoRequestManager->updateFromRequest($video, $videoRequest);
 
         return new ApiJsonResponse(Response::HTTP_OK, $this->videoResponseMapper->map($video));
+    }
+
+    #[OA\Response(response: 204, description: "Success")]
+    #[OA\Response(response: 404, description: "Not found")]
+    #[Route(path: '/{videoId}/publication', name: 'videos_publish', methods: ['PUT'])]
+    public function publish(
+        #[OA\PathParameter] string $videoId,
+    ): Response {
+        $video = $this->videoProvider->getByUserAndId(
+            $this->getUser()->getId(),
+            Uuid::fromString($videoId)
+        );
+
+        $this->denyAccessUnlessGranted(AuthorizationVoterInterface::UPDATE, $video);
+
+        $this->videoManager->publish($video);
+
+        return new ApiJsonResponse(Response::HTTP_NO_CONTENT);
+    }
+
+    #[OA\Response(response: 204, description: "Success")]
+    #[OA\Response(response: 404, description: "Not found")]
+    #[Route(path: '/{videoId}/publication', name: 'videos_unpublish', methods: ['DELETE'])]
+    public function unpublish(
+        #[OA\PathParameter] string $videoId,
+    ): Response {
+        $video = $this->videoProvider->getByUserAndId(
+            $this->getUser()->getId(),
+            Uuid::fromString($videoId)
+        );
+
+        $this->denyAccessUnlessGranted(AuthorizationVoterInterface::UPDATE, $video);
+
+        $this->videoManager->unpublish($video);
+
+        return new ApiJsonResponse(Response::HTTP_NO_CONTENT);
     }
 }

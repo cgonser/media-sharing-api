@@ -7,6 +7,7 @@ use App\Media\Provider\MomentProvider;
 use App\Media\Provider\MusicProvider;
 use App\Media\Request\VideoMomentRequest;
 use App\Media\Request\VideoRequest;
+use App\Media\Request\VideoStatusRequest;
 use App\User\Provider\UserProvider;
 use DateTime;
 use DateTimeInterface;

@@ -9,6 +9,8 @@ use App\Media\Enumeration\VideoStatus;
 use App\Media\Message\VideoCreatedEvent;
 use App\Media\Message\VideoDeletedEvent;
 use App\Media\Message\VideoPublishedEvent;
+use App\Media\Message\VideoUnpublishedEvent;
+use App\Media\Notification\VideoGeneratedNotification;
 use App\Media\Notification\VideoPublishedNotification;
 use App\Media\Repository\VideoRepository;
 use App\Notification\Service\Notifier;
@@ -55,17 +57,33 @@ class VideoManager
         $this->videoRepository->save($video);
     }
 
-    public function publish(Video $video): void
+    public function defineVideoDuration(Video $video): void
     {
-        if (VideoStatus::PUBLISHED === $video->getStatus()) {
-            return;
-        }
-
         $video->setDuration(0);
 
         /** @var VideoMoment $videoMoment */
         foreach ($video->getVideoMoments() as $videoMoment) {
             $video->setDuration($video->getDuration() + $videoMoment->getMoment()->getDuration());
+        }
+    }
+
+    public function markAsGenerated(Video $video): void
+    {
+        if (VideoStatus::isGenerated($video->getStatus())) {
+            return;
+        }
+
+        $video->setStatus(VideoStatus::PREVIEW);
+
+        $this->update($video);
+
+        $this->notifier->send(new VideoGeneratedNotification($video), $video->getUser());
+    }
+
+    public function publish(Video $video): void
+    {
+        if (VideoStatus::PUBLISHED === $video->getStatus()) {
+            return;
         }
 
         $video->setStatus(VideoStatus::PUBLISHED);
@@ -80,6 +98,24 @@ class VideoManager
                 $video->getId(),
                 $video->getUserId(),
                 $video->getPublishedAt(),
+            )
+        );
+    }
+
+    public function unpublish(Video $video): void
+    {
+        if (VideoStatus::HIDDEN === $video->getStatus()) {
+            return;
+        }
+
+        $video->setStatus(VideoStatus::HIDDEN);
+
+        $this->update($video);
+
+        $this->messageBus->dispatch(
+            new VideoUnpublishedEvent(
+                $video->getId(),
+                $video->getUserId(),
             )
         );
     }

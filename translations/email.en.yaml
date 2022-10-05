@@ -20,10 +20,16 @@ moment:
         cta: "Review this Moment in the app"
 
 video:
+    generated:
+        subject: "Your video was generated"
+        greeting: "Video generated"
+        line_1: "Your video was generated"
+        cta: "Review this Video in the app"
+
     published:
         subject: "Your video was published"
         greeting: "Video published"
-        line_1: "Your video published"
+        line_1: "Your video was published"
         cta: "Review this Video in the app"
 
     commented:
