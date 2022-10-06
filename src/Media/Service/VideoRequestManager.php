@@ -58,9 +58,9 @@ class VideoRequestManager
             $video->setLocalPath($videoRequest->localPath);
         }
 
-        if ($videoRequest->has('moods')) {
-            $video->setMoods($videoRequest->moods);
-        }
+//        if ($videoRequest->has('moods')) {
+//            $video->setMoods($videoRequest->moods);
+//        }
 
         if ($videoRequest->has('locations')) {
             $this->mapVideoLocations($video, $videoRequest->locations);

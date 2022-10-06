@@ -52,9 +52,25 @@ class VideoManager
 
     public function save(Video $video): void
     {
+        $this->updateVideoMoods($video);
+
         $this->validator->validate($video);
 
         $this->videoRepository->save($video);
+    }
+
+    public function updateVideoMoods(Video $video): void
+    {
+        $moods = [];
+
+        /** @var VideoMoment $videoMoment */
+        foreach ($video->getVideoMoments() as $videoMoment) {
+            if (!in_array($videoMoment->getMoment()->getMood()->value, $moods)) {
+                $moods[] = $videoMoment->getMoment()->getMood()->value;
+            }
+        }
+
+        $video->setMoods($moods);
     }
 
     public function defineVideoDuration(Video $video): void
