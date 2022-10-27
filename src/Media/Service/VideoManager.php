@@ -91,6 +91,8 @@ class VideoManager
 
         $video->setStatus(VideoStatus::PREVIEW);
 
+        $this->defineVideoDuration($video);
+
         $this->update($video);
 
         $this->notifier->send(new VideoGeneratedNotification($video), $video->getUser());
