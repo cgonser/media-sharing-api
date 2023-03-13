@@ -29,6 +29,7 @@ RUN set -e; \
                 libxml2-dev \
                 libxslt-dev \
                 libzip-dev \
+                linux-headers \
                 postgresql-dev \
                 zlib-dev
 
