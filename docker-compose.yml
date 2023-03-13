@@ -18,7 +18,7 @@ services:
         container_name: itinair-nginx
         image: nginx:alpine
         ports:
-            - "80:80"
+            - "8017:80"
         links:
             - php-fpm
         volumes:
